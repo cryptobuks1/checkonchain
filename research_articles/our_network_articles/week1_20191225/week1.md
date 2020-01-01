@@ -16,11 +16,11 @@ Similar to the DCR/BTC price that characterises the investor class, block subsid
 ![insight_3.png](images/insight_3.png)
 
 
-## Insight 4 - Politeia in Review
+## Insight 4 - A Year of Politeia
 
+Politeia marked a year of use in October, a year in which 38 proposals were put to a vote, of which 25 were approved and 13 rejected. For each proposal, all of the tickets in the live pool when voting starts (~40,960 tickets) have a week to vote Yes or No. The average (mean) participation of eligible tickets was 31.2%, the highest turnout for a proposal was 52% and the lowest 21% (just above the 20% quorum requirement). Many of the proposals to be approved had overwhelming stakeholder support, with 13 of the 25 approved proposals hitting 90%+ approval.
 
-
-
+![Insight 4 - Politeia voter participation rates and voting outcomes](images/insight_4.png)
 
 ## Insight 5 - Privacy Mixing Performance
 Decred rolled out the first phase of it's privacy implementation based on the CoinShuffle++ protocol in August. Privacy mixing has been integrated with the PoS Ticket system to take advantage of consistency in DCR denominations, consistent circulation and pseudo-random selection. This makes for a consistently large and rotating anonymity set. In the four months since launch, over 20% of the DCR supply has participated in privacy mixing.
