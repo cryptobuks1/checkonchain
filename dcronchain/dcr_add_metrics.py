@@ -240,8 +240,15 @@ class dcr_add_metrics():
                 'PriceRealUSD'          - Realised Price (USD)
                 'DailyIssuedNtv'        - Daily DCR Issued
                 'DailyIssuedUSD'        - Daily Issued USD
+                'AdrActCnt'             - Active Address Count
                 'TxTfrValNtv'           - Daily Transferred DCR
                 'TxTfrValUSD'           - Daily Transferred USD
+                'TxTfrValAdjNtv'        - Daily Transferred DCR (Adjusted for noise)
+                'TxTfrValAdjUSD'        - Daily Transferred USD (Adjusted for noise)
+                'TxTfrValMedNtv'        - Median DCR Transaction
+                'TxTfrValMeanNtv'       - Mean DCR Transaction
+                'TxCnt'                 - Daily transaction count (Full count incl 0 DCR Tx)
+                'TxTfrCnt'              - Daily Transfer count (transfer of non-zero DCR)
                 'FeeTotNtv'             - Total Fees DCR
                 'FeeTotUSD'             - Total Fees USD
                 'S2F'                   - Actual Stock-to-Flow Ratio
@@ -266,8 +273,9 @@ class dcr_add_metrics():
             'date','blk','age_days','age_sply','CapMrktCurUSD','CapRealUSD',
             'DiffMean','PriceBTC','PriceUSD','PriceRealUSD',
             'SplyCur','DailyIssuedNtv','DailyIssuedUSD','S2F',
-            'inf_pct_ann','TxTfrValNtv','TxTfrValUSD',
-            'FeeTotNtv','FeeTotUSD']]
+            'inf_pct_ann','TxCnt','TxTfrCnt','TxTfrValMedNtv','TxTfrValMeanNtv',
+            'TxTfrValNtv','TxTfrValUSD','TxTfrValAdjNtv','TxTfrValAdjUSD',
+            'FeeTotNtv','FeeTotUSD','AdrActCnt']]
         _coin['CapS2FModel'] = regression_analysis()
         #Add new columns for transferring _natv data to_coin
         _coin['tic_day']                = 0.0
@@ -316,7 +324,9 @@ class dcr_add_metrics():
         df = df[[
             'date', 'blk', 'age_days','age_sply','window',                          #Time Metrics
             'CapMrktCurUSD', 'CapRealUSD','PriceBTC', 'PriceUSD', 'PriceRealUSD',   #Value Metrics
-            'DailyIssuedNtv','DailyIssuedUSD','TxTfrValNtv','TxTfrValUSD',          #Transaction Metrics
+            'DailyIssuedNtv','DailyIssuedUSD','AdrActCnt','TxCnt','TxTfrCnt',       #Block Reward Metrics
+            'TxTfrValNtv','TxTfrValUSD','TxTfrValAdjNtv','TxTfrValAdjUSD',          #Global Transaction Metrics
+            'TxTfrValMedNtv','TxTfrValMeanNtv',                                     #Local Transaction Metrics
             'FeeTotNtv','FeeTotUSD',                                                #Fee Metrics
             'S2F', 'inf_pct_ann','SplyCur', 'dcr_sply',                             #Supply Metrics
             'dcr_tic_sply_avg','tic_day', 'tic_price_avg', 'tic_pool_avg',          #Ticket Metrics
@@ -491,46 +501,4 @@ class dcr_add_metrics():
 #DCR_natv = dcr_add_metrics().dcr_natv()
 #DCR_real = dcr_add_metrics().dcr_real()
 #DCR_sply = dcr_add_metrics().dcr_sply(500000)
-DCR_tics = dcr_add_metrics().dcr_ticket_models()
-
-DCR_tics.columns
-
-
-
-DCR_tics['dcr_tic_surplus'] = (
-    DCR_tics['dcr_tic_vol'].rolling(142).mean() / DCR_tics['TxTfrValNtv'].rolling(142).mean()
-    - 
-    DCR_tics['dcr_tic_sply_avg']/ DCR_tics['SplyCur']
-)
-
-from checkonchain.general.standard_charts import *
-
-
-loop_data = [[1],[0]]
-x_data = [
-    DCR_tics['blk'],
-    DCR_tics['blk'],
-]
-y_data = [
-    DCR_tics['PriceBTC'],
-    DCR_tics['dcr_tic_surplus'],
-]
-name_data = [
-    'PriceBTC','dcr_tic_surplus'
-]
-title_data = [
-    'Analysis','Date','Variable','Price BTC'
-]
-type_data = [
-    'linear','linear','linear'
-]
-fig = check_standard_charts().basic_chart(
-    x_data,
-    y_data,
-    name_data,
-    loop_data,
-    title_data,
-    type_data
-)
-fig.update_yaxes(range=[-0.4,0.4],secondary_y=False)
-fig.show()
+#DCR_tics = dcr_add_metrics().dcr_ticket_models()

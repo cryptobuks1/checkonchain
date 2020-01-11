@@ -324,6 +324,140 @@ class check_standard_charts():
         
         return fig
 
+
+
+
+    def dual_subplot_lines_singleaxis(
+        self,
+        title_data, range_data ,autorange_data ,type_data,
+        loop_data,x_data,y_data,name_data,color_data,
+        dash_data,width_data,opacity_data,legend_data,
+        ):
+        """Loop_data = [
+            [row=1,Y1],
+            [row=2,Y1],
+            """
+        fig = make_subplots(
+            rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.02
+        )
+        """#######  Add Traces (ROW=1, Yaxis=1)   #######"""
+        for i in loop_data[0]:
+            fig.add_trace(go.Scatter(
+                row=1,col=1,
+                mode='lines',
+                x=x_data[i], 
+                y=y_data[i],
+                name=name_data[i],
+                opacity=opacity_data[i],
+                showlegend=legend_data[i],
+                line=dict(
+                    width=width_data[i],
+                    color=color_data[i],
+                    dash=dash_data[i]
+                    )))
+        
+        
+        """#######  Add Traces (ROW=2, Yaxis=1)   #######"""
+        for i in loop_data[1]:
+            fig.add_trace(go.Scatter(
+                row=2,col=1,
+                mode='lines',
+                x=x_data[i], 
+                y=y_data[i],
+                name=name_data[i],
+                opacity=opacity_data[i],
+                showlegend=legend_data[i],
+                line=dict(
+                    width=width_data[i],
+                    color=color_data[i],
+                    dash=dash_data[i]
+                    )))               
+        
+                
+        """#######  Title Block   #######"""
+        fig.update_layout(
+            paper_bgcolor=self._background,
+            plot_bgcolor=self._background,
+            autosize=True,            
+            title=go.layout.Title(
+                text=title_data[0],
+                x=0.5, 
+                xref='paper',
+                font=dict(
+                    family=self._font,
+                    size = self._titlesize
+                )),
+            legend=dict(
+                yanchor='middle',
+                y=0.5,
+                font=dict(
+                    family=self._font,
+                    size=self._legendsize
+                )))
+        
+        """#######  Annotation   #######"""
+        fig.update_layout(
+            annotations=[
+                go.layout.Annotation(
+                    x=0.5,
+                    y=self._annotation_y,
+                    text=self._annotation,
+                    showarrow=False,
+                    xref="paper",
+                    yref="paper",
+                    opacity=0.75,
+                    font=dict(
+                        family=self._font,
+                        size=16,
+                        color=self._gridcolor
+                    )
+                )
+            ]
+        )
+
+        """#######  X-Axis   #######"""
+        fig.update_xaxes(
+            title_text=title_data[1],
+            type=type_data[0],
+            range=range_data[0],
+            title_font=dict(
+                family=self._font,
+                size=self._axesfontsize
+                ),
+            tickfont=dict(
+                family=self._font,
+                size=self._tickfontsize
+                ),
+            gridcolor=self._gridcolor,
+            gridwidth=self._gridwidth,
+            zerolinecolor=self._zerolinecolor
+            )
+        fig.update_xaxes(autorange=autorange_data[0]) #override range
+        
+
+        """#######  Y-Axis-1   #######"""
+        fig.update_yaxes(
+            title_text=title_data[2],
+            type=type_data[1],
+            range=range_data[1],
+            title_font=dict(
+                family=self._font,
+                size=self._axesfontsize
+                ),
+            tickfont=dict(
+                family=self._font,
+                size=self._tickfontsize
+                ),
+            gridcolor=self._gridcolor,
+            gridwidth=self._gridwidth,
+            zerolinecolor=self._zerolinecolor,
+            secondary_y=False
+            )
+        fig.update_yaxes(autorange=autorange_data[1],secondary_y=False) #override range
+        
+        fig.update_layout(template="plotly_dark")
+        return fig
+
     def add_vol_bars_x(self, fig, x_data, y_data, color_data, loop_data , name_data):
         for i in loop_data:
             fig.add_trace(

@@ -30,8 +30,8 @@ class regression_analysis():
         planb = pd.DataFrame(data={
             'Details':['BTC_PlanBModel'],
             'rsq':[0.947328],
-            'intercept':[14.6227],
-            'coefficient':[3.31954]
+            'intercept':[-1.84],
+            'coefficient':[3.36]
             })
         btc_s2f = pd.DataFrame(data={
             'Details':['BTC_S2F_MrktCap_20191013'],

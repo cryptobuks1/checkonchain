@@ -24,7 +24,7 @@ class btc_add_metrics():
         """Pulls Coinmetrics v2 API Community,
             adds early price data by Plan B (fills backwards)
         """
-        df = Coinmetrics_api('btc',"2009-01-03","2019-10-07").convert_to_pd()
+        df = Coinmetrics_api('btc',"2009-01-03",today).convert_to_pd()
         #Coin age in days
         df['age_days'] = (df[['date']] - df.loc[0,['date']])/np.timedelta64(1,'D')
         #Coin age in supply issuance
@@ -97,6 +97,12 @@ class btc_add_metrics():
         df = self.btc_sply(to_blk)
         return df.iloc[::btc_sply_interval,:] #Select every 144 blocks
 
+    def btc_sply_halvings_step(self):
+        """Calculate btc supply halvings for plotting"""
+        df = btc_supply_schedule(0).btc_halvings_stepped()
+        df['age_sply'] = df['end_sply']/21e6
+        return df #Select every 144 blocks
+
 
     def btc_real(self):
         """Coinmetrics + Hashrate from QUANDL"""
@@ -104,13 +110,14 @@ class btc_add_metrics():
         _coin = self.btc_coin()
         _blk_max = int(_coin['blk'][_coin.index[-1]])
         df = _coin[[
-            'date', 'blk', 'age_days','age_sply', 
-            'CapMrktCurUSD', 'CapRealUSD', 'PriceUSD', 'PriceRealUSD', 
-            'DailyIssuedNtv', 'DailyIssuedUSD',
-            'TxTfrCnt', 'TxTfrValAdjNtv', 'TxTfrValAdjUSD','TxTfrValNtv','TxTfrValUSD',
-            'FeeTotNtv','FeeTotUSD',
-            'S2F','inf_pct_ann', 'SplyCur',
-            'DiffMean', 'notes'
+            'date', 'blk', 'age_days','age_sply',                                   #Time Metrics
+            'CapMrktCurUSD', 'CapRealUSD', 'PriceUSD', 'PriceRealUSD',              #Value Metrics
+            'DailyIssuedNtv', 'DailyIssuedUSD','AdrActCnt','TxCnt', 'TxTfrCnt',     #Block Reward Metrics
+            'TxTfrValAdjNtv', 'TxTfrValAdjUSD', 'TxTfrValNtv', 'TxTfrValUSD',       #Global Transaction Metrics
+            'TxTfrValMeanNtv', 'TxTfrValMeanUSD', 'TxTfrValMedNtv','TxTfrValMedUSD',#Local Transaction Metrics             
+            'FeeTotNtv','FeeTotUSD',                                                #Fee Metrics
+            'S2F','inf_pct_ann', 'SplyCur',                                         #Supply Metrics
+            'DiffMean', 'notes'                                                     #PoW Metrics
         ]]
         return df
 
@@ -136,7 +143,7 @@ class btc_add_metrics():
 
     def btc_pricing_models(self):
         print('...Calculating Bitcoin pricing models...')
-        _real = self.btc_real()
+        _real = self.btc_subsidy_models()
         df = _real
 
         # Average Cap and Average Price
@@ -151,13 +158,21 @@ class btc_add_metrics():
         df['PriceTop'] =df['CapTop']/df['SplyCur']
 
         #Calc S2F Model - Specific to Bitcoin
-        btc_s2f_model = regression_analysis().ln_regression(df,'S2F','CapMrktCurUSD','date')['model_params']
-        df['CapS2Fmodel'] = np.exp(float(btc_s2f_model['coefficient'])*np.log(df['S2F'])+float(btc_s2f_model['intercept']))
-        df['PriceS2Fmodel'] = df['CapS2Fmodel']/df['SplyCur']
+        btc_s2f_model = regression_analysis().ln_regression(df,'S2F','PriceUSD','date')['model_params']
+        df['PriceS2Fmodel'] = (
+            np.exp(float(btc_s2f_model['intercept']))
+            * df['S2F']**float(btc_s2f_model['coefficient'])
+            )
+        df['CapS2Fmodel'] = df['PriceS2Fmodel']*df['SplyCur']
         #Calc S2F Model - Bitcoins Plan B Model
         planb_s2f_model = regression_analysis().regression_constants()['planb']
-        df['CapPlanBmodel'] = np.exp(float(planb_s2f_model['coefficient'])*np.log(df['S2F'])+float(planb_s2f_model['intercept']))
-        df['PricePlanBmodel'] = df['CapPlanBmodel']/df['SplyCur']
+        df['PricePlanBmodel'] = np.exp(-1.84)*df['S2F']**3.36
+        df['CapPlanBmodel'] = df['PricePlanBmodel']/df['SplyCur']
+
+        #Calc Diff Model - Specific to Bitcoin
+        btc_diff_model = regression_analysis().ln_regression(df,'DiffMean','CapMrktCurUSD','date')['model_params']
+        df['CapDiffmodel'] = np.exp(float(btc_diff_model['coefficient'])*np.log(df['DiffMean'])+float(btc_diff_model['intercept']))
+        df['PriceDiffmodel'] = df['CapDiffmodel']/df['SplyCur']
 
         # Inflow Cap and Inflow Price
         df['CapInflow'] = df['DailyIssuedUSD'].expanding().sum()
@@ -172,9 +187,11 @@ class btc_add_metrics():
         df['FeesPct'] =  df['CapFee']/df['MinerIncome']
         df['MinerCap'] = df['MinerIncome'].expanding().sum()
 
-        #Moving Averages
+        #Moving Averages (Magic Lines)
         df['PriceUSD_128DMA'] = df['PriceUSD'].rolling(128).mean()
         df['PriceUSD_200DMA'] = df['PriceUSD'].rolling(200).mean()
+        df['PriceUSD_128WMA'] = df['PriceUSD'].rolling(896).mean()
+        df['PriceUSD_200WMA'] = df['PriceUSD'].rolling(1400).mean()
         return df
 
     def btc_oscillators(self):
@@ -191,7 +208,8 @@ class btc_add_metrics():
 
         #Mayer Multiple
         df['MayerMultiple'] = df['PriceUSD']/df['PriceUSD_200DMA']
-
+        df['S2FMultiple'] = df['PriceUSD']/df['PricePlanBmodel']
+        df['DiffMultiple'] = df['PriceUSD']/df['PriceDiffmodel']
         return df
 
-#BTC_subs = btc_add_metrics().btc_subsidy_models()
+#BTC_subs = btc_add_metrics().btc_oscillators()
