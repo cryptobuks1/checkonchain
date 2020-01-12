@@ -168,7 +168,7 @@ name_data = [
     'Bitcoin Halvings'
     ]
 color_data = [
-    'rgb(254, 150, 70)', 'rgb(65, 191, 83)','rgb(112, 203, 255)',
+    'rgb(254, 215, 140)', 'rgb(65, 191, 83)','rgb(112, 203, 255)',
     'rgb(255, 102, 0)' , 'rgb(65, 191, 83)','rgb(112, 203, 255)',
     'rgb(255,255,255)'
     ]
@@ -212,19 +212,13 @@ fig.show()
 
 
 
-
-
-
-
 """
 #############################################################################
-                    USER METRICS - GLOBAL NATIVE UNITS TRANSFERRED
+            USER METRICS - GLOBAL NATIVE UNITS TRANSFERRED
 #############################################################################
 """
 
-#Address Density
-BTC_data['AdrDens'] = BTC_data['TxTfrValNtv']/BTC_data['AdrActCnt']
-DCR_data['AdrDens'] = DCR_data['TxTfrValNtv']/DCR_data['AdrActCnt']
+
 DCR_data['dcr_tic_buy'] = DCR_data['tic_day']*DCR_data['tic_price_avg']
 
 loop_data = [[0,1,2],[3,4,5,6]]
@@ -234,9 +228,9 @@ x_data = [
     BTC_half['age_days'],    
     ]
 y_data = [
-    BTC_data['TxTfrValNtv'].rolling(14).mean(),
-    DCR_data['TxTfrValNtv'].rolling(14).mean(),
-    DCR_data['dcr_tic_buy'].rolling(14).mean(),
+    BTC_data['TxTfrValNtv'].rolling(7).mean(),
+    DCR_data['TxTfrValNtv'].rolling(7).mean(),
+    DCR_data['dcr_tic_buy'].rolling(7).mean(),
     BTC_data['TxTfrValNtv'].cumsum(),
     DCR_data['TxTfrValNtv'].cumsum(),
     DCR_data['dcr_tic_buy'].cumsum(),
@@ -259,7 +253,7 @@ dash_data = [
     ]
 width_data = [
     1,1,1,
-    4,4,4,
+    5,5,5,
     1,
     ]
 opacity_data = [
@@ -277,10 +271,128 @@ title_data = [
     'Protocol Age (days)',
     'Daily Native Units Transferred',
     'Cumulative Native Units Transferred']
-range_data = [[0,4500],[2,7],[2,11]]
+range_data = [[0,4500],[2,8],[2,12]]
 autorange_data = [False,False,False]
 type_data = ['linear','log','log']#
 fig = check_standard_charts().subplot_lines_doubleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+fig.show()
+
+
+
+
+
+
+"""
+#############################################################################
+            USER METRICS - LOCAL TRANSACTION FLOWS
+#############################################################################
+"""
+#Address Density
+BTC_data['AdrDens'] = BTC_data['TxTfrValAdjNtv']/BTC_data['AdrActCnt']
+DCR_data['AdrDens'] = (
+    DCR_data['TxTfrValNtv'] 
+    - DCR_data['tic_day'].rolling(7).mean()*3
+    )/DCR_data['AdrActCnt']
+
+
+
+
+loop_data = [[0,1,2,3,4,7],[5,6]]
+x_data = [
+    #Transaction Volume
+    BTC_data['age_days'],
+    BTC_data['age_days'],
+    DCR_data['age_days'],
+    DCR_data['age_days'],
+    DCR_data['age_days'],
+    #Address Density
+    BTC_data['age_days'],
+    DCR_data['age_days'],
+    BTC_half['age_days'],
+    ]
+y_data = [
+    BTC_data['TxTfrValMedNtv'].rolling(2).mean(),
+    BTC_data['TxTfrValMeanNtv'],
+    DCR_data['TxTfrValMedNtv'].rolling(2).mean(),
+    DCR_data['TxTfrValMeanNtv'],
+    DCR_data['tic_price_avg'],
+    #Address Density
+    BTC_data['AdrDens'].rolling(1).mean(),
+    DCR_data['AdrDens'].rolling(1).mean(),
+    BTC_half['y_arb']
+    ]
+name_data = [
+    'BTC Median Tx',
+    'BTC Mean Tx',
+    'DCR Median Tx',
+    'DCR Mean Tx',
+    'DCR Ticket Price',
+    'BTC Address Density',
+    'DCR Address Density',
+    'Bitcoin Halvings',
+
+    ]
+color_data = [
+    'rgb(254, 150, 70)',
+    'rgb(255, 102, 0)',
+    'rgb(112, 203, 255)',
+    'rgb(47, 116, 251)',#'rgb(65, 191, 83)',
+    'rgb(255,255,255)',
+    'rgb(255, 102, 0)',
+    'rgb(46, 214, 161)',
+    'rgb(255,255,255)'
+    ]
+dash_data = [
+    'solid','solid',
+    'solid','solid','solid',
+    'solid','solid',
+    'dash',
+    ]
+width_data = [
+    1,1,
+    2,2,2,
+    2,2,
+    1,
+    ]
+opacity_data = [
+    1,1,
+    1,1,1,
+    1,1,
+    0.5
+    ]
+legend_data = [
+    True,True,
+    True,True,True,
+    True,True,
+    True,
+    ]
+title_data = [
+    'Native Units Transferred On-chain',
+    'Protocol Age (days)',
+    'Daily Native Units Transferred',
+    'Active Coins per Active Address']
+range_data = [[0,4500],[-5,5],[-1,9]]
+autorange_data = [False,False,False]
+type_data = ['linear','log','log']#
+fig = check_standard_charts().subplot_lines_singleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+fig.show()
+
+loop_data = [[5,6],[]]
+title_data = [
+    'Address Density',
+    'Protocol Age (days)',
+    'Active Coins per Active Address',
+    'Active Coins per Active Address']
+range_data = [[0,4500],[-1,3],[-1,9]]
+fig = check_standard_charts().subplot_lines_singleaxis(
     title_data, range_data ,autorange_data ,type_data,
     loop_data,x_data,y_data,name_data,color_data,
     dash_data,width_data,opacity_data,legend_data

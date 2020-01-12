@@ -1,3 +1,47 @@
+
+
+
+
+
+
+
+
+
+# User Adoption
+
+1) Active Address Count
+- Ticket baseline (Assuming a typical use of 4x Address)
+
+2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## The Cost of Time
 A feature where **Decred** differs significantly from the design of **Bitcoin** is in the allocation of 10% of the block subsidy to a network treasury. This capital may be allocated by **Decred** ticket holders towards furthering the project goals and development in an autonomous and self-sustaining manner.
 
