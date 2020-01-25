@@ -60,7 +60,9 @@ for y in range(5,105,5): #Assume range of Attacker ticket stake ownership
         P_y * DCR_subs['PoS_Cost'] + x_y * DCR_subs['PoW_Cost']
     )
     DCR_subs[col_name+'_Daily'] = ( #Daily Unforgeable Cost
-        P_y * DCR_subs['PoS_Cost_Daily'] + x_y * DCR_subs['PoW_Cost_Daily']
+        P_y * DCR_subs['PoS_Cost_Daily'] #PoS Reward
+        #+ P_y * DCR_subs['dcr_tic_sply_avg'] * DCR_subs['PriceUSD'] #Buy Tickets
+        + x_y * DCR_subs['PoW_Cost_Daily'] #Hashpower reward
     )
 
 #Calculate monetary premium over pure PoW Energy Expendature
@@ -159,7 +161,7 @@ toggle_dcr = 1#DCR_subs['SplyCur']
                     UNFORGEABLE COSTLINESS - DAILY
 #############################################################################
 """
-loop_data = [[0,1,2,3,4,5,6,7,8],[9,10]]
+loop_data = [[0,1,2,3,4,5,6,7,8,9,10],[]]
 x_data = [
     BTC_subs['age_sply'],DCR_subs['age_sply'],  #Market Caps
     BTC_subs['age_sply'],                       #BTC UC
@@ -174,7 +176,8 @@ y_data = [
     DCR_subs['Unforg_Cost_5%_Daily']/toggle_dcr,DCR_subs['Unforg_Cost_10%_Daily']/toggle_dcr,     #DCR UC
     DCR_subs['Unforg_Cost_15%_Daily']/toggle_dcr,DCR_subs['Unforg_Cost_30%_Daily']/toggle_dcr,    #DCR UC
     DCR_subs['Unforg_Cost_50%_Daily']/toggle_dcr,DCR_subs['Unforg_Cost_75%_Daily']/toggle_dcr,   #DCR UC
-    BTC_subs['PoW_Premium'],DCR_subs['PoW_Premium'],            #Pow Premium Secondary
+    BTC_subs['TxTfrValUSD'].rolling(7).mean(),DCR_subs['TxTfrValUSD'].rolling(7).mean(),
+    #BTC_subs['PoW_Premium'],DCR_subs['PoW_Premium'],            #Pow Premium Secondary
     ]
 name_data = [
     'BTC Market Cap','DCR Market Cap',
@@ -182,7 +185,7 @@ name_data = [
     'DCR Attack Cost 5%','DCR Attack Cost 10%',
     'DCR Attack Cost 15%','DCR Attack Cost 30%',
     'DCR Attack Cost 50%','DCR Attack Cost 75%',
-    'BTC Pure PoW Premium','DCR Pure PoW Premium',
+    'BTC Daily USD Settled','DCR Daily USD Settled',
     ]
 color_data = [
     'rgb(255, 255,255)' ,'rgb(46, 214, 161)' ,
@@ -190,7 +193,7 @@ color_data = [
     'rgb(1, 255, 116)','rgb(156,225,43)', 
     'rgb(255, 255, 102)','rgb(255, 153, 102)',
     'rgb(255, 102, 102)','rgb(255, 80, 80)',
-    'rgb(255, 255, 255)', 'rgb(46, 214, 161)',
+    'rgb(255, 255, 255)', 'rgb(112, 203, 255)',
     ]
 dash_data = [
     'dot','dot',
@@ -198,14 +201,14 @@ dash_data = [
     'solid','solid',
     'solid','solid',
     'solid','solid',
-    'dot','dot',
+    'solid','solid',
     ]
 width_data = [
-    1,1,
+    2,2,
     2,
-    2,2,2,
-    2,2,2,
-    1,1
+    1,1,1,
+    1,1,1,
+    3,3
     ]
 opacity_data = [
     1,1,
@@ -222,12 +225,12 @@ legend_data = [
     True,True
     ]#
 title_data = [
-    'Daily Cost to Attack',
+    'Daily Security and Tx Settlement',
     'Coin Age (Supply/21M)',
     'Cost to Attack Network (USD)',
     'Pure PoW Premium Ratio']
-range_data = [[0,1],[4,12],[-1,5]]
-autorange_data = [False,True,False]
+range_data = [[0,1],[2,12],[-1,5]]
+autorange_data = [False,False,False]
 type_data = ['linear','log','log']#
 fig = check_standard_charts().subplot_lines_singleaxis(
     title_data, range_data ,autorange_data ,type_data,

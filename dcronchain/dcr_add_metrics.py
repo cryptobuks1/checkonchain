@@ -349,18 +349,24 @@ class dcr_add_metrics():
 
         print('...Calculating Decred block subsidy models...')
         df = self.dcr_real()
-        #Calculate PoS Return on Investment
-        df['PoW_income_dcr']    = df['DailyIssuedNtv']*self.blkrew_ratio[0]
+        #Calculate Block Subsidy Models
+        df['PoW_income_dcr']    = (
+            (df['DailyIssuedNtv'] + df['FeeTotNtv']) *self.blkrew_ratio[0]
+        )
         df['PoS_income_dcr']    = df['DailyIssuedNtv']*self.blkrew_ratio[1]
         df['Fund_income_dcr']   = df['DailyIssuedNtv']*self.blkrew_ratio[2]
         df['Total_income_dcr']  = df['PoW_income_dcr']+df['PoS_income_dcr']+df['Fund_income_dcr']
         
-        df['PoW_income_usd']    = df['PoW_income_dcr']  *df['PriceUSD']
+        df['PoW_income_usd']    = (
+            (df['PoW_income_dcr'] + df['FeeTotNtv'])  *df['PriceUSD']
+        )
         df['PoS_income_usd']    = df['PoS_income_dcr']  *df['PriceUSD']
         df['Fund_income_usd']   = df['Fund_income_dcr'] *df['PriceUSD']
         df['Total_income_usd']  = df['Total_income_dcr']*df['PriceUSD']
 
-        df['PoW_income_btc']    = df['PoW_income_dcr']  *df['PriceBTC']
+        df['PoW_income_btc']    = (
+            (df['PoW_income_dcr'] + df['FeeTotNtv'])  *df['PriceBTC']
+        )
         df['PoS_income_btc']    = df['PoS_income_dcr']  *df['PriceBTC']
         df['Fund_income_btc']   = df['Fund_income_dcr'] *df['PriceBTC']
         df['Total_income_btc']  = df['Total_income_dcr']*df['PriceBTC']

@@ -82,13 +82,3 @@
 ![decred_01.PNG](decred_01.PNG)
 ![decred_01.PNG](decred_02.PNG)
 
-
-# DECRED COLOURS
-|COLOUR   	   |    RGB COLOUR   	    |
-|:-:	       |    :-:	                |
-|KEY BLUE      |    'rgb(41, 112, 255)' |
-|TURQOISE      |    'rgb(46, 214, 161)' |
-|DARK BLUE     |    'rgb(9, 20, 64)'    |
-|LIGHT BLUE    |    'rgb(112, 203, 255)'|
-|GREEN         |    'rgb(65, 191, 83)'  |
-|ORANGE        |    'rgb(237, 109, 71)' |

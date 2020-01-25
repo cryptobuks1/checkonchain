@@ -45,9 +45,8 @@ BTC_half['age_days'] = (
                     USER METRICS - ACTIVE ADDRESSES
 #############################################################################
 """
-DCR_data = DCR_data.merge(BTC_data[['age_days','AdrActCnt']],on='age_days',how='left',suffixes=('', '_BTC'))
-#DCR_data.rename(columns={'AdrActCnt_y':'AdrActCnt_BTC'}, inplace=True)
-DCR_data['DCRBTC_AdrActCnt'] = DCR_data['AdrActCnt'] / DCR_data['AdrActCnt_BTC']
+#Adjust Active address by removing extra use of tickets (50% use 4x, 50% use 2x)
+DCR_data['AdrActCntAdj'] = DCR_data['AdrActCnt'] - DCR_data['tic_day'].rolling(7).mean()*3
 
 loop_data = [[0,1,2],[3,4,5]]
 x_data = [
@@ -56,12 +55,12 @@ x_data = [
     BTC_half['age_days'],    
     ]
 y_data = [
-    BTC_data['AdrActCnt'],DCR_data['AdrActCnt'],DCR_data['tic_day'].rolling(7).mean()*4,
+    BTC_data['AdrActCnt'],DCR_data['AdrActCntAdj'].rolling(7).mean(),DCR_data['tic_day'].rolling(7).mean()*3,
     BTC_data['PriceUSD'],DCR_data['PriceUSD'],
     BTC_half['y_arb'],
     ]
 name_data = [
-    'BTC AdrActCnt','DCR AdrActCnt','4x Ticket Buys',
+    'BTC AdrActCnt','DCR AdrActCnt','3x Ticket Buys',
     'BTC Price','DCR Price',
     'Bitcoin Halvings'
     ]
@@ -91,7 +90,7 @@ legend_data = [
     True,
     ]
 title_data = [
-    'Active Addresses',
+    'Daily USD Value Secured and Settled',
     'Protocol Age (days)',
     'Active Address Count',
     'Price USD']
@@ -110,7 +109,14 @@ fig.show()
                 USER METRICS - DCRBTC ACTIVE ADDRESS RATIO (AGE_DAYS)
 #############################################################################
 """
-loop_data = [[1,2,0,3,4],[]]
+
+DCR_data = DCR_data.merge(BTC_data[['age_days','AdrActCnt','TxTfrCnt']],on='age_days',how='left',suffixes=('', '_BTC'))
+#DCR_data.rename(columns={'AdrActCnt_y':'AdrActCnt_BTC'}, inplace=True)
+DCR_data['DCRBTC_AdrActCnt'] = DCR_data['AdrActCnt'] / DCR_data['AdrActCnt_BTC']
+DCR_data['DCRBTC_TxTfrCnt'] = DCR_data['TxTfrCnt'] / DCR_data['TxTfrCnt_BTC']
+
+
+loop_data = [[1,2,3,0],[]]
 x_data = [
     DCR_data['age_days'],
     [0,5000],[0,5000],[0,5000],
@@ -156,15 +162,15 @@ x_data = [
 y_data = [
     BTC_data['TxTfrCnt'].rolling(1).mean(),
     DCR_data['TxTfrCnt'].rolling(3).mean(),
-    DCR_data['tic_day'].rolling(3).mean(),
+    DCR_data['tic_day'].rolling(3).mean()*3,
     BTC_data['TxTfrCnt'].cumsum(),
     DCR_data['TxTfrCnt'].cumsum(),
-    DCR_data['tic_day'].cumsum(),
+    DCR_data['tic_day'].cumsum()*3,
     BTC_half['y_arb'],
     ]
 name_data = [
-    'BTC TxTfrCnt','DCR TxTfrCnt','DCR Ticket Buys',
-    'BTC Cumulative TxTfr','DCR Cumulative TxTfr','Ticket Buys Cumulative',
+    'BTC TxTfrCnt','DCR TxTfrCnt','DCR Ticket Baseline',
+    'BTC Cumulative TxTfr','DCR Cumulative TxTfr','DCR Cumulative Tickets',
     'Bitcoin Halvings'
     ]
 color_data = [
@@ -242,7 +248,7 @@ name_data = [
     'Bitcoin Halvings'
     ]
 color_data = [
-    'rgb(254, 150, 70)', 'rgb(65, 191, 83)','rgb(112, 203, 255)',
+    'rgb(254, 215, 140)', 'rgb(65, 191, 83)','rgb(112, 203, 255)',
     'rgb(255, 102, 0)' , 'rgb(65, 191, 83)','rgb(112, 203, 255)',
     'rgb(255,255,255)'
     ]
@@ -284,6 +290,156 @@ fig.show()
 
 
 
+"""
+#############################################################################
+            USER METRICS - CUMULATIVE VALUE TRANSFERRED
+#############################################################################
+"""
+
+loop_data = [[0,1,2,3,4,5],[7,8,6]]
+x_data = [
+    BTC_data['age_days'],DCR_data['age_days'],DCR_data['age_days'],
+    BTC_data['age_days'],DCR_data['age_days'],DCR_data['age_days'],
+    BTC_half['age_days'],
+    BTC_data['age_days'],DCR_data['age_days']    
+    ]
+y_data = [
+    BTC_data['TxTfrValNtv'].cumsum(),
+    DCR_data['TxTfrValNtv'].cumsum(),
+    DCR_data['dcr_tic_buy'].cumsum(),
+    BTC_data['TxTfrValUSD'].cumsum(),
+    DCR_data['TxTfrValUSD'].cumsum(),
+    DCR_data['tic_usd_cost'].cumsum(),
+    BTC_half['y_arb'],
+    BTC_data['PriceUSD'],DCR_data['PriceUSD']
+    ]
+name_data = [
+    'BTC Settled','DCR Settled','DCR Settled in Tickets',
+    'Bitcoin Settled USD','Decred Settled USD','Decred USD in Tickets',
+    'Bitcoin Halvings',
+    'Bitcoin Price','Decred Price'
+    ]
+color_data = [
+    'rgb(255, 102, 0)' , 'rgb(65, 191, 83)','rgb(112, 203, 255)',
+    'rgb(255, 102, 0)' , 'rgb(65, 191, 83)','rgb(112, 203, 255)',
+    'rgb(255,255,255)',
+    'rgb(255,255,255)','rgb(46, 214, 161)'
+    ]
+dash_data = [
+    'dash','dash','dash',
+    'solid','solid','solid',
+    'dash',
+    'solid','solid'
+    ]
+width_data = [
+    3,3,3,
+    3,3,3,
+    1,
+    1,1
+    ]
+opacity_data = [
+    1,1,1,
+    1,1,1,
+    0.5,
+    1,1
+    ]
+legend_data = [
+    True,True,True,
+    True,True,True,
+    True,
+    True,True,
+    ]
+title_data = [
+    'Cumulative Value Settled On-chain',
+    'Protocol Age (days)',
+    'Value Settled (USD, BTC, DCR)',
+    'Coin Price']
+range_data = [[0,4500],[3,13],[-2,6]]
+autorange_data = [False,False,False]
+type_data = ['linear','log','log']#
+fig = check_standard_charts().subplot_lines_doubleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+fig.show()
+
+
+
+"""
+#############################################################################
+            USER METRICS - DAILY VALUE TRANSFERRED
+#############################################################################
+"""
+
+loop_data = [[0,1,2,3,4,5],[7,8,6]]
+x_data = [
+    BTC_data['age_days'],DCR_data['age_days'],DCR_data['age_days'],
+    BTC_data['age_days'],DCR_data['age_days'],DCR_data['age_days'],
+    BTC_half['age_days'],
+    BTC_data['age_days'],DCR_data['age_days']    
+    ]
+y_data = [
+    BTC_data['TxTfrValNtv'].rolling(7).mean(),
+    DCR_data['TxTfrValNtv'].rolling(7).mean(),
+    DCR_data['dcr_tic_buy'].rolling(7).mean(),
+    BTC_data['TxTfrValUSD'].rolling(7).mean(),
+    DCR_data['TxTfrValUSD'].rolling(7).mean(),
+    DCR_data['tic_usd_cost'].rolling(7).mean(),
+    BTC_half['y_arb'],
+    BTC_data['PriceUSD'],DCR_data['PriceUSD']
+    ]
+name_data = [
+    'BTC Settled','DCR Settled','DCR Settled in Tickets',
+    'Bitcoin Settled USD','Decred Settled USD','Decred USD in Tickets',
+    'Bitcoin Halvings',
+    'Bitcoin Price','Decred Price'
+    ]
+color_data = [
+    'rgb(255, 102, 0)' , 'rgb(65, 191, 83)','rgb(112, 203, 255)',
+    'rgb(255, 102, 0)' , 'rgb(65, 191, 83)','rgb(112, 203, 255)',
+    'rgb(255,255,255)',
+    'rgb(255,255,255)','rgb(46, 214, 161)'
+    ]
+dash_data = [
+    'solid','solid','solid',
+    'solid','solid','solid',
+    'dash',
+    'solid','solid'
+    ]
+width_data = [
+    1,1,1,
+    1,1,1,
+    1,
+    1,1
+    ]
+opacity_data = [
+    1,1,1,
+    1,1,1,
+    0.5,
+    1,1
+    ]
+legend_data = [
+    True,True,True,
+    True,True,True,
+    True,
+    True,True,
+    ]
+title_data = [
+    'Daily Value Settled On-chain',
+    'Protocol Age (days)',
+    'Value Settled (USD, BTC, DCR)',
+    'Coin Price']
+range_data = [[0,4500],[3,13],[-2,6]]
+autorange_data = [False,False,False]
+type_data = ['linear','log','log']#
+fig = check_standard_charts().subplot_lines_doubleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+fig.show()
+
 
 
 """
@@ -291,17 +447,8 @@ fig.show()
             USER METRICS - LOCAL TRANSACTION FLOWS
 #############################################################################
 """
-#Address Density
-BTC_data['AdrDens'] = BTC_data['TxTfrValAdjNtv']/BTC_data['AdrActCnt']
-DCR_data['AdrDens'] = (
-    DCR_data['TxTfrValNtv'] 
-    - DCR_data['tic_day'].rolling(7).mean()*3
-    )/DCR_data['AdrActCnt']
 
-
-
-
-loop_data = [[0,1,2,3,4,7],[5,6]]
+loop_data = [[0,1,2,3,4],[5,6,7]]
 x_data = [
     #Transaction Volume
     BTC_data['age_days'],
@@ -321,8 +468,8 @@ y_data = [
     DCR_data['TxTfrValMeanNtv'],
     DCR_data['tic_price_avg'],
     #Address Density
-    BTC_data['AdrDens'].rolling(1).mean(),
-    DCR_data['AdrDens'].rolling(1).mean(),
+    BTC_data['PriceUSD'],
+    DCR_data['PriceUSD'],
     BTC_half['y_arb']
     ]
 name_data = [
@@ -331,8 +478,8 @@ name_data = [
     'DCR Median Tx',
     'DCR Mean Tx',
     'DCR Ticket Price',
-    'BTC Address Density',
-    'DCR Address Density',
+    'BTC Price',
+    'DCR Price',
     'Bitcoin Halvings',
 
     ]
@@ -342,26 +489,26 @@ color_data = [
     'rgb(112, 203, 255)',
     'rgb(47, 116, 251)',#'rgb(65, 191, 83)',
     'rgb(255,255,255)',
-    'rgb(255, 102, 0)',
+    'rgb(255, 255, 255)',
     'rgb(46, 214, 161)',
     'rgb(255,255,255)'
     ]
 dash_data = [
     'solid','solid',
     'solid','solid','solid',
-    'solid','solid',
+    'dot','dot',
     'dash',
     ]
 width_data = [
     1,1,
     2,2,2,
-    2,2,
+    1,1,
     1,
     ]
 opacity_data = [
     1,1,
     1,1,1,
-    1,1,
+    0.6,0.6,
     0.5
     ]
 legend_data = [
@@ -374,16 +521,26 @@ title_data = [
     'Native Units Transferred On-chain',
     'Protocol Age (days)',
     'Daily Native Units Transferred',
-    'Active Coins per Active Address']
-range_data = [[0,4500],[-5,5],[-1,9]]
+    'Coin Price USD']
+range_data = [[0,4500],[-5,5],[-2,6]]
 autorange_data = [False,False,False]
 type_data = ['linear','log','log']#
-fig = check_standard_charts().subplot_lines_singleaxis(
+fig = check_standard_charts().subplot_lines_doubleaxis(
     title_data, range_data ,autorange_data ,type_data,
     loop_data,x_data,y_data,name_data,color_data,
     dash_data,width_data,opacity_data,legend_data
     )
 fig.show()
+
+
+
+#Address Density
+BTC_data['AdrDens'] = BTC_data['TxTfrValAdjNtv']/BTC_data['AdrActCnt']
+DCR_data['AdrDens'] = (
+    DCR_data['TxTfrValNtv'] 
+    - DCR_data['tic_day'].rolling(7).mean()*3
+    )/DCR_data['AdrActCnt']
+
 
 loop_data = [[5,6],[]]
 title_data = [
@@ -397,4 +554,227 @@ fig = check_standard_charts().subplot_lines_singleaxis(
     loop_data,x_data,y_data,name_data,color_data,
     dash_data,width_data,opacity_data,legend_data
     )
+fig.show()
+
+
+
+"""
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+                    MINERS AND POW
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+"""
+
+
+"""
+#############################################################################
+                    BITCOIN AND DECRED POW GROWTH
+#############################################################################
+"""
+
+BTC_hash = btc_add_metrics().btc_hash()
+DCR_hash = DCR_data[DCR_data['pow_hashrate_THs_avg']>1]
+
+
+loop_data = [[0,1,2,3],[4,5]]
+x_data = [
+    BTC_hash['age_sply'],DCR_hash['age_sply'],
+    BTC_hash['age_sply'],DCR_hash['age_sply'],
+    BTC_hash['age_sply'],DCR_hash['age_sply'],
+    ]
+y_data = [
+    BTC_hash['DiffMean'],DCR_hash['DiffMean'],
+    BTC_hash['pow_hashrate_THs'],DCR_hash['pow_hashrate_THs_avg'],
+    BTC_hash['PriceUSD'],DCR_hash['PriceUSD'],
+    ]
+name_data = [
+    'Bitcoin Difficulty Ribbon','Decred Difficulty Ribbon',
+    'Bitcoin Hashrate','Decred Hashrate',
+    'BTC Price','DCR Price',
+    ]
+color_data = [
+    'rgb(255, 102, 0)' , 'rgb(46, 214, 161)' ,
+    'rgb(254, 215, 140)','rgb(65, 191, 83)',
+    'rgb(255, 102, 0)' , 'rgb(46, 214, 161)' ,
+    #'rgb(255, 80, 80)','rgb(255, 102, 102)',
+    #'rgb(255, 153, 102)','rgb(255, 255, 102)',
+    #'rgb(156,225,43)', 'rgb(1, 255, 116)',
+    #'rgb(255, 255, 255)', 'rgb(46, 214, 161)',
+    ]
+dash_data = [
+    'solid','solid',
+    'solid','solid',
+    'dot','dot',
+    ]
+width_data = [
+    2,2,1,1,1,1
+    ]
+opacity_data = [
+    1,1,1,1,0.75,0.75
+    ]
+legend_data = [
+    True,True,True,True,True,True,
+    ]#
+title_data = [
+    'Proof of Work Growth',
+    'Coin Age (Days since Launch)',
+    'Protocol Difficulty  |  Network Hashrate (TH/s)',
+    'Coin Price (USD)']
+range_data = [[0,1],[0,14],[-2,5]]
+autorange_data = [False,False,False]
+type_data = ['linear','log','log']#
+fig = check_standard_charts().subplot_lines_doubleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+#Increase tick spacing
+fig.update_xaxes(dtick=0.1)
+
+""" =================================
+    ADD DIFFICULTY RIBBON BAR CHARTS
+================================="""
+for i in [9,14,25,40,60,90,128,200]:
+    fig.add_trace(go.Scatter(
+        mode='lines',
+        x=DCR_hash['age_sply'], 
+        y=DCR_hash['DiffMean'].rolling(i).mean(),
+        name='Difficulty '+str(i),
+        opacity=0.5,
+        showlegend=False,
+        line=dict(
+            width=i/200*2,
+            color='rgb(156,225,143)',
+            dash='solid'
+            )),
+        secondary_y=False)
+
+for i in [9,14,25,40,60,90,128,200]:
+    fig.add_trace(go.Scatter(
+        mode='lines',
+        x=BTC_hash['age_sply'], 
+        y=BTC_hash['DiffMean'].rolling(i).mean(),
+        name='Difficulty '+str(i),
+        opacity=0.5,
+        showlegend=False,
+        line=dict(
+            width=i/200*2,
+            color='rgb(255, 102, 0)',
+            dash='solid'
+            )),
+        secondary_y=False)
+
+
+fig.show()
+
+
+
+
+
+"""
+#############################################################################
+                    MINER CUMMULATIVE INCOMES
+#############################################################################
+"""
+
+BTC_hash['PoW_income_usd'] = BTC_hash['DailyIssuedUSD'] + BTC_hash['FeeTotUSD']
+BTC_hash['FeeRatio'] = BTC_hash['FeeTotUSD']/BTC_hash['PoW_income_usd']
+DCR_hash['FeeRatio'] = DCR_hash['FeeTotUSD']/DCR_hash['PoW_income_usd']
+
+
+loop_data = [[0,2,6,4,1,3,7,5],[]]
+x_data = [
+    BTC_hash['age_sply'],DCR_hash['age_sply'],
+    BTC_hash['age_sply'],DCR_hash['age_sply'],
+    BTC_hash['age_sply'],DCR_hash['age_sply'],
+    BTC_hash['age_sply'],DCR_hash['age_sply'],
+    #Second Chart
+    BTC_hash['age_sply'],DCR_hash['age_sply'],
+    ]
+y_data = [
+    BTC_hash['PoW_income_usd'].cumsum(),
+    DCR_hash['PoW_income_usd'].cumsum(),
+    BTC_hash['FeeTotUSD'].cumsum(),
+    DCR_hash['FeeTotUSD'].cumsum(),
+    BTC_hash['PoW_income_usd'],
+    DCR_hash['PoW_income_usd'],
+    BTC_hash['CapMrktCurUSD'],
+    DCR_hash['CapMrktCurUSD'],
+    #Second Chart
+    BTC_hash['FeeRatio'],   #Fee Ratio
+    DCR_hash['FeeRatio'],   #Fee Ratio
+    ]
+name_data = [
+    'Bitcoin Cumulative PoW Reward','Decred Cumulative PoW Reward',
+    'Bitcoin Cumulative Tx Fees','Decred Cumulative Tx Fees',
+    'Bitcoin Daily PoW Reward','Decred Daily PoW Reward',
+    'Bitcoin Market Cap', 'Decred Market Cap',
+    'Bitcoin Fee Ratio','Decred Fee Ratio'
+    ]
+color_data = [
+    'rgb(255, 102, 0)' , 'rgb(46, 214, 161)' ,
+    'rgb(255, 102, 0)' , 'rgb(46, 214, 161)',
+    'rgb(254, 215, 140)','rgb(65, 191, 83)',
+    'rgb(255, 102, 0)' , 'rgb(46, 214, 161)',
+    #Second Chart
+    'rgb(255, 102, 0)' , 'rgb(46, 214, 161)',
+    ]
+dash_data = [
+    'solid','solid',
+    'dash','dash',
+    'dot','dot',
+    'solid','solid',
+    'solid','solid'
+    ]
+width_data = [
+    2,2,2,2,1,1,1,1,
+    1,1
+    ]
+opacity_data = [
+    1,1,1,1,0.75,0.75,1,1,
+    1,1
+    ]
+legend_data = [
+    True,True,
+    True,True,
+    False,False,
+    True,True,
+    True,True,
+    ]#
+title_data = [
+    'Proof of Work Miner Rewards',
+    'Coin Age (Supply / 21M)',
+    'Value (USD)',
+    '']
+range_data = [[0,1],[2,12],[2,8]]
+autorange_data = [False,False,False]
+type_data = ['linear','log','log']#
+fig = check_standard_charts().subplot_lines_doubleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+#Increase tick spacing
+fig.update_xaxes(dtick=0.1)
+fig.show()
+
+#Fee Ratio Chart
+
+loop_data = [[8,9],[]]
+title_data = [
+    'Fee Ratio of PoW Block Reward',
+    'Coin Age (Supply / 21M)',
+    'Fee Ratio','']
+range_data = [[0,1],[-5,0],[0,0]]
+fig = check_standard_charts().subplot_lines_doubleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+#Increase tick spacing
+fig.update_xaxes(dtick=0.1)
+fig.update_yaxes(tickformat = ".2%")
 fig.show()
