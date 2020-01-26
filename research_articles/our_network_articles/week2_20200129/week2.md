@@ -27,7 +27,7 @@ Decred is unique in that it supports both Miners and Stakeholders with coins con
 ## Insight 4 - Treasury Expendature
 The Decred treasury is a central component of Decred's value proposition, enabling sustainable and self-sovereign development into the future. The treasury receives 10% of the DCR block subsidy for deployment by DCR stakeholders.
 
-To date, the Decred treasury has accumulated over 639,600 DCR, equivalent to $11.5M at $18/DCR. This represents a spend ratio of 32% of inflows to-date and 14% of the final inflow of 2.1M DCR at the end of the block subsidy. Pricing all treasury expendature outflows on the day of the transaction, the Decred treasury has spent $6.96M USD bringing the protocol from genesis to its current form.
+To date, the Decred treasury has accumulated over 639,600 DCR, equivalent to $11.5M at $18/DCR. The project has a spend ratio of 32% of inflows to-date and 14% of the final inflow of 2.1M DCR, at the end of the block subsidy. Pricing all treasury expendature outflows on the day of the transaction, the Decred treasury has spent $6.96M USD to bring the protocol from genesis to its current state.
 
 ![insight_4.png](images/insight_4.png)
 
