@@ -1,13 +1,8 @@
-import pandas as pd
+#Analyse the Decred Treasury
+from checkonchain.general.standard_charts import *
+from checkonchain.dcronchain.dcr_add_metrics import *
 
-#Plotly Libraries
-from plotly.subplots import make_subplots
-import plotly.graph_objects as go
-import plotly.io as pio
-pio.renderers.default = "browser"
-
-
-treasury = pd.read_csv(r"D:\code_development\checkonchain\checkonchain\dcronchain\resources\data\treasury_20191020.csv.csv")
+treasury = pd.read_csv(r"D:\code_development\checkonchain\checkonchain\dcronchain\resources\data\treasury_20200126.csv")
 treasury.columns
 
 

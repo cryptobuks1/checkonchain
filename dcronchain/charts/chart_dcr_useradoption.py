@@ -778,3 +778,233 @@ fig = check_standard_charts().subplot_lines_doubleaxis(
 fig.update_xaxes(dtick=0.1)
 fig.update_yaxes(tickformat = ".2%")
 fig.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+                    STAKEHOLDERS
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+"""
+
+"""
+#############################################################################
+                    STAKEHOLDER TOTAL LOCKED IN TICKETS
+#############################################################################
+"""
+
+
+loop_data = [[0,1,2,3],[]]
+x_data = [
+    DCR_hash['date'],
+    DCR_hash['date'],
+    DCR_hash['date'],
+    DCR_hash['date'],
+    ]
+y_data = [
+    DCR_hash['CapMrktCurUSD'],
+    DCR_hash['tic_usd_cost'].cumsum(),
+    DCR_hash['PoW_income_usd'].cumsum(),
+    DCR_hash['CapRealUSD'],
+    ]
+name_data = [
+    'Market Cap',
+    'Cumulative Ticket Lockup',
+    'Cumulative PoW Block Reward',
+    'Realised Cap',
+    ]
+color_data = [
+    'rgb(46, 214, 161)' ,   #Turquoise
+    'rgb(65, 191, 83)',     #Decred Green
+    'rgb(250, 38, 53)' ,    #PoW Red
+    'rgb(239, 125, 50)',    #Price Orange
+    ]
+dash_data = [
+    'solid','solid','solid','dot',
+    ]
+width_data = [
+    2,2,2,1
+    ]
+opacity_data = [
+    1,1,1,1
+    ]
+legend_data = [
+    True,True,True,True,
+    ]
+title_data = [
+    'Stakeholder Commitments',
+    'date',
+    'Value (USD)',
+    '']
+range_data = [['2016-01-01','2021-01-01'],[6,10],[2,8]]
+autorange_data = [False,False,True]
+type_data = ['date','log','log']#
+fig = check_standard_charts().subplot_lines_singleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+#Increase tick spacing
+#fig.update_xaxes(dtick=0.1)
+fig.show()
+
+
+
+
+
+
+
+"""
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+                    BUILDERS AND TREASURY
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+"""
+
+
+"""
+#############################################################################
+                    TREASURY INFLOW OUTFLOW
+#############################################################################
+"""
+
+DCR_fund = pd.read_csv(r"D:\code_development\checkonchain\checkonchain\dcronchain\resources\data\treasury_20200126.csv")
+#Sort by timestamp - oldest to newest
+DCR_fund = DCR_fund.sort_values(by='time_stamp')
+#Reset Index
+DCR_fund = DCR_fund.reset_index(drop=True)
+#Convert timestamp to datetime
+DCR_fund['date'] = pd.to_datetime(DCR_fund['time_stamp'],unit='s',utc=True)
+#Calculate Transaction value * direction (+ve = inflow)
+DCR_fund['funds'] = DCR_fund['value'] * DCR_fund['direction']
+#Treasury Balance = cumulative sum of funds
+DCR_fund['balance'] = DCR_fund['funds'].cumsum()
+#Incoming and Outgoing = cumulatve sum in +ve and negative direction
+DCR_fund['incoming'] = DCR_fund['funds'].clip(lower=0)
+DCR_fund['outgoing'] = DCR_fund['funds'].clip(upper=0)
+#Treasury Spend Rate
+DCR_fund['spend_rate'] = DCR_fund['outgoing'].cumsum()*-1/DCR_fund['balance']
+DCR_fund['spend_rate_final'] = DCR_fund['outgoing'].cumsum()/(-21e6*0.1)
+#Combine with Price USD and BTC Data
+DCR_fund = pd.merge_asof(
+    DCR_fund,
+    DCR_data[['date','PriceUSD','PriceBTC']],
+    left_on='date',
+    right_on='date'
+    )
+#Calculate Expendature
+DCR_fund['balance_usd'] = DCR_fund['balance'] * DCR_fund['PriceUSD']
+DCR_fund['incoming_usd'] = DCR_fund['incoming'] * DCR_fund['PriceUSD']
+DCR_fund['outgoing_usd'] = DCR_fund['outgoing'] * DCR_fund['PriceUSD']
+DCR_fund['expendature_usd'] = DCR_fund['outgoing_usd'].cumsum()*-1
+
+
+
+
+loop_data = [[0,1,2],[3]]
+x_data = [
+    DCR_fund['date'],
+    DCR_fund['date'],
+    DCR_fund['date'],
+    DCR_fund['date'],
+    DCR_fund['date'],
+    DCR_fund['date'],
+    ]
+y_data = [
+    DCR_fund['balance'],
+    DCR_fund['incoming'].cumsum(),
+    DCR_fund['outgoing'].cumsum()*-1,
+    DCR_fund['PriceUSD'],
+    DCR_fund['spend_rate'],
+    DCR_fund['spend_rate_final'],
+    ]
+name_data = [
+    'Treasury Balance',
+    'Treasury Inflows',
+    'Treasury Outflows',
+    'PriceUSD',
+    'Treasury Spend Ratio (Actual)',
+    'Treasury Spend Ratio (Final)'
+    ]
+color_data = [
+    'rgb(65, 191, 83)',     #Decred Green
+    'rgb(46, 214, 161)' ,   #Turquoise
+    'rgb(250, 38, 53)' ,    #PoW Red
+    'rgb(255,255,255)',     #White
+    'rgb(255,255,255)',     #White
+    'rgb(65, 191, 83)'      #Decred Green
+    ]
+dash_data = [
+    'solid','solid','solid','dot',
+    'solid','dash'
+    ]
+width_data = [
+    2,2,2,1,
+    2,2
+    ]
+opacity_data = [
+    1,1,1,1,
+    1,1
+    ]
+legend_data = [
+    True,True,True,True,True,
+    True,True,
+    ]
+title_data = [
+    'Decred Treasury Flows',
+    'date',
+    'Treasury Flows (DCR)',
+    'DCR Price (USD)']
+range_data = [['2016-01-01','2021-01-01'],[0,1e6],[-1,3]]
+autorange_data = [False,False,False]
+type_data = ['date','linear','log']
+fig = check_standard_charts().subplot_lines_doubleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+#Increase tick spacing
+fig.update_yaxes(dtick=1e5,secondary_y=False)
+fig.show()
+
+
+loop_data = [[4,5],[]]
+range_data = [['2016-01-01','2021-01-01'],[0,0.5],[]]
+autorange_data = [False,False,False]
+type_data = ['date','linear','log']
+title_data = [
+    'Decred Treasury Flows',
+    'date',
+    'Spend Ratio',
+    '']
+fig = check_standard_charts().subplot_lines_singleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+fig.update_yaxes(tickformat = "%",dtick=0.1)
+fig.show()
