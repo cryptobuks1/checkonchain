@@ -34,6 +34,6 @@ To date, the Decred treasury has accumulated over 639,600 DCR, equivalent to $11
 ## Insight 5 - Decred Consensus Change DCP0005
 Decred is currently undergoing its fifth on-chain vote to upgrade the consensus rules. The DCP0005 change restructures block headers and filters to improve SPV security and optimise the interaction between PoS votes and PoW miners.
 
-The DCP0005 codebase lies dormant in the new node software. Only after 95% of Miners and 75% of Stakers upgrade does the vote to activate it go live. A minimum quorum of 20% of Stakeholders must vote Yay with 75% consensus to activate the new code. The current approval rate has 99.94% of tickets voting Yes out of a 59.68% participation rate (abstain is default).
+The DCP0005 codebase lies dormant in the new node software. Only after 95% of Miners and 75% of Stakers upgrade does the vote to activate it go live. A minimum quorum of 20% of Stakeholders must vote with 75% consensus to activate the new code. The current approval rate has 99.94% of tickets voting Yes out of a 59.68% participation rate (abstain is default).
 
 ![insight_5.png](images/insight_5.png)
