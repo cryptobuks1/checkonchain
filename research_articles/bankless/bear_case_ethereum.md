@@ -1,4 +1,4 @@
-# The Bear Case for Ethereum
+# Why Ethereum Will Not Develop a Monetary Premium
 
 The Ethereum project has long drawn critiques, especially from Bitcoiners, regarding many facets of its design, execution and failure to deliver what was originally stipulated in the ICO offering. The project is currently attempting the immense engineering challenge of reconstructing an entirely new blockchain, followed by integration of the existing chain whilst both are in live operation.
 
@@ -79,20 +79,33 @@ This challenges the ‘unstoppable’ narrative and is dishonest in selling prod
 
 There are no safe back-doors in cryptography. If it is accessible by the developers, it is accessible by attackers.
 
-**Reliance on MakerDAO and Oracles**
+**Reliance on Centralised Oracles**
 
 The centrepiece of the ‘DeFi’ ecosystem, MakerDAO, is directed by the MKR governance token. One can argue that without Maker and the issued DAI/SAI tokens, much of the ‘DeFi’ ecosystem becomes reliant on centralised and permissioned stablecoin infrastructure like USDT and USDC. Furthermore, a vast majority of the ecosystem is reliant on the centrally controlled Maker ETH/USD price oracle which is a problem not easily fixed in a permission-less manner.
 
-In fact, the author does not believe that trustless oracles are a solvable problem and highlights that this problem has been the subject of research for decades. Any on-chain price feed (like Uniswap) are subject to liquidity attacks and would require such immense size, it will not be a reality for decades at best. Thus, trustless oracles, an essential component of ‘DeFi’ will remain centralised for…decades. 
+In fact, the author does not believe that trustless oracles are a solvable problem and highlights this problem has been the subject of research for decades. Any on-chain price feed (like Uniswap) is subject to liquidity attacks and would require such immense size, it will not be a reality for decades at best. Thus, trustless oracles, an essential component of ‘DeFi’, will likely remain centralised for decades. 
 
-A major critique of MKR is the high concentration of tokens in the hands of known, KYC’d venture capitalists and the team themselves. Indeed, a recent proposal passed to reduce the de-central bank interest rate by 4% with 94% of the vote from a single entity. This suggests apathy amongst the voting quorum, poor incentives for participation and strong influence by a small group of large token holders. There is also reasonable grounds to assume that MKR is a pseudo-equity type token and is likely to be classified as a financial security under most jurisdictions.
+This means that for the foreseeable future, attacks on these centralised oracles will be a fundamental risk for investor capital. The notion of a 'house of cards' to describe 'DeFi' is applicable. These centralised oracles are being utilised as primitives for other composable protocols. The entire stack above is only as resilient as it's weakest link, leading to the obfuscation of risk from users. 
 
-Now given the interrelation between the entire open finance ecosystem and heavy reliance on centralised oracles, one must ask what would happen if Maker and it’s token holders were to be targeted by regulators or nation states? Unregulated issuance of capital loans require banking licenses is most developed nations and this makes the project a prime target for regulators, similar to illicit token issuance during the ICO boom.
+This appears to be a source of systemic and unmitigated risk.
+
+**Reliance on MakerDAO**
+
+A major critique of MKR is the high concentration of tokens in the hands of known, KYC’d venture capitalists, and the team themselves. There is also reasonable grounds to assume that MKR is a pseudo-equity type token and is likely to be classified as a financial security under most jurisdictions. 
+
+Indeed, a [recent proposal passed](https://cryptoslate.com/makerdao-whale-with-94-voting-power-reduces-dai-stability-fee-by-4/) to reduce the 'de-central' bank interest rate by 4% with 94% of the vote from a single entity. This suggests apathy amongst the voting quorum, poor incentives for participation and strong influence by a small group of large token holders.
+
+Now given the interrelation between the entire open finance ecosystem and heavy reliance on Maker's centralised oracles, one must ask what would happen if Maker and it’s token holders were to be targeted by regulators, nation states or hackers? Unregulated issuance of capital loans require banking licenses is most developed nations. This makes the project a prime target for regulators, similar to illicit token issuance during the ICO boom.
 
 Shut down of Maker may be temporary, as a grassroots fork is re-established, however at what cost to ETH holders in the meantime? It is this threat and uncertainty of severe financial loss which again makes ETH an unattractive investment in this context.
 
-Should the value proposition of locking up ETH to power open finance begin to unravel, it would be reasonable to expect that value accrued under this pretence would similarly begin to unwind. Ethereum bulls will argue that smart contracts are native to the protocol and could be forked by a third party. This is true, however it is questionable how many iterations of the new narrative, boom, regulation clamp down, bust investors will tolerate until apathy tarnishes future value accrual and the ETH token loses out in competitive landscape.
+If the MakerDAO oracle was to be hacked and it liquidated, not only CDPs/Vaults, but all dependant protocols into the hands of an attacker, would a rollback be on the table? What if it wasn't 3% of ETH claimed by the attacker, what if it was 30%? That attacker is now the networks largest validator in PoS.
 
+This is a real risk and the outcome is not so clear cut in the thick of it.
+
+![image_3.png](images/image_3.png)
+
+Should the value proposition of locking up ETH to power open finance unravel, it would be reasonable to expect that all value accrued under this pretence would unwind. Ethereum bulls argue that smart contracts native to the protocol could forked by a third party. This is true, however the author questions how many iterations of new narrative --> boom --> regulation/hack/false promise --> bust the investors class will tolerate before apathy tarnishes future value accrual.
 
 ## THE TORTOISE WINS THE RACE
 
@@ -106,7 +119,7 @@ As a concluding summary, the Ethereum project suffers from a combination of:
 
 At the end of the day, the reason Ethereum will struggle to develop a monetary premium is simple.
 
-**There is no certainty for investors on what they are buying.**
+**There is no certainty for investors on what they are buying, and there is no tangible data suggesting this reality is changing.**
 
 One could not fault a prospective investor, who is aware of the magnitude, history and depth of the above uncertainties, for being unwilling to part capital in exchange for ETH tokens. The original vision of world computer, in the authors opinion, was the best narrative the project has had and it would be an achievable goal if the direction had not endlessly pivoted. 
 
@@ -118,3 +131,9 @@ The author expects that if Bitcoin achieves global money status, most users will
 
 Intuitively, building an immensely secure and immutable base layer with the sole purpose of transaction settlement makes sense. More complex layers with reduced security and consensus demand should be isolated to layers higher in the stack. Indeed, this is what the Ethereum 2.0 beacon chain is designed to do, finality and settlement only. No bloat. 2.0 shards simply replicate what Bitcoin’s second, third and higher layer solutions achieve however without the liquidity, reputation and security premium that Bitcoin has developed.
 
+
+
+by Checkmate
+> Checkmate is a full-time engineer and spare-time on-chain analyst for Bitcoin and Decred. Working as a research contractor for the Decred project as well as an analyst for the community and newsletter at ReadySetCrypto.
+
+![profile](images/profile.jpg)
