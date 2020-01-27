@@ -31,7 +31,7 @@ Whilst the issuance rate indeed appears to reduce in time, the selection of the 
 
 The point of critique here is simply that a small pool of people have monetary authority to determine the inflation rate of what is supposed to be a monetary asset. Play this game out long enough, and eventually, someone at the helm will abuse this power.
 
-![image_1.png](images\image_1.png)
+![image_1.png](image\image_01.png)
 
 **Centralisation of Nodes and Validators**
 
@@ -42,8 +42,6 @@ Ethereum has historically required more specialised, high performance hardware f
 In the most recent Istanbul Hard Fork, a sizeable portion of networks nodes had not upgraded and were effectively forked off the network. With the above centralisation taking effect in time, the capacity for users to signal intent and initiate a UASF type defence against malicious actors is greatly diminished, even under PoS where stake pools assume greater authority.
 
 This highlights a progressive centralisation of governance power relationship towards the core developers, who hold considerable ETH to validate PoS and also influence the direction of monetary policy experiments.
-
-![image_2.png](images\image_2.png)
 
 **Monetary Experiments**
 
@@ -103,7 +101,7 @@ If the MakerDAO oracle was to be hacked and it liquidated, not only CDPs/Vaults,
 
 This is a real risk and the outcome is not so clear cut in the thick of it.
 
-![image_3.png](images\image_3.png)
+![image_3.png](image\image_02.png)
 
 Should the value proposition of locking up ETH to power open finance unravel, it would be reasonable to expect that all value accrued under this pretence would unwind. Ethereum bulls argue that smart contracts native to the protocol could forked by a third party. This is true, however the author questions how many iterations of new narrative --> boom --> regulation/hack/false promise --> bust the investors class will tolerate before apathy tarnishes future value accrual.
 
@@ -136,4 +134,4 @@ Intuitively, building an immensely secure and immutable base layer with the sole
 by Checkmate
 > Checkmate is a full-time engineer and spare-time on-chain analyst for Bitcoin and Decred. Working as a research contractor for the Decred project as well as an analyst for the community and newsletter at ReadySetCrypto.
 
-![profile](images/profile.jpg)
+![profile](image/profile.jpg)
