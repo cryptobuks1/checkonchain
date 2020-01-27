@@ -103,7 +103,7 @@ If the MakerDAO oracle was to be hacked and it liquidated, not only CDPs/Vaults,
 
 This is a real risk and the outcome is not so clear cut in the thick of it.
 
-![image_3.png](images/image_3.png)
+![image_3.png](images\image_3.png)
 
 Should the value proposition of locking up ETH to power open finance unravel, it would be reasonable to expect that all value accrued under this pretence would unwind. Ethereum bulls argue that smart contracts native to the protocol could forked by a third party. This is true, however the author questions how many iterations of new narrative --> boom --> regulation/hack/false promise --> bust the investors class will tolerate before apathy tarnishes future value accrual.
 
