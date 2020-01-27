@@ -31,7 +31,7 @@ Whilst the issuance rate indeed appears to reduce in time, the selection of the 
 
 The point of critique here is simply that a small pool of people have monetary authority to determine the inflation rate of what is supposed to be a monetary asset. Play this game out long enough, and eventually, someone at the helm will abuse this power.
 
-![image_1.png](image\image_01.png)
+![image_1.png](image/image_01.png)
 
 **Centralisation of Nodes and Validators**
 
@@ -101,7 +101,7 @@ If the MakerDAO oracle was to be hacked and it liquidated, not only CDPs/Vaults,
 
 This is a real risk and the outcome is not so clear cut in the thick of it.
 
-![image_3.png](image\image_02.png)
+![image_3.png](image/image_02.png)
 
 Should the value proposition of locking up ETH to power open finance unravel, it would be reasonable to expect that all value accrued under this pretence would unwind. Ethereum bulls argue that smart contracts native to the protocol could forked by a third party. This is true, however the author questions how many iterations of new narrative --> boom --> regulation/hack/false promise --> bust the investors class will tolerate before apathy tarnishes future value accrual.
 
