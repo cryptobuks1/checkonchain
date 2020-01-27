@@ -104,7 +104,7 @@ As a concluding summary, the Ethereum project suffers from a combination of:
 - Over-reliance on third party applications, which can be stopped, to accrue value to the ETH token. The non-capped supply and fluidity of monetary policy require this mechanism.
 - Culmination of second system syndrome in the need for an entire rebuild of the base blockchain. This is an immense feat of rolling one chain into another and will take years.
 
-At the end of the day, the reason Ethereum will struggle to develop a monetary policy is simple.
+At the end of the day, the reason Ethereum will struggle to develop a monetary premium is simple.
 
 **There is no certainty for investors on what they are buying.**
 
