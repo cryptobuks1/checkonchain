@@ -844,7 +844,7 @@ dash_data = [
     'solid','solid','solid','dot',
     ]
 width_data = [
-    2,2,2,1
+    2,2,2,2
     ]
 opacity_data = [
     1,1,1,1
