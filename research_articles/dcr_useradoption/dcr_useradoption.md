@@ -62,18 +62,18 @@ This paper studies this aggregate behaviour driven by individal skin-in-the-game
 
 At it's core, Decred aims to provide an immutable, uncensorable and self-sovereign store of value in the DCR crypto-asset. Decred's hard-coded, supply cap and deterministic monetary policy make it a valid contender in the landscape of digital stores of value. 
 
-With growing market size and increasing network decentralisation, Decred now boasts an impressive security system. This provides users with a set of unique [assurances of resistance against ledger tampering, block re-organisations and double spends](https://medium.com/@permabullnino/introduction-to-crypto-accounting-an-analysis-of-decred-as-an-accounting-system-4d3e67fce28). Decred's Hybrid PoW/PoS consensus mechanism thus acts to secure the wealth held in DCR, settle value transferred over the ledger and uphold these immutable characteristics.
+With growing market size and increasing network decentralisation, Decred now boasts an impressive security system. This provides users with a set of unique [assurances for resistance against ledger tampering, block re-organisations and double spends](https://medium.com/@permabullnino/introduction-to-crypto-accounting-an-analysis-of-decred-as-an-accounting-system-4d3e67fce28). Decred's Hybrid PoW/PoS consensus mechanism thus acts to secure user wealth held in DCR, settle value transferred over the ledger and uphold these immutable characteristics.
 
 ## Resistance to Reorganisations
 
-The Decred protocol is four years old and impressively has experienced very few blockchain reogranisations through history. Re-organisations to a depth of one block are natural phenomena  in blockchains (including Bitcoin) that usually work themselves out. As of block height 414,977, the following [re-orgs have been detected](https://matrix.to/#/!vGasNHFXqjoEWUBTIi:decred.org/$157910732378277MwoqT:decred.org?via=decred.org&via=matrix.org&via=zettaport.com) with the majority of depth 2 and all depth 3 being associated with a [bug during the DCP004 upgrade](https://matheusd.com/post/dcp0004-and-hardforks/):
+The Decred protocol is four years old and impressively has experienced very few blockchain reogranisations through history. Re-organisations to a depth of one block are natural phenomena  in blockchains (including Bitcoin) as a result of network latency and probability and usually work themselves out. As of block height 414,977, the following [block re-orgs have been detected](https://matrix.to/#/!vGasNHFXqjoEWUBTIi:decred.org/$157910732378277MwoqT:decred.org?via=decred.org&via=matrix.org&via=zettaport.com) with the majority of depth 2 and all of depth 3 being associated with a [bug encountered during the DCP004 upgrade](https://matheusd.com/post/dcp0004-and-hardforks/):
 
 - Depth 1 blocks = 1922 instances (0.4631%, natural phenomena).
 - Depth 2 blocks = 25 (0.006%, most during DCP004 upgrade).
 - Depth 3 blocks = 3 (0.0007%, all during DCP004 upgrade).
 - Depth >3 blocks = Nil.
 
-Thus, Decred's implementation of a hybrid PoW/PoS consensus mechanism has to date maintained consensus at the chain tip for 99.9933% of its four year lifespan.
+Thus, Decred's implementation of a hybrid PoW/PoS consensus mechanism has to date maintained consensus at the chain tip for 99.9933% of its four year lifespan, impressive for a network valued at $150M at the time of writing.
 
 ## Global Transaction Settlement
 
@@ -81,12 +81,12 @@ Decred has settled over $11.44Bil in USD denominated transaction value, via the 
 
 For context, Bitcoin at age 4yrs (first halving), had settled a total transaction value of $10.83Bil in USD value via the transfer of 1.17Bil BTC. 
 
-It is worth highlighting some differences in market and coin holding behaviour between Bitcoin and Decred users. 
-- Bitcoin pricing and first exchanges became reliably active in 2010-11 before which BTC carried no value. Decred launched into a 2016 market into almost immediate exchange listings to facilitate price discovery.
-- For Bitcoin, coins held as a store of value or inflation hedge are often held in cold storage for months to years without transacting. Conversely, DCR held by long term holders is in constant on-chain circulation for participation in the PoS ticket system.
-- Bitcoin has historically acted as the reserve asset for the cryptocurrency market which increases coin velocity. 
+It is worth highlighting some differences in market and coin holding behaviour between Bitcoin and Decred users to detail these observations. 
+- Bitcoin pricing and first exchanges became reliably active in 2010-11 before which BTC had no market value. Decred launched into a 2016 market into almost immediate exchange listings to facilitate price discovery.
+- For Bitcoin, coins held as a store of value or inflation hedge are often held in cold storage for months to years without transacting, leaving only the withdrawal transaction signature on-chain. Conversely, DCR held by long term holders is in constant on-chain circulation for participation in the PoS ticket system.
+- Bitcoin has historically acted as the reserve asset for the cryptocurrency market which increases coin velocity.
 
-Thus, it is reasonable to expect Bitcoin to have settled a higher number of coins (low early price) for a smaller USD value, given DCR was priced between $0.49 and $2.69 during first month and has consistent on-chain flows in PoS tickets. It suggests that holding DCR as a long term speculative investment or store of value, dominated by ticket participation, is the primary use case of DCR to date.
+Thus, it is reasonable to expect Bitcoin to have settled a higher number of coins (low early price) for a similar aggregate USD value. This data suggests that holding DCR as a long term speculative investment or store of value is the primary use case of DCR to date.
 
 ![user_settled.png](images/user_settled.png)
 
@@ -94,24 +94,24 @@ Thus, it is reasonable to expect Bitcoin to have settled a higher number of coin
 
 The transaction value settled by Bitcoin and Decred on a daily basis are shown in the chart below, compared to the most adverse security budget curves developed in [Part 2 of this study](https://medium.com/@_Checkmatey_/decred-hypersecure-unforgeably-scarce-e076b91a2be). It can be seen that both protocols settle millions in USD denominated value, and orders of magnitude more than their respective security budgets. 
 
-This suggests that both protocols display a strong **Settlement Premium** where the value settled exceeds the block reward available as incentive to honest security providers. It is likely this premium is representative of the secondary costs of aquiring hardware, hash-power and coordinating the logistics of an attack. Additionally, one must consider the scope of potential reward for an attacker such as censoring specific transactions, shorting the coin price for profit or system wide disruption (mining empty block etc).
+This suggests that both protocols display a strong **Settlement Premium** where the value settled exceeds the block reward available as incentivise honest security providers. It is likely this premium is representative of the secondary costs of aquiring hardware, hash-power and coordinating the logistics of an attack. Additionally, one must consider the scope of potential reward for an attacker such as censoring specific transactions, shorting the coin price for profit or system wide disruption (mining empty block etc).
 
-For Decred, the $6.8M in value settled daily aligns approximately with the 15% ticket share security line. In other words, the cost to re-organise the Decred ledger in a double spend attack, assuming the attacker holds 15% of all tickets (at no cost), is approximately equal to the total value flowing through on the chain. Interestingly, this aligns with a typical ticket share of the [largest stakepool](https://decred.org/vsp/), however this is likley consequential rather than a driving factor as this attack vector requires around 40x the honest hashpower to conduct.
+For Decred, the $6.8M in value settled daily aligns approximately with the 15% ticket share security line. In other words, the cost to re-organise the Decred ledger in a double spend attack, assuming the attacker holds 15% of all tickets (at no cost), is approximately equal to the total value flowing through on the chain. Interestingly, this aligns with a typical ticket share of the [largest stakepool](https://decred.org/vsp/). However, this likely consequential rather than a driving factor as this attack vector requires approximately 40x the honest hashpower to conduct and is thus unlikely.
 
-Considering the Decred 50% ticket security curve (light red) as an equivalent pure PoW security metric (attacker still requires a 51% attack on miners), it can be seen that the **Settlement Premium** is similar in magnitide to 4year old Bitcoin (comparing y-axis values of security curves to settled value).
+The Decred 50% ticket security curve (light red) can be considered as an equivalent pure PoW security metric as an attacker with 50% of tickets still requires a 51% attack on miners. It can be seen that the **Settlement Premium** is similar in magnitide to 4year old Bitcoin through comparing y-axis values of security curves to daily settled value.
 
 ![user_security.png](images/user_security.png)
 
 ## User Activity 
 Where a notable difference between user behaviour can be observed is via monitoring transaction counts as a proxy for network activity. 
 
-Bitcoin has seen a consistent growth in meaningful transaction counts over time. Transaction counts generally follow movements in price and align with Bitcoin's continued market dominance and position as a local reserve asset for the market.
+Bitcoin has seen a consistent growth in meaningful transaction counts over time. Transaction counts generally follow/lead movements in price and align with Bitcoin's continued market dominance and position as a local reserve asset for the market.
 
 For Decred, it can be seen that transaction counts have been comparatively higher in the early years however have remained consistent and rangebound throughout its lifetime. This indicates sluggish growth in new users and this trend can be observed across similar activity metrics like active addresses. Decred activity metrics also followed price during the 2016-17 bull market however with a notably weaker correlation strength to Bitcoin.
 
-A consistent baseline of DCR ticket activity makes up around 62% of the cumulative transaction count. This accounts for tickets utilising three separate transactions through the lifecycle: 1) UTXO aggregation 2) ticket purchase transaction and 3) vote transaction.
+A consistent baseline of DCR ticket activity makes up around 62% of the cumulative transaction count. This chart shows the aggregate for the three separate transactions through the ticket lifecycle: 1) UTXO aggregation 2) ticket purchase transaction and 3) vote transaction.
 
-Since August 2019, the Decred on-chain privacy mixing protocol has been operational and was followed by an uptick in both transaction counts and active addresses. This is a result of both demand for privacy mixing as well as technical factors whereby mixes utilise more transactions and addresses during execution. 
+Since August 2019, the Decred on-chain privacy mixing protocol has been operational and was followed by an uptick in both transaction counts and active addresses. This is a result of both demand for privacy mixing as well as technical factors whereby mixes utilise more transactions and addresses during execution.
 
 Comparing the count of daily active addresses for both ledgers shows Decred address activity to be around 45% to 50% of that seen for Bitcoin following launch of the privacy implementation. Prior to privacy mixing, Decred was at a low of 25% relative activity.
 
@@ -127,24 +127,21 @@ Decred tickets have experienced a near-linear uptrend in DCR denominated price a
 
 Mean DCR transaction size has generally followed this ticket price trend closely. Prior to privacy mixing, a mean transaction size of around 80DCR represented 62% of the then ticket price (130DCR), consistent with the cummulative transaction counts metric. Following privacy mixing, an increased volume of smaller sized transactions lead to a decrease in both mean and median size.
 
-The median DCR transaction size has shown an inverse correlation to coin price, a similar trend observed through Bitcoin's history. As the USD value of coins increase, an equivalent denomination of value can be stored or transferred in a smaller volume of coins. It is also indicative of increased usage by smaller, retail level users purchasing coins during bullish markets and peaks in market attention. The inverse is also true where bear market users are dominated by larger, long term holders with higher conviction.
+The median DCR transaction size has shown an inverse correlation to coin price, a similar trend observed through Bitcoin's history. As the USD value of coins increase, an equivalent denomination of USD value can be stored or transferred in a smaller volume of coins. It is also indicative of increased usage by smaller, retail level users purchasing coins during bullish markets and peaks in market attention. The inverse is also true where bear market users are dominated by larger, long term holders with higher conviction.
 
 ![user_local_ntv.png](images/user_local_ntv.png)
 
-## User Summary
+## DCR Hodler Summary
 
-Overall, Decred aggregate transactions volume and size suggest comparable economic value flowing through the Decred chain as Bitcoin circa 2013, albeit in fewer but larger sized transactions. Ticket related activity accounts for approximately 50% to 60% of on-chain activity. 
+Overall, Decred aggregate transactions volume and size suggest comparable economic value flowing through the Decred chain as Bitcoin circa 2013, albeit in fewer, larger sized transactions. Ticket related activity accounts for approximately 50% to 60% of on-chain flows and supports the notion that most users treat DCR as a long term speculative investment or store of value candidate.
 
-Decred has an approximately equal network valuation to Bitcoin at the same age whilst supporting approximately 25% of the daily transaction and active address count (privacy mixing excluded). The addition of DCR privacy mixing  This highlights a slower growth and uptake of Decred as well as Bitcoin's dominance as a local reserve asset for the cryptocurrency market.
+Decred has an approximately equal network valuation to Bitcoin at the same age whilst supporting approximately 25% of the daily transaction and active address count (privacy mixing excluded). Along with rangebound transaction counts, this highlights a slower growth and uptake of Decred as well as Bitcoin's dominance as a local reserve asset for the cryptocurrency market. The new CoinJoin implementation clearly indicates strong demand for DCR fungability and Decred block-space, a promising development. 
 
 ![user_summary_table.png](images/user_summary_table.png)
 
-
 # 2) The Unforgeable Work of DCR Miners
 
-Proof-of-Work miners are integral to the security, decentralisation and immutability of the Decred blockchain. Miners are responsible for building the blockchain and proposing 
-
-The investment by miners into mining hardware CAPEX and OPEX is a 
+Proof-of-Work miners are integral to the security, decentralisation and immutability of the Decred blockchain. Miners are responsible for building the blockchain by cryptographically hashing valid transactions into blocks. The investment by miners into mining hardware CAPEX and OPEX is a fundamental component of the security system. 
 
 
 ![miner_pow_growth.png](images/miner_pow_growth.png)
