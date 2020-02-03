@@ -581,9 +581,9 @@ DCR_hash = DCR_data[DCR_data['pow_hashrate_THs_avg']>1]
 
 loop_data = [[0,1,2,3],[4,5]]
 x_data = [
-    BTC_hash['age_sply'],DCR_hash['age_sply'],
-    BTC_hash['age_sply'],DCR_hash['age_sply'],
-    BTC_hash['age_sply'],DCR_hash['age_sply'],
+    BTC_hash['age_days'],DCR_hash['age_days'],
+    BTC_hash['age_days'],DCR_hash['age_days'],
+    BTC_hash['age_days'],DCR_hash['age_days'],
     ]
 y_data = [
     BTC_hash['DiffMean'],DCR_hash['DiffMean'],
@@ -623,7 +623,7 @@ title_data = [
     'Coin Age (Days since Launch)',
     'Protocol Difficulty  |  Network Hashrate (TH/s)',
     'Coin Price (USD)']
-range_data = [[0,1],[0,14],[-2,5]]
+range_data = [[0,4380],[0,14],[-2,5]]
 autorange_data = [False,False,False]
 type_data = ['linear','log','log']#
 fig = check_standard_charts().subplot_lines_doubleaxis(
@@ -632,7 +632,7 @@ fig = check_standard_charts().subplot_lines_doubleaxis(
     dash_data,width_data,opacity_data,legend_data
     )
 #Increase tick spacing
-fig.update_xaxes(dtick=0.1)
+fig.update_xaxes(dtick=365)
 
 """ =================================
     ADD DIFFICULTY RIBBON BAR CHARTS
@@ -640,7 +640,7 @@ fig.update_xaxes(dtick=0.1)
 for i in [9,14,25,40,60,90,128,200]:
     fig.add_trace(go.Scatter(
         mode='lines',
-        x=DCR_hash['age_sply'], 
+        x=DCR_hash['age_days'], 
         y=DCR_hash['DiffMean'].rolling(i).mean(),
         name='Difficulty '+str(i),
         opacity=0.5,
@@ -655,7 +655,7 @@ for i in [9,14,25,40,60,90,128,200]:
 for i in [9,14,25,40,60,90,128,200]:
     fig.add_trace(go.Scatter(
         mode='lines',
-        x=BTC_hash['age_sply'], 
+        x=BTC_hash['age_days'], 
         y=BTC_hash['DiffMean'].rolling(i).mean(),
         name='Difficulty '+str(i),
         opacity=0.5,
@@ -810,7 +810,7 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 """
 #############################################################################
-                    STAKEHOLDER TOTAL LOCKED IN TICKETS
+                    STAKEHOLDER TOTAL LOCKED IN TICKETS - USD
 #############################################################################
 """
 
@@ -870,8 +870,136 @@ fig = check_standard_charts().subplot_lines_singleaxis(
 fig.show()
 
 
+"""
+#############################################################################
+                    STAKEHOLDER TOTAL LOCKED IN TICKETS - BTC
+#############################################################################
+"""
+DCR_data = DCR_data.merge(BTC_data[['date','PriceUSD',]],on='date',how='left',suffixes=('', '_BTC'))
 
 
+loop_data = [[0,1,2,3,4],[]]
+x_data = [
+    DCR_data['date'],
+    DCR_data['date'],
+    DCR_data['date'],
+    DCR_data['date'],
+    DCR_data['date'],
+    ]
+y_data = [
+    DCR_data['SplyCur']*DCR_data['PriceBTC'],
+    DCR_data['tic_btc_cost'].cumsum(),
+    DCR_data['PoS_income_btc'].cumsum(),
+    DCR_data['PoW_income_btc'].cumsum(),
+    DCR_data['PriceRealUSD']/DCR_data['PriceUSD_BTC']*DCR_data['SplyCur'],
+    ]
+name_data = [
+    'Market Cap',
+    'Cumulative Ticket Lockup',
+    'Cumulative PoS Block Reward',
+    'Cumulative PoW Block Reward',
+    'Realised Cap',
+    ]
+color_data = [
+    'rgb(46, 214, 161)' ,   #Turquoise
+    'rgb(65, 191, 83)',     #Decred Green
+    'rgb(153, 51, 255)',    #PoS Purple
+    'rgb(250, 38, 53)' ,    #PoW Red
+    'rgb(239, 125, 50)',    #Price Orange
+    ]
+dash_data = [
+    'solid','solid','solid','solid','dot',
+    ]
+width_data = [
+    2,2,2,2,2
+    ]
+opacity_data = [
+    1,1,1,1,1
+    ]
+legend_data = [
+    True,True,True,True,True,
+    ]
+title_data = [
+    'Stakeholder Commitments in BTC',
+    'date',
+    'Value (BTC)',
+    '']
+range_data = [['2016-01-01','2021-01-01'],[3,6],[2,8]]
+autorange_data = [False,False,True]
+type_data = ['date','log','log']#
+fig = check_standard_charts().subplot_lines_singleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+#Increase tick spacing
+#fig.update_xaxes(dtick=0.1)
+fig.show()
+
+
+"""
+#############################################################################
+                    TICKET METRICS
+#############################################################################
+"""
+
+loop_data = [[0,1,],[]]
+x_data = [
+    DCR_data['date'],
+    DCR_data['date'],
+    DCR_data['date'],
+    DCR_data['date'],
+    DCR_data['date'],
+    ]
+y_data = [
+    DCR_data['PriceUSD'],
+    DCR_data['CapTicPriceUSD'],
+    DCR_data['PoS_income_btc'].cumsum(),
+    DCR_data['PoW_income_btc'].cumsum(),
+    DCR_data['PriceRealUSD']/DCR_data['PriceUSD_BTC']*DCR_data['SplyCur'],
+    ]
+name_data = [
+    'Market Cap',
+    'Cumulative Ticket Lockup',
+    'Cumulative PoS Block Reward',
+    'Cumulative PoW Block Reward',
+    'Realised Cap',
+    ]
+color_data = [
+    'rgb(46, 214, 161)' ,   #Turquoise
+    'rgb(65, 191, 83)',     #Decred Green
+    'rgb(153, 51, 255)',    #PoS Purple
+    'rgb(250, 38, 53)' ,    #PoW Red
+    'rgb(239, 125, 50)',    #Price Orange
+    ]
+dash_data = [
+    'solid','solid','solid','solid','dot',
+    ]
+width_data = [
+    2,2,2,2,2
+    ]
+opacity_data = [
+    1,1,1,1,1
+    ]
+legend_data = [
+    True,True,True,True,True,
+    ]
+title_data = [
+    'Stakeholder Commitments in BTC',
+    'date',
+    'Value (BTC)',
+    'DCRUSD Price']
+range_data = [['2016-01-01','2021-01-01'],[3,6],[2,8]]
+autorange_data = [False,False,True]
+type_data = ['date','log','log']#
+fig = check_standard_charts().subplot_lines_singleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+#Increase tick spacing
+#fig.update_xaxes(dtick=0.1)
+fig.show()
 
 
 
