@@ -183,7 +183,7 @@ There are two mechanisms which would lead to this vote result, both of which the
 - Miners are freely able to stake mined coins, and during the 2017 bull market, this was a profitable strategy. Thus miners holding tickets still voted in favor of long term user experience rather than in their own short term financial interest. This suggests sound alignment of miner values with those of the rest of the community.
 - Mining was dominated by dual Ethereum GPU miners in 2017, whom are generally believed to have distributed DCR coins almost immediately to exchanges for sale. Thus, miners would not have a significant say in the vote and indicates a wide coin distribution into the public has occured which enhances vote decentralisation.
 
-![miner_stakediff.png](images\miner_stakediff.png)
+![miner_stakediff.png](images/miner_stakediff.png)
 
 An additional observation pertaining to the cumulative miner rewards paid is the notion of miners 'putting the bottom in' for bear markets. Given this represents the aggregate income of the mining industry, where network valuation falls below this level, it can indicate mining is becoming increasingly unprofitable on aggregate.
 
