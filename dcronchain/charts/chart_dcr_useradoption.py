@@ -876,6 +876,8 @@ fig.show()
 #############################################################################
 """
 DCR_data = DCR_data.merge(BTC_data[['date','PriceUSD',]],on='date',how='left',suffixes=('', '_BTC'))
+DCR_data['CapRealBTC'] = DCR_data['CapRealUSD'].diff(periods=1)/DCR_data['PriceUSD_BTC']
+DCR_data['CapRealBTC'] = DCR_data['CapRealBTC'].cumsum()
 
 
 loop_data = [[0,1,2,3,4],[]]
@@ -891,7 +893,7 @@ y_data = [
     DCR_data['tic_btc_cost'].cumsum(),
     DCR_data['PoS_income_btc'].cumsum(),
     DCR_data['PoW_income_btc'].cumsum(),
-    DCR_data['PriceRealUSD']/DCR_data['PriceUSD_BTC']*DCR_data['SplyCur'],
+    DCR_data['CapRealBTC'],
     ]
 name_data = [
     'Market Cap',
@@ -1136,3 +1138,7 @@ fig = check_standard_charts().subplot_lines_singleaxis(
     )
 fig.update_yaxes(tickformat = "%",dtick=0.1)
 fig.show()
+
+
+
+DCR_sply = dcr_add_metrics().dcr_sply(420600)

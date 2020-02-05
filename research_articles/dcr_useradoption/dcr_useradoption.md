@@ -141,99 +141,111 @@ Decred has an approximately equal network valuation to Bitcoin at the same age w
 
 # 2) The Unforgeable Work of DCR Miners
 
-Proof-of-Work miners are integral to the security, decentralisation and immutability of the Decred blockchain. Miners are responsible for building the chain through cryptographically hashing valid transactions into blocks before presenting them for validated by PoS tickets.
+Proof-of-Work miners are integral to the security, decentralisation and immutability of the Decred blockchain. Miners are responsible for building the blockchain by cryptographically hashing valid transactions into blocks, and presenting them for validation by PoS tickets.
 
-Miners invest in hardware CAPEX and establish long term energy contracts to provide this service which secured the blockchain through a number of unforgeable mechanisms:
+Miners invest in mining hardware and establish long term energy contracts to provide this service which secures the blockchain through a number of unavoidable mechanisms:
 
-- Creates a financial and logistical hurdle for potential attackers to overcome to aquire sufficient hash-rate and energy to build an competitive side-chain.
 - Investment in Application Specific Integrated Circuits (ASICs) create an incentive for honest miners to defend their sunk-cost CAPEX. This aligns miner incentives with the users and success of the Decred blockchain.
-- Proof-of-Work roots the cost of block creation to a demand for energy which cannot be forged.
-- The globally competitive market for energy leads to widely distributed mining operations in pursuit of favourable combinations of energy sources and contracts, hardware manufacturing, climates and regulatory jurisdictions. This promotes geographical distribution of mining operations to provide system redundancy.
+- Creates a financial and logistical hurdle for potential attackers to overcome in order to aquire sufficient hash-rate and energy resources to build an competitive side-chain.
+- Proof-of-Work consensus roots the cost of block creation to an unforgeable demand for energy.
+- The globally competitive market for energy leads to widely distributed mining operations in pursuit of favourable combinations of energy sources and contracts, hardware manufacturing, climates and regulatory jurisdictions. This promotes geographical distribution of mining operations to provide system redundancy and resilience.
 
 ## Growth of Hash-rate
 
-Decred launched into the 2016 market where GPU miners were readily available. Decred thus had an initial difficulty setting equivalent to the hashpower of 256 contemporary GPUs. Decred mining has since progressed to become an ASIC dominated chain as of early 2018 [[1](https://youtu.be/7K2sDhyjQys)], [[2](https://youtu.be/8TPFIVYy_i4)]. Since ASICs have come on-line, the Decred hash-rate has expanded by 1,000x with most growth occuring over a one year period from 2018 to 2019.
+Decred launched into the 2016 market where GPU miners were readily available, and thus had an initial difficulty set to the equivalent hashpower of 256 contemporary GPUs. Decred mining has since progressed to become an ASIC dominated chain with ASICs coming online in early 2018 [[1](https://youtu.be/7K2sDhyjQys)], [[2](https://youtu.be/8TPFIVYy_i4)]. Following ASICs, the Decred hash-rate has expanded by 1,000x with most growth occuring over a one year period from 2018 to 2019.
 
-The Decred hash-rate currently fluctuates between 400-500 PetaHash/s, similar to that of Bitcoin in 2015. Decred hash-rate has remained relatively stable since early 2019 in response to depression of the DCRUSD price during the bear market cycle.
+The Decred hash-rate currently fluctuates between 400-500 PetaHash/s, a similar magnitude to  Bitcoin circa 2015, after the introduction of ASICs in 2012. Decred hash-rate has remained relatively stable since early 2019 in response to depression of the DCRUSD price during the bear market cycle. There are remarkable similarities in the growth rate of Decred hash-power from age 0 to 4yrs compared to Bitcoin from age 3 to 6yrs.
 
 ![miner_pow_growth.png](images/miner_pow_growth.png)
 
-The Decred difficulty ribbon is presented in the chart above by taking a series of daily moving averages (9,14,25,40,60,90,128 and 200 periods) of protocol mining difficulty. The difficulty ribbon provides insight into the aggregate behaviour of miners. This shows that Decred has experienced four distinct phases of the mining cycle throughout its four year lifespan, summarised in the table below.
+The Decred difficulty ribbon is presented in the chart above by taking a series of daily moving averages (9, 14, 25, 40, 60, 90, 128 and 200 periods) of protocol mining difficulty. The difficulty ribbon provides insight into the aggregate behaviour of miners and shows Decred has experienced four distinct phases of the mining cycle, summarised in the table below.
 
 ![miner_character.png](images/miner_character.png)
 
-It can be seen that there are remarkable similarities in the growth rate of hash-power between Decred from year 0 to 4 compared to Bitcoin from year 3 to 6. What is notable is the coupling between Bitcoin price and hash-rate trends. Re-expansion of the Bitcoin difficulty ribbon tends to follow price appreciation during bull markets and, conversely, compresses following the capitulation phase at the end of bear markets.  
+What is notable is the coupling between Bitcoin price and hash-rate trends. Re-expansion of the Bitcoin difficulty ribbon tends to follow price appreciation during bull markets and, conversely, compresses following the capitulation phase at the end of bear markets.  
 
-For Decred, ASICs were introduced to the network at the peak of what became a significant and industry wide bear market (starting early 2018). Thus Decred has experienced a process of hash-rate expansion due to improved hardware efficiency (supersceding GPUs) without the support of coin price appreciation.
+For Decred, ASICs were introduced to the network at the peak of what became a significant and industry wide bear market, starting early 2018. Thus Decred has experienced a process of hash-rate expansion due to improved hardware efficiency (supersceding GPUs) without the support of coin price appreciation.
 
-As such, it is likely that the present cohort of ASIC miners have endured challenging financial conditions, particularly through 2019 as seen by the current compression of the Difficulty ribbon as miners turn off unprofitable hardware. Similarly, it is reasonable to conclude that miners will require sustained DCR price appreciation to justify further investment in hardware CAPEX or upgrades.
+As such, it is likely that the present cohort of ASIC miners have endured challenging financial conditions, particularly through 2019. This is confirmed by the current compression of the Difficulty ribbon, a result of miners turning off unprofitable hardware.
 
-Assuming a bear market price floor has been found at the time of writing, the Decred hash-rate and mining difficulty will likely remain rangebound at currently levels until this price threshold is passed.
+Similarly, it is reasonable to conclude that miners will require sustained DCR price appreciation to justify any further investment in hardware CAPEX or upgrades. Therefore, the author expects the Decred hash-rate and mining difficulty to remain rangebound at current levels until this price upper threshold is passed.
 
 ## Miner Income
 
-We can establish a basis for aggregate miner behaviour by reviewing the [cumulative block rewards](https://medium.com/@permabullnino/decred-on-chain-a-look-at-block-subsidies-6f5180932c9b) paid to miners (incl. subsidy and fees). Decred has paid miners over $147M in PoW rewards with $875k of this attributed to transaction fees (0.595%).
+We can establish a basis for aggregate miner behaviour by reviewing the [cumulative block rewards](https://medium.com/@permabullnino/decred-on-chain-a-look-at-block-subsidies-6f5180932c9b) paid to miners (incl. subsidy and fees). It is important to remember that miners carry costs denominated in local fiat currencies for hardware, overheads, capital costs and energy contracts. Thus, the USD price is the correct metric as a baseline for assessing miner incentives. In this context, Decred has paid miners over $147M in PoW rewards with $875k of this attributed to transaction fees (0.595%).
 
-Long term development of a fee market is a critical evolution to sustain a fixed maximum coin supply of 21M units. Whilst early in Decred's life, the ratio of daily transaction fees as a proportion of the total block reward shows Decred fees account for 0.04% of miner income. Similar to block-space utility, the Decred privacy implementation has shown a positive feature for miner incomes and the fee ratio.
+Long term development of a fee market is a critical evolution to sustain a fixed maximum coin supply of 21M units. The ratio of daily transaction fees as a proportion of the total block reward shows Decred fees currently account for 0.04% of miner income. Similar to block-space utility, the Decred privacy implementation has shown to be a positive feature for miner incomes and the fee ratio as demand for mixing increases the volume of fees paid.
 
-Of note is the distinct plateau in cumulative transaction fees paid after July 2017. This is a direct result of the consensus rule change to [replace the original stake-difficulty algorithm](https://medium.com/decred/new-stake-difficulty-algorithm-cdf432d623fe) which had a natural resonance in the ticket price. This led to 'fee wars' by users attempting to aquire tickets during price troughs and an overall poor user experience. This consensus rule change [passed a governance vote with 97.9% approval](https://explorer.dcrdata.org/agenda/sdiffalgorithm) despite being clearly against miner short term interest.
+### The Stake-Diff Algorithm
 
-There are two mechanisms which would lead to this vote result, both of which the author deems positive outcomes for the Decred project and governance system:
+Of note is the distinct plateau in cumulative transaction fees paid after July 2017. This is a direct result of the consensus rule change to [replace the original stake-difficulty algorithm](https://medium.com/decred/new-stake-difficulty-algorithm-cdf432d623fe) which had a natural resonance in the ticket price. This led to 'fee wars' were users attempted to aquire tickets during price troughs and resulted in an overall poor user experience. This consensus rule change [passed a governance vote with 97.9% approval](https://explorer.dcrdata.org/agenda/sdiffalgorithm) despite being clearly against miner short term interest (higher fees).
 
-- Miners are freely able to stake mined coins, and during the 2017 bull market, this was a profitable strategy. Thus miners holding tickets still voted in favor of long term user experience rather than in their own short term financial interest. This suggests sound alignment of miner values with those of the rest of the community.
-- Mining was dominated by dual Ethereum GPU miners in 2017, whom are generally believed to have distributed DCR coins almost immediately to exchanges for sale. Thus, miners would not have a significant say in the vote and indicates a wide coin distribution into the public has occured which enhances vote decentralisation.
+There are two mechanisms that would lead to this vote result, both of which the author deems very positive outcomes for the Decred project health anda credit to the governance and upgrade system:
+
+1. Miners are freely able to stake mined coins, and during the 2017 bull market, this was a profitable strategy. Thus miners holding tickets still voted in favor of long term user experience rather than in their own short term financial interest. This suggests sound alignment of miner values with those of the rest of the community.
+
+2. Mining was dominated by dual Ethereum GPU miners in 2017, whom are generally believed to have distributed DCR coins almost immediately to exchanges for sale. Thus, miners would not have had a a significant say in the vote and this indicates a wide, public coin distribution has occured which enhances vote decentralisation.
 
 ![miner_stakediff.png](images/miner_stakediff.png)
 
-An additional observation pertaining to the cumulative miner rewards paid is the notion of miners 'putting the bottom in' for bear markets. Given this represents the aggregate income of the mining industry, where network valuation falls below this level, it can indicate mining is becoming increasingly unprofitable on aggregate.
+An additional observation pertaining to cumulative miner rewards paid is the notion of miners 'putting the bottom in' for bear markets. Given this represents the aggregate income of the mining industry, when the network valuation falls below this level, it can indicate mining is becoming increasingly unprofitable on aggregate.
 
-This leads to weaker miners disabling mining rigs, a compression of the difficulty ribbon and an increased share of hash-rate gained by stronger miners. Given strong miner stategy tends to focus on accumulation of coins in bullish markets, this begins to constrain the available supply entering the market and has shown to preceed price appreciation and bullish conditions for both Bitcoin and Decred in the past. 
+This leads to weaker miners disabling mining rigs, a compression of the difficulty ribbon and an increased share of hash-rate gained by stronger miners. Given strong miner stategy tends to focus on accumulation of coins in bullish markets, this begins to constrain the available supply entering the market and has historically shown to preceed price appreciation and bullish conditions, both for Bitcoin and Decred.
 
 ![miner_pow_rewards.png](images/miner_pow_rewards.png)
 
 ## Summary of Proof-of-Work Miners
 
-Decred mining is dominated by ASIC hardware and has experienced significant growth in hash-rate despite bear market conditions since 2018. It is likely that miners have been tested by challenging financial conditions and poor profitability as a result which sheds light on mechanisms behind DCR price performance since all-time-highs.
+Decred mining is dominated by ASIC hardware and has experienced significant growth in hash-rate despite bear market conditions since 2018. It is likely that miners have been tested by challenging financial conditions and poor profitability since 2019 which sheds some light on the mechanisms behind DCR price performance through this time.
 
-That said, the difficulty ribbon and cumulative rewards paid to miners are exhibiting typical basing patterns seen in other proof-of-work coins like Bitcoin. A notable increase in demand for block-space is seen following the launch of Decred's privacy mixing technology, carrying a net positive impact on the fee ratio and long term sustainability. 
+That said, the difficulty ribbon and cumulative rewards paid to miners are exhibiting typical basing patterns often seen in other proof-of-work coins like Bitcoin. A notable increase in demand for block-space is seen following the launch of Decred's privacy mixing technology which carries a net positive impact on the fee ratio and long term sustainability of the DCR mining market. 
 
 # 3) The Strong Hands of DCR Stakeholders
 
-Long-term holding of DCR is distictly different to many other cryptocurrencies in that it promotes the continual movement of coins in the form of PoS tickets. The purchase of a ticket ([or part thereof](https://docs.decred.org/proof-of-stake/ticket-splitting/)) is an explicit and deliberate act to bind a quantity of the stakeholders DCR coins, in an illiquid state, to the performance of the Decred network.
+Long-term holding of DCR is distictly different to many other cryptocurrencies in that it promotes the continual movement of coins in the form of PoS tickets. The purchase of a ticket ([or part thereof](https://docs.decred.org/proof-of-stake/ticket-splitting/)) is an explicit and deliberate act to bind a volume of DCR coins, in an illiquid state, to the performance of the Decred network.
 
-[Tickets undergo a process](https://docs.decred.org/proof-of-stake/overview/) of maturation, psuedo-random selection to vote and then a delay before coins are released. The whole process can take anywhere between 1.5 and 142days. Ticket stakeholders are thus exposed to coin price volatility and market reaction to any consensus or governance votes during that window.
+[Tickets undergo a process](https://docs.decred.org/proof-of-stake/overview/) of maturation, psuedo-random selection to vote and then another maturation delay before coins are released. The whole process can take anywhere between 1.5 and 142days and ticket stakeholders are thus exposed to coin price volatility, and market reaction to any consensus or governance votes during that window.
 
-In reward for their patience, resilience and taking on price risk, stakeholders are rewarded with 30% of the block reward, split between the five tickets selected to vote on each block.
+As reward for their patience, resilience and acceptance of price risk, stakeholders are rewarded with 30% of the block reward, split equally between the five tickets selected to vote on each block. This process gamifies participation in Decred governance whilst also promoting a desire to 'choose wisely' for governance and consensus decisions.
 
-This process gamifies the participation in Decred governance whilst also promoting active participation and a desire to 'choose wisely' for governance and consensus decisions.
+### Ticket Participation
+
+The cumulative DCR bound to the chain in tickets (blue) has very closely matched the total coin issuance via Proof-of-Work (red). This is an important observation, it suggests DCR coins distributed by miners (who are compulsory sellers) are ultimately making their way back into the PoS system after being accumulated by investors, improving wealth distribution and vote decentralisation.
+
+The chart below shows that in the lead up to, and during a protocol consensus change vote, DCR bound to the chain grows noticably. This indicates a strong incentive for participation and a demand for stakeholders to have a meaningful say.
+
+![staker_consensus_change.png](images/staker_consensus_change.png)
+![staker_ticket_pool.png](images/staker_ticket_pool.png)
 
 ## Hodler Psychology
 
-DCR holders are free to opt-out and sell their coins into the market at any time when their coins are not bound in tickets. Thus, all ticket purchases carry an underlying assumption, that the individual believes the ticket price plus block reward will be more valuable in the future than today.
+DCR holders are free to opt-out and sell their coins into the market at any time when coins are not bound in tickets. Thus, all ticket purchases carry an underlying assumption, that the individual believes the ticket price plus PoS block reward will be more valuable in the future than today.
 
-In other words, if a holder believes obtaining the PoS block reward is not worth the volatility risk, they are better off holding liquid DCR coins or to sell them, rather than take on price risk for a psuedo-random period of time.
+In other words, if a holder believes obtaining the PoS block reward is not worth the volatility risk, they are better off holding liquid DCR coins or to move to sell them, rather than take on risk for a psuedo-random period of time.
 
-This is a very different mechanism to Bitcoin holders who will typically move BTC coins they believe to be undervalued into deep cold storage without moving them. The team at [Coinmetrics developed the Realised Price](https://coinmetrics.io/realized-capitalization/) to quantify this behaviour.
-
-The Realised Price measures the aggregate value of each UTXO, priced at the time it last moved. It thus represents an aggregate view on the market cost-basis for BTC coins and a lower bound on what long-term holders believe the Bitcoin network is worth.
+This is a very different mechanism to Bitcoin holders who will typically send BTC coins they believe are undervalued into deep cold storage. The team at [Coinmetrics developed the Realised Price](https://coinmetrics.io/realized-capitalization/) to quantify this behaviour by measuring the value of each UTXO, priced at the time it last moved. It thus represents an aggregate view on the market cost-basis for BTC coins, and a lower bound on what long-term holders believe the Bitcoin network is worth (the value users have 'saved' in BTC).
 
 For Decred, the realised price is more closely correlated with market value as it is influenced by the continual flow of DCR in tickets. Thus, this metric does not adhere to the same set of assumptions and instead has shown to be a point of market support and resistance in bull and bear markets respectively.
 
 ## Stakeholder Commitment
 
-Rational market actors are more likely to sell DCR when they believe coins are overvalued, rather than buy tickets and take on volatility risk. By taking a cumulative sum of all DCR bound in tickets, priced at the time of purchase, we can establish a measure of stakeholder 'commitment' to the Decred chain. This represents the aggregate dollar value locked in tickets.
+Rational market actors are more likely to sell DCR they believe are overvalued, rather than buy tickets and take on volatility risk. By taking a cumulative sum of all DCR bound in tickets, priced at the time of purchase, we can establish a measure of stakeholder 'commitment' to the Decred chain. This represents the aggregate dollar value locked in tickets.
 
-To date, Decred stakeholders have committed over $5.6 Billion in value to the chain in ticket purchases, approximately 38x the market cap of the entire network at the time of writing.
+To date, Decred stakeholders have committed over $5.6 Billion in value to the chain in ticket purchases, approximately 38x the market cap of the entire network at the time of writing. Price in BTC, this equates to 1M BTC in value purchased in tickets, two orderx of magnitude greater than network value and cumulative rewards paid denominated in BTC.
 
-Interestingly, this psychological stakeholder commitment line has acted as a point of price resistance during the 2017 bull trend. Conversely, PoW miners cannot be expected to commit more hash-power investment than is allowed for in the block reward. The cumulative miner income line has thus shown to be a level of fundamental support during bearish trends.
+Interestingly, these psychological stakeholder commitment lines have acted as points of price resistance during the 2017 bull trend. Conversely, PoW miners, whos cost basis is USD denominated, cannot be expected to commit more hash-power investment than is allowed for in the USD denominated block reward. The cumulative miner USD income line has thus shown to be a level of fundamental support during bearish trends.
 
 ![staker_cumulative_usd.png](images/staker_cumulative_usd.png)
 
+Investors in the cryptocurrency market often consider a cost basis denominated in BTC, being akin to the local reserve asset of the market. When modelling the cumulative rewards paid out to both PoW miners and PoS stakeholders, it can be seen that both fundamental levels are respected by the DCR/BTC price chart [(credit to @permabullnino for this finding)](https://medium.com/@permabullnino/decred-on-chain-a-look-at-block-subsidies-6f5180932c9b).
 
+Decred thus far has issued 31.4k and 15.3k in BTC equivalent value to PoW miners and PoS stakeholders respectively.
 
 ![staker_cumulative_btc.png](images/staker_cumulative_btc.png)
 
-![staker_ticket_pool.png](images/staker_ticket_pool.png)
+## Stakeholder Summary
+
+
 
 # 4) The Skill and Time of DCR Architects
 
