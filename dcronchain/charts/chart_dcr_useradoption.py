@@ -1016,13 +1016,7 @@ $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 """
 
 
-"""
-#############################################################################
-                    TREASURY INFLOW OUTFLOW
-#############################################################################
-"""
-
-DCR_fund = pd.read_csv(r"D:\code_development\checkonchain\checkonchain\dcronchain\resources\data\treasury_20200126.csv")
+DCR_fund = pd.read_csv(r"D:\code_development\checkonchain\checkonchain\dcronchain\resources\data\treasury_20200212.csv")
 #Sort by timestamp - oldest to newest
 DCR_fund = DCR_fund.sort_values(by='time_stamp')
 #Reset Index
@@ -1033,28 +1027,32 @@ DCR_fund['date'] = pd.to_datetime(DCR_fund['time_stamp'],unit='s',utc=True)
 DCR_fund['funds'] = DCR_fund['value'] * DCR_fund['direction']
 #Treasury Balance = cumulative sum of funds
 DCR_fund['balance'] = DCR_fund['funds'].cumsum()
-#Incoming and Outgoing = cumulatve sum in +ve and negative direction
+#Incoming and Outgoing = cumulative sum in +ve and negative direction
 DCR_fund['incoming'] = DCR_fund['funds'].clip(lower=0)
 DCR_fund['outgoing'] = DCR_fund['funds'].clip(upper=0)
 #Treasury Spend Rate
 DCR_fund['spend_rate'] = DCR_fund['outgoing'].cumsum()*-1/DCR_fund['balance']
-DCR_fund['spend_rate_final'] = DCR_fund['outgoing'].cumsum()/(-21e6*0.1)
+DCR_fund['spend_rate_final'] = DCR_fund['outgoing'].cumsum()/(-19.32e6*0.1)
 #Combine with Price USD and BTC Data
 DCR_fund = pd.merge_asof(
     DCR_fund,
-    DCR_data[['date','PriceUSD','PriceBTC']],
+    DCR_data[['date','PriceUSD','PriceBTC','tic_pool_avg','tic_day','tic_price_avg']],
     left_on='date',
     right_on='date'
     )
-#Calculate Expendature
+#Calculate Expenditure
 DCR_fund['balance_usd'] = DCR_fund['balance'] * DCR_fund['PriceUSD']
 DCR_fund['incoming_usd'] = DCR_fund['incoming'] * DCR_fund['PriceUSD']
 DCR_fund['outgoing_usd'] = DCR_fund['outgoing'] * DCR_fund['PriceUSD']
-DCR_fund['expendature_usd'] = DCR_fund['outgoing_usd'].cumsum()*-1
+DCR_fund['expenditure_usd'] = DCR_fund['outgoing_usd'].cumsum()*-1
 
 
 
-
+"""
+#############################################################################
+                    TREASURY INFLOW OUTFLOW - DCR
+#############################################################################
+"""
 loop_data = [[0,1,2],[3]]
 x_data = [
     DCR_fund['date'],
@@ -1063,50 +1061,75 @@ x_data = [
     DCR_fund['date'],
     DCR_fund['date'],
     DCR_fund['date'],
+    DCR_fund['date'],
+    DCR_fund['date'],
+    DCR_fund['date'],
     ]
 y_data = [
+    #Chart 1 - INFLOW/OUTFLOW DCR
     DCR_fund['balance'],
     DCR_fund['incoming'].cumsum(),
     DCR_fund['outgoing'].cumsum()*-1,
     DCR_fund['PriceUSD'],
+    #Chart 2 - INFLOW/OUTFLOW USD
+    DCR_fund['balance_usd'],
+    DCR_fund['incoming_usd'].cumsum(),
+    DCR_fund['outgoing_usd'].cumsum()*-1,
+    #Chart 3 - SPEND RATIO
     DCR_fund['spend_rate'],
     DCR_fund['spend_rate_final'],
     ]
 name_data = [
-    'Treasury Balance',
-    'Treasury Inflows',
-    'Treasury Outflows',
+    #Chart 1
+    'Treasury Balance DCR',
+    'Treasury Inflows DCR',
+    'Treasury Outflows DCR',
     'PriceUSD',
+    #Chart 2
+    'Treasury Balance USD',
+    'Treasury Inflows USD',
+    'Treasury Outflows USD',
+    #Chart 3
     'Treasury Spend Ratio (Actual)',
     'Treasury Spend Ratio (Final)'
     ]
 color_data = [
+    #Chart 1
     'rgb(65, 191, 83)',     #Decred Green
     'rgb(46, 214, 161)' ,   #Turquoise
     'rgb(250, 38, 53)' ,    #PoW Red
     'rgb(255,255,255)',     #White
-    'rgb(255,255,255)',     #White
-    'rgb(65, 191, 83)'      #Decred Green
+    #Chart 2
+    'rgb(65, 191, 83)',     #Decred Green
+    'rgb(46, 214, 161)' ,   #Turquoise
+    'rgb(250, 38, 53)' ,    #PoW Red
+    #Chart 3
+    'rgb(46, 214, 161)' ,   #Turquoise
+    'rgb(250, 38, 53)' ,    #PoW Red
     ]
 dash_data = [
     'solid','solid','solid','dot',
+    'dot','dot','dot',
     'solid','dash'
     ]
 width_data = [
     2,2,2,1,
+    2,2,2,
     2,2
     ]
 opacity_data = [
     1,1,1,1,
+    1,1,1,
     1,1
     ]
 legend_data = [
-    True,True,True,True,True,
+    True,True,True,True,
+    True,True,True,
     True,True,
     ]
 title_data = [
-    'Decred Treasury Flows',
-    'date',
+    'Decred Treasury Flows - DCR',
+    'Date',
     'Treasury Flows (DCR)',
     'DCR Price (USD)']
 range_data = [['2016-01-01','2021-01-01'],[0,1e6],[-1,3]]
@@ -1121,13 +1144,38 @@ fig = check_standard_charts().subplot_lines_doubleaxis(
 fig.update_yaxes(dtick=1e5,secondary_y=False)
 fig.show()
 
+"""
+#############################################################################
+                    TREASURY INFLOW OUTFLOW - USD
+#############################################################################
+"""
+loop_data = [[0,1,2],[4,5,6]]
+range_data = [['2016-01-01','2021-01-01'],[0,1e6],[4,7]]
+autorange_data = [False,False,True]
+type_data = ['date','linear','log']
+title_data = [
+    'Decred Treasury Flows',
+    'Date',
+    'Treasury Flows (DCR)',
+    'Treasury Flows (USD)']
+fig = check_standard_charts().subplot_lines_doubleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+fig.show()
 
-loop_data = [[4,5],[]]
+"""
+#############################################################################
+                    TREASURY SPEND RATIO
+#############################################################################
+"""
+loop_data = [[7,8],[]]
 range_data = [['2016-01-01','2021-01-01'],[0,0.5],[]]
 autorange_data = [False,False,False]
 type_data = ['date','linear','log']
 title_data = [
-    'Decred Treasury Flows',
+    'Decred Treasury Spend Ratio',
     'date',
     'Spend Ratio',
     '']
@@ -1141,4 +1189,79 @@ fig.show()
 
 
 
-DCR_sply = dcr_add_metrics().dcr_sply(420600)
+"""
+#############################################################################
+                    TICKET VOTE POWER
+#############################################################################
+"""
+#Calculate USD Power per Ticket in Pool
+DCR_fund['vote_power_usd'] = DCR_fund['balance_usd']/DCR_fund['tic_pool_avg']
+#Calculate DCR Power per Ticket in Pool
+DCR_fund['vote_power_dcr'] = DCR_fund['balance']/DCR_fund['tic_pool_avg']
+#Calculate Relative Proportion
+DCR_fund['vote_power'] = DCR_fund['vote_power_dcr']/DCR_fund['tic_price_avg']
+
+
+loop_data = [[1],[2]]
+x_data = [
+    DCR_fund['date'],
+    DCR_fund['date'],
+    DCR_fund['date'],
+    ]
+y_data = [
+    DCR_fund['vote_power_usd'],
+    DCR_fund['vote_power_dcr'],
+    DCR_fund['vote_power'],
+    ]
+name_data = [
+    'Vote Power USD',
+    'Vote Power DCR',
+    'Vote Power Ratio',
+    ]
+color_data = [
+    #Chart 1
+    'rgb(65, 191, 83)',     #Decred Green
+    'rgb(46, 214, 161)' ,   #Turquoise
+    'rgb(250, 38, 53)' ,    #PoW Red
+    'rgb(255,255,255)',     #White
+    #Chart 2
+    'rgb(65, 191, 83)',     #Decred Green
+    'rgb(46, 214, 161)' ,   #Turquoise
+    'rgb(250, 38, 53)' ,    #PoW Red
+    #Chart 3
+    'rgb(255,255,255)',     #White
+    'rgb(65, 191, 83)'      #Decred Green
+    ]
+dash_data = [
+    'solid','solid','solid','solid',
+    ]
+width_data = [
+    2,2,1,2,
+    2,2,2,
+    2,2
+    ]
+opacity_data = [
+    1,1,1,1,
+    1,1,1,
+    1,1
+    ]
+legend_data = [
+    True,True,True,True,
+    True,True,True,
+    True,True,
+    ]
+title_data = [
+    'Vote Power per Ticket (DCR)',
+    'Date',
+    'Vote Power per Ticket (DCR)',
+    'Vote Power to Ticket Price Ratio']
+range_data = [['2016-01-01','2021-01-01'],[-1,2],[-2,0]]
+autorange_data = [False,False,False]
+type_data = ['date','log','log']
+fig = check_standard_charts().subplot_lines_doubleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+fig.update_yaxes(tickformat = "%",secondary_y=True)
+fig.show()

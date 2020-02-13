@@ -196,13 +196,13 @@ This leads to weaker miners disabling mining rigs, a compression of the difficul
 
 ## Summary of Proof-of-Work Miners
 
-Decred mining is dominated by ASIC hardware and has experienced significant growth in hash-rate despite bear market conditions since 2018. It is likely that miners have been tested by challenging financial conditions and poor profitability since 2019 which sheds some light on the mechanisms behind DCR price performance through this time.
+Decred mining is dominated by ASIC hardware and has experienced significant growth in hash-rate despite bear market conditions since 2018. It is likely that miners have been tested by challenging financial conditions and poor profitability since 2019 which sheds some light on the mechanisms behind DCR price performance, particularly through 2019 and early 2020.
 
 That said, the difficulty ribbon and cumulative rewards paid to miners are exhibiting typical basing patterns often seen in other proof-of-work coins like Bitcoin. A notable increase in demand for block-space is seen following the launch of Decred's privacy mixing technology which carries a net positive impact on the fee ratio and long term sustainability of the DCR mining market. 
 
 # 3) The Strong Hands of DCR Stakeholders
 
-Long-term holding of DCR is distictly different to many other cryptocurrencies in that it promotes the continual movement of coins in the form of PoS tickets. The purchase of a ticket ([or part thereof](https://docs.decred.org/proof-of-stake/ticket-splitting/)) is an explicit and deliberate act to bind a volume of DCR coins, in an illiquid state, to the performance of the Decred network.
+Long-term holding of DCR is distinctly different to many other crypto-currencies in that it promotes the continual movement of coins in the form of PoS tickets. The purchase of a ticket ([or part thereof](https://docs.decred.org/proof-of-stake/ticket-splitting/)) is an explicit and deliberate act to bind a volume of DCR coins, in an illiquid state, to the performance of the Decred network.
 
 [Tickets undergo a process](https://docs.decred.org/proof-of-stake/overview/) of maturation, psuedo-random selection to vote and then another maturation delay before coins are released. The whole process can take anywhere between 1.5 and 142days and ticket stakeholders are thus exposed to coin price volatility, and market reaction to any consensus or governance votes during that window.
 
@@ -229,35 +229,52 @@ For Decred, the realised price is more closely correlated with market value as i
 
 ## Stakeholder Commitment
 
-Rational market actors are more likely to sell DCR they believe are overvalued, rather than buy tickets and take on volatility risk. By taking a cumulative sum of all DCR bound in tickets, priced at the time of purchase, we can establish a measure of stakeholder 'commitment' to the Decred chain. This represents the aggregate dollar value locked in tickets.
+Rational market actors are more likely to sell DCR they believe is overvalued, rather than buy tickets and take on volatility risk. By taking a cumulative sum of all DCR bound in tickets, priced at the time of purchase, we can establish a measure of stakeholder 'commitment' to the Decred chain. This represents the aggregate dollar value locked in tickets.
 
-To date, Decred stakeholders have committed over $5.6 Billion in value to the chain in ticket purchases, approximately 38x the market cap of the entire network at the time of writing. Price in BTC, this equates to 1M BTC in value purchased in tickets, two orderx of magnitude greater than network value and cumulative rewards paid denominated in BTC.
+To date, Decred stakeholders have committed over $5.6 Billion in value to the chain in ticket purchases, approximately 38x the market cap of the entire network at the time of writing. Price in BTC, this equates to 1M BTC in value purchased in tickets, two orders of magnitude greater than network value and cumulative rewards paid denominated in BTC.
 
-Interestingly, these psychological stakeholder commitment lines have acted as points of price resistance during the 2017 bull trend. Conversely, PoW miners, whos cost basis is USD denominated, cannot be expected to commit more hash-power investment than is allowed for in the USD denominated block reward. The cumulative miner USD income line has thus shown to be a level of fundamental support during bearish trends.
+Interestingly, these psychological stakeholder commitment lines have acted as points of price resistance during the 2017 bull trend. For ticket holders, selling DCR at prices that exceed the aggregate 
+
+Conversely, PoW miners, who's cost basis is USD denominated, cannot be expected to commit more hash-power investment than is allowed for in the USD denominated block reward. The cumulative miner USD income line has thus shown to be a level of fundamental support during bearish trends.
 
 ![staker_cumulative_usd.png](images/staker_cumulative_usd.png)
 
-Investors in the cryptocurrency market often consider a cost basis denominated in BTC, being akin to the local reserve asset of the market. When modelling the cumulative rewards paid out to both PoW miners and PoS stakeholders, it can be seen that both fundamental levels are respected by the DCR/BTC price chart [(credit to @permabullnino for this finding)](https://medium.com/@permabullnino/decred-on-chain-a-look-at-block-subsidies-6f5180932c9b).
+Investors in the cryptocurrency market often consider their cost basis denominated in BTC, being akin to the local reserve asset of the market. It thus makes sense for investors, who participate in the PoS system, to develop psychological price levels with respect to the DCR/BTC pair.
 
-Decred thus far has issued 31.4k and 15.3k in BTC equivalent value to PoW miners and PoS stakeholders respectively.
+When modelling the cumulative rewards paid out to both PoW miners and PoS stakeholders, it can be seen that both fundamental levels are respected by the DCR/BTC price chart [(credit to @permabullnino for this finding)](https://medium.com/@permabullnino/decred-on-chain-a-look-at-block-subsidies-6f5180932c9b). In total, stakeholders have locked over $1.0M in BTC denominated value in tickets, two orders of magnitude more that the cumulative block reward issued to both PoW miners (31.4k BTC) and PoS stakeholders (15.3k BTC).
 
 ![staker_cumulative_btc.png](images/staker_cumulative_btc.png)
 
 ## Stakeholder Summary
+Stakeholders are central to the unique security and governance mechanism of the Decred blockchain. There is early evidence of psychological levels being associated with stakeholder incentives and sentiment with network valuations respecting cumulative block reward and ticket lock-up lines.
 
-
+There is a clear correlation between ticket prices and the PoW issuance curve, especially through the early 'great inflation'. Coupled with clear increases in DCR locked tickets around consensus changes, strong participation rates (>50%) and the user favorable change to the stake-difficulty algorithm, it suggests that Decred has a strong coin and thus vote distribution within the market. This is a positive observation pertaining to stakeholder decentralisation and network resilience.
 
 # 4) The Skill and Time of DCR Architects
 
+At the core of Decred's centre of gravity is the Decred Treasury which is fueled by 10% of the block-subsidy. The Treasury is available for active deployment by the hive-mind of ticket holders for the purpose of enhancing Decred protocol value. 
 
+The Treasury has enabled Decred to bootstrap itself, from genesis, in a completely self-sovereign way, without reliance on the ulterior motives or financial leverage by external parties providing capital.
 
+At the time of writing, and with all transactions priced at the time of occurrence, the Treasury has:
+- Received 947k DCR, equivalent to $24.6M USD.
+- Spent 312k DCR, equivalent to $7.25M USD ($7.66M if considering the 4% founders pre-mine as an expense priced at $0.49/DCR).
+- Accumulated a balance of over 635k DCR, equivalent to $14.4M USD.
+- A spend ratio of 49% of actual DCR inflows to date, equivalent to 16% of the final 1.932M DCR inflow.
+
+![treasury_balance.png](images/treasury_balance.png)
+![treasury_spendratio.png](images/treasury_spendratio.png)
+
+The Treasury an invaluable differentiator for Decred. It creates an open, fair and equitable way for individuals to deploy and acquire DCR coins by leveraging the whole range of human skills and capabilities. Protocols secured by a pure PoW consensus rely on users acquiring coins via technically challenging and expensive mining and/or purchasing off the market. Pure PoS consensus often struggles to find a fair initial distribution method and tends to favor those who participate early in perpetuity.
+
+With the Decred treasury, stakeholders can be expected to act in their financial best interest, aiming to preserve and enhance the fundamental and market perception of DCR coins.
+
+![treasury_votepower.png](images/treasury_votepower.png)
 
 
 
 # Builders
-At the core of **Decred's** centre of gravity is the network Treasury, fueled by 10% of the block-subsidy. At the time of writing, the treasury has amassed over 650k DCR, equivalent to $11.9M USD. These funds are available for deployment by the hive-mind of stakeholders for the purpose of enhancing **Decred** protcol value. 
 
-The treasury is a invaluable differentiator for Decred. It creates an open, fair and equitable way for individuals to aquire coins by levergaging the whole range of human skills and capabilities. Protocols secured by a pure PoW or PoS consensus model rely on users aquiring coins via technically challenging and expensive mining and/or purchasing off the market.
 
 
 

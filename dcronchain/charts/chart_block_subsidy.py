@@ -1,8 +1,11 @@
 #PermabullNinos Block Subsidy Charts
 from checkonchain.general.standard_charts import *
 from checkonchain.dcronchain.dcr_add_metrics import *
+from checkonchain.general.general_helpers import *
 
 DCR_subs = dcr_add_metrics().dcr_ticket_models()
+
+general_helpers.df_to_csv(DCR_subs,'DCR_data')
 """
 #############################################################################
                     DCR USD BLOCK SUBSIDY MODELS
