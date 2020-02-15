@@ -34,7 +34,7 @@ It is not uncommon for Miners, who have invested heavily in both CAPEX and OPEX 
 
 The people who contribute to and develop the Decred codebase, market presence and research base, are typically strong hand holders of DCR and active participants in Proof-of-Stake security and governance. Having developed sound understanding of Decred fundamentals, these people are often motivated and dedicated DCR HODLers of last resort.
 
-These examples are distillations of an essential yet informal value of Decred holders, skin-in-the-game. This paper studies this aggregate behaviour driven by individual skin-in-the-game for all four user categories. It aims to describe how the **Decred** blockchain has performed as a whole over time.
+These examples are distillations of an essential yet informal value of Decred holders, skin-in-the-game. This paper studies this aggregate behaviour driven by individual skin-in-the-game for all four user categories. It aims to describe how the Decred blockchain has performed as a whole over time.
 
 ## TL; DR
 - Growth metrics of **DCR Hodlers** has been relatively sluggish compared to Bitcoin at the same age and especially with respect to the strong ledger assurances provided by Decred. Decred has security finality guarantees orders of magnitude higher than it's current transactional throughput and has shown impressive resilience against re-organisations.
