@@ -1031,7 +1031,7 @@ DCR_fund['balance'] = DCR_fund['funds'].cumsum()
 DCR_fund['incoming'] = DCR_fund['funds'].clip(lower=0)
 DCR_fund['outgoing'] = DCR_fund['funds'].clip(upper=0)
 #Treasury Spend Rate
-DCR_fund['spend_rate'] = DCR_fund['outgoing'].cumsum()*-1/DCR_fund['balance']
+DCR_fund['spend_rate'] = DCR_fund['outgoing'].cumsum()*-1/DCR_fund['incoming'].cumsum()
 DCR_fund['spend_rate_final'] = DCR_fund['outgoing'].cumsum()/(-19.32e6*0.1)
 #Combine with Price USD and BTC Data
 DCR_fund = pd.merge_asof(

@@ -252,9 +252,21 @@ There is a clear correlation between ticket prices and the PoW issuance curve, e
 
 # 4) The Skill and Time of DCR Architects
 
-At the core of Decred's centre of gravity is the Decred Treasury which is fueled by 10% of the block-subsidy. The Treasury is available for active deployment by the hive-mind of ticket holders for the purpose of enhancing Decred protocol value. 
+At the core of Decred's centre of gravity is the Decred Treasury which is fueled by 10% of the block-subsidy. The Treasury is available for active deployment by the hive-mind of ticket holders for the purpose of enhancing Decred protocol value.
 
-The Treasury has enabled Decred to bootstrap itself, from genesis, in a completely self-sovereign way, without reliance on the ulterior motives or financial leverage by external parties providing capital.
+This mechanism carries a number of notable advantages for Decred, especially in the long term:
+
+1. **Maximises the protocol's self-sovereignty** by minimising the influence of external parties on project direction. Many cryptocurrencies have resorted to funding mechanisms such as venture capital raises, initial coin offerings and reliance on donations. All such models have constraints such as ulterior motives of financial backers, compliance with securities laws, and slowness of progress (on a donation model).
+
+2. **Incentivises sustained engagement by skilled people** who meaningfully contribute to the project. This grows the pool of dedicated DCR holders and enhances resilience of the governance model as these builders are personally motivated to see the protocol succeed.
+
+3. **Builds resilience and reliability in the development progress** where responsible management of treasury funds during 'good times' can subsequently act as a back-up reserve during downturns to ensure continued progress.
+
+4. **Creates opportunity for perfectly equitable employment** whereby individuals in a decentralised and global context can trade their time and skill for DCR coins, all free from background checks, discrimination or compromising personal privacy.
+
+## Decred Treasury Book Keeping
+
+At the time of writing, the **Decred** treasury is [in the process of migrating](https://proposals.decred.org/proposals/c96290a2478d0a1916284438ea2c59a1215fe768a87648d04d45f6b7ecb82c3f) to a fully on-chain wallet custodied by the pool of DCR ticket holders. This iteration in the design essentially nullifies the potential for any individual to access the treasury balance without explicit approval by DCR ticket holders. It is noted that to date no evidence of treasury fund misappropriation has been observed on the public ledger.
 
 At the time of writing, and with all transactions priced at the time of occurrence, the Treasury has:
 - Received 947k DCR, equivalent to $24.6M USD.
@@ -265,13 +277,38 @@ At the time of writing, and with all transactions priced at the time of occurren
 ![treasury_balance.png](images/treasury_balance.png)
 ![treasury_spendratio.png](images/treasury_spendratio.png)
 
-The Treasury an invaluable differentiator for Decred. It creates an open, fair and equitable way for individuals to deploy and acquire DCR coins by leveraging the whole range of human skills and capabilities. Protocols secured by a pure PoW consensus rely on users acquiring coins via technically challenging and expensive mining and/or purchasing off the market. Pure PoS consensus often struggles to find a fair initial distribution method and tends to favor those who participate early in perpetuity.
+## Stakeholder Vote Power
 
-With the Decred treasury, stakeholders can be expected to act in their financial best interest, aiming to preserve and enhance the fundamental and market perception of DCR coins.
+DCR stakeholders can be expected to act in their financial best interest, aiming to preserve and enhance the fundamental and market perception of DCR coins. Given the pseudo-random time of lockup for DCR in tickets, the impact of votes on Treasury spend will be felt by stakeholders, incentivising intelligent and thoughtful discussion and decision making.
+
+This system is akin to miners protecting their ASIC investment, where stakeholders act to protect both their own DCR value and the value of the Treasury itself. Longevity of the Treasury is a key component of the Decred value proposition and thus it is in stakeholders best interest to protect it.
+
+To illustrate this point, [Naseer (2019)](https://medium.com/@Ammarooni/decred-an-alternative-contender-a3547a014745) analysed the potential value that would have accrued for Bitcoin had it implemented a Decred like Treasury system:
+
+> How much cash could Bitcoin have had, if Bitcoin had Decred’s design and a Treasury Fund? Up to $18 Billion.
+
+Every DCR ticket in the pool has equal opportunity to contribute vote power towards Treasury funding decsions. Given each ticket has a price denominated in DCR, one can establish a measure of the amount of financial power each ticket wields from the Treasury. Shown below:
+
+- Blue: Taking a ratio of the Treasury DCR balance to the number of tickets in the pool, each ticket currently carries a decision weight of 15.5 DCR. As the ticket pool osscilates fround the target of 40,960 tickets, it can be seen this metric is plateauing over time, indicating Treasury spend is on par with inflow.
+
+- Red: Taking a ratio of the above ratio with the DCR ticket price shows that each ticket has a vote power of approximately 11% of the ticket value. 
 
 ![treasury_votepower.png](images/treasury_votepower.png)
 
+## Decred, the Fair and Equitable Employer
 
+The Treasury an invaluable differentiator for Decred. It creates an open, fair and equitable way for individuals to deploy and acquire DCR coins by leveraging the whole range of human skills and capabilities. 
+
+Protocols secured by a pure PoW consensus rely on users acquiring coins via technically challenging and often expensive mining operations or by purchasing coins off the market. Pure PoS consensus blockchains often struggle to find a fair balance between a fair initial distribution, sustainable funding and avoiding perpetual wealth concentrations.
+
+For Decred, the Treasury creates and entirely new and unique opportunity for coin acquisition. People from all backgrounds, nationalities and socio-economic positions can propose, deliver and contribute their skill and time to the project and be paid for their efforts. This is a mode of employment requiring no reference checks, no background check and fully supports pseudo-anonymity and personal privacy. One merely needs to build trust with current stakeholders by active development and delivery of services deemed valuable to the project. 
+
+In fact, the author of this paper has never revealed their identity nor provided any personal information, instead opting for pseudo-anonymity and an approach of consistent delivery of work detailed in phased proposals.
+
+
+
+![treasury_summary_table.png](images/treasury_summary_table.png)
+![treasury_summary.png](images/treasury_summary.png)
 
 # Builders
 
@@ -298,12 +335,3 @@ With the Decred treasury, stakeholders can be expected to act in their financial
 ## The Cost of Time
 A feature where **Decred** differs significantly from the design of **Bitcoin** is in the allocation of 10% of the block subsidy to a network treasury. This capital may be allocated by **Decred** ticket holders towards furthering the project goals and development in an autonomous and self-sustaining manner.
 
-This mechanism carries a number of notable advantages, especially in the long term:
-
-1. **Maximising the protocol's self-sovereignty** via minimising the influence of external parties on project direction. Pure PoW or PoS cryptocurrencies to date have resorted to funding mechanisms such as venture capital raises, initial coin offerings and reliance on donations, all of which have associated constraints such competing ideologies and motivations of backers, compliance and registration with securities law, and slowness of progress (on a donation model).
-
-2. **Incentivises sustained engagement by skilled people** who meaningfully contribute to the project. This grows the pool of DCR holders with skin-in-the-game and enhances resilience of the governance model as these builders are personally motivated to see the protocol succed.
-
-3. **Builds resilience in the development progress** where responsible management of treasury funds during 'good times' can subsequently act as a back-up reserve during downturns to ensure continuued progress.
-
-At the time of writing, the **Decred** treasury is [in the process of migrating](https://proposals.decred.org/proposals/c96290a2478d0a1916284438ea2c59a1215fe768a87648d04d45f6b7ecb82c3f) to a fully on-chain wallet custodied by the pool of DCR ticket holders. This iteration in the design essentially nullifies the potential for any individual to access the treasury balance without explicit approval by DCR ticket holders. It is noted that to date no evidence of treasury fund misappropriation has been observed on the public ledger.
