@@ -16,7 +16,7 @@ The following article is the final part of a three-part study into Decred from a
 
 # Overview
 
-In this paper, I explore the aggregate **resilience, adoption and governance behaviour** of key participants in the Decred network. Decred's incentive structure is unique amongst cryptocurrency protocols, engaging the attention and action of four parties, each with a critical role in sustaining network health:
+In this paper, I explore the aggregate **resilience, adoption and governance behaviour** of key participants in the Decred network. Decred's incentive structure is unique among cryptocurrency protocols, engaging the attention and action of four parties, each with a critical role in sustaining network health:
 
 - **Users** who utilise DCR as an uncensorable and self-sovereign means for storing and transferring wealth.
 
@@ -37,7 +37,7 @@ The people who contribute to and develop the Decred codebase, market presence an
 These examples are distillations of an essential yet informal value of Decred holders, skin-in-the-game. This paper studies this aggregate behaviour driven by individual skin-in-the-game for all four user categories. It aims to describe how the Decred blockchain has performed as a whole over time.
 
 ## TL; DR
-- Growth metrics of **DCR Hodlers** has been relatively sluggish compared to Bitcoin at the same age and especially with respect to the strong ledger assurances provided by Decred. Decred has security finality guarantees orders of magnitude higher than it's current transactional throughput and has shown impressive resilience against re-organisations.
+- Growth metrics of **DCR Hodlers** has been relatively sluggish compared to Bitcoin at the same age and especially with respect to the strong ledger assurances provided by Decred. Decred has security finality guarantees orders of magnitude higher than it's current transaction throughput and has shown impressive resilience against re-organisations.
 
 - **Miners** have likely experienced challenging financial conditions through 2018 to 2019 after ASICs launched at the peak of the bull market. Early signs of difficulty ribbon recovery and block subsidy models suggest strong fundamental support exists below current DCR pricing. It is expected that miners deploying additional or next generation ASIC technology will require a sustained increase to the DCR/USD price to justify the investment.
 
@@ -47,11 +47,7 @@ These examples are distillations of an essential yet informal value of Decred ho
 
 ## Disclosure
 
-*This paper was written and researched as part of the author's [research proposal](https://proposals.decred.org/proposals/78b50f218106f5de40f9bd7f604b048da168f2afbec32c8662722b70d62e4d36) accepted by the Decred DAO. Thus, the writer was paid in DCR for their billed time undertaking the research. Nevertheless, the study aims to be objective and mathematically rigorous based on publicly available market and blockchain data. All findings can be readily verified by readers in the attached [spreadsheet](X) and all assumptions shall be clearly stated.*
-
-# UPDATE SPREADSHEET
-
-
+*This paper was written and researched as part of the author's [research proposal](https://proposals.decred.org/proposals/78b50f218106f5de40f9bd7f604b048da168f2afbec32c8662722b70d62e4d36) accepted by the Decred DAO. Thus, the writer was paid in DCR for their billed time undertaking the research. Nevertheless, the study aims to be objective and mathematically rigorous based on publicly available market and blockchain data. All findings can be readily verified by readers in the attached [spreadsheets](data/) and all assumptions shall be clearly stated.*
 
 
 # 1) The Immutable Wealth of DCR Holders
@@ -148,7 +144,7 @@ Miners invest in mining hardware and establish long term energy contracts to pro
 
 ## Growth of Hash-rate
 
-Decred launched into the 2016 market where GPU miners were readily available, and thus had an initial difficulty set to the equivalent hashpower of 256 contemporary GPUs. Decred mining has since progressed to become an ASIC dominated chain with ASICs coming online in early 2018 [[1](https://youtu.be/7K2sDhyjQys)], [[2](https://youtu.be/8TPFIVYy_i4)]. Following ASICs, the Decred hash-rate has expanded by 1,000x with most growth occuring over a one year period from 2018 to 2019.
+Decred launched into the 2016 market where GPU miners were readily available, and thus had an initial difficulty set to the equivalent hash-power of 256 contemporary GPUs. Decred mining has since progressed to become an ASIC dominated chain with ASICs coming online in early 2018 [[1](https://youtu.be/7K2sDhyjQys)], [[2](https://youtu.be/8TPFIVYy_i4)]. Following ASICs, the Decred hash-rate has expanded by 1,000x with most growth occurring over a one year period from 2018 to 2019.
 
 The Decred hash-rate currently fluctuates between 400-500 PetaHash/s, a similar magnitude to  Bitcoin circa 2015, after the introduction of ASICs in 2012. Decred hash-rate has remained relatively stable since early 2019 in response to depression of the DCR/USD price during the bear market cycle. There are remarkable similarities in the growth rate of Decred hash-power from age 0 to 4yrs compared to Bitcoin from age 3 to 6yrs.
 
@@ -213,7 +209,7 @@ The chart below shows that in the lead up to, and during a protocol consensus ch
 ![staker_consensus_change.png](images/staker_consensus_change.png)
 ![staker_ticket_pool.png](images/staker_ticket_pool.png)
 
-## Hodler Psychology
+## Stakeholder Psychology
 
 DCR holders are free to opt-out and sell their coins into the market at any time when coins are not bound in tickets. Thus, all ticket purchases carry an underlying assumption, that the individual believes the ticket price plus PoS block reward will be more valuable in the future than today.
 
@@ -328,10 +324,23 @@ The Decred Treasury is an invaluable cornerstone of the Decred project's success
 The Treasury has spent a very modest $7.25 Million with an extraordinary volume of world-class technology and products to show for it. Until very recently, the Treasury has operated at a surplus with outflows only outpacing inflows through a period of heavily depressed prices in late 2019.
 
 # Conclusion
+This paper has analysed the actual performance of the Decred blockchain after four years of operation in the context of the four key groups of participants in the network. It reveals  that the chain remains relatively small in size, however those who participate support the project intensely, even through challenging financial conditions.
 
+- Growth metrics of DCR Hodlers has been relatively sluggish compared to Bitcoin at the same age and especially with respect to the strong ledger assurances provided by Decred. Decred has security finality guarantees orders of magnitude higher than it's current transaction throughput and has shown impressive resilience against re-organisations.
 
+- Miners have likely experienced challenging financial conditions through 2018 to 2019 after ASICs launched at the peak of the bull market. Early signs of difficulty ribbon recovery and block subsidy models suggest strong fundamental support exists below current DCR pricing. It is expected that miners deploying additional or next generation ASIC technology will require a sustained increase to the DCR/USD price to justify the investment.
 
+- Stakeholders have shown remarkable resilience throughout the 2018–19 bear market with over $5.6 Billion in value spent on DCR ticket purchases (1.0 Million BTC equivalent). The governance vote to change the stake difficulty algorithm was very clearly against the fee income interest of miners, yet passed with 97.9% approval. This suggests strong alignment between miner and user values and/or strong coin and thus vote decentralisation has occurred for Decred.
 
+- Treasury spending to date has achieved a remarkable output of world-class technology relative to a modest $7.25 Million spend. The value of each DCR ticket relative to the Treasury balance (vote power) suggests strong incentives by stakeholders to protect the Treasury by personal sacrifice.
 
+> In summary, the Decred network continues to display an impressive resiliency to adverse conditions, a credit to the stronghand of participants, elegant design of hybrid PoW/PoS consensus, and Treasury funding incentive structures.
 
+> The dedication of stakeholders and miners is evident in the aggregate behaviour on-chain and manifests in along-term, conservative and well considered decision making process.
 
+## Signature
+**Decred**
+> ![Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE](images/dcr_qr.png)
+> [Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE](https://explorer.dcrdata.org/address/Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE)
+
+> Signed Message (Article Title): IMQtg3wxDHS9hd0BlPynuJiU0OkBqpbf+HSK7ZFYlWijQPXkdteq8YuUqW2izK/K+qF+MoJWQFyd2w/isfmwmKs=
