@@ -34,20 +34,14 @@ It is not uncommon for Miners, who have invested heavily in both CAPEX and OPEX 
 
 The people who contribute to and develop the Decred codebase, market presence and research base, are typically strong hand holders of DCR and active participants in Proof-of-Stake security and governance. Having developed sound understanding of Decred fundamentals, these people are often motivated and dedicated DCR HODLers of last resort.
 
-These examples are distillations of an essential yet informal value of Decred holders, skin-in-the-game. The Decred design is centred around the fundamentally crypto-anarchic principles of action and accountability of the system whilst preserving the individual's privacy and anonymity. 
-
-> Decred is a crypto-anarchic society. 
-> The whole is stronger than the sum of it's parts.
-> Yet it protects, secures and obscures each at an individual level.
-
-This paper studies this aggregate behaviour driven by individual skin-in-the-game for all four user categories. It aims to describe how the **Decred** blockchain has performed as a whole over time.
+These examples are distillations of an essential yet informal value of Decred holders, skin-in-the-game. This paper studies this aggregate behaviour driven by individual skin-in-the-game for all four user categories. It aims to describe how the Decred blockchain has performed as a whole over time.
 
 ## TL; DR
 - Growth metrics of **DCR Hodlers** has been relatively sluggish compared to Bitcoin at the same age and especially with respect to the strong ledger assurances provided by Decred. Decred has security finality guarantees orders of magnitude higher than it's current transactional throughput and has shown impressive resilience against re-organisations.
 
-- **Miners** have likely experienced challenging financial conditions through 2018 to 2019 after ASICs launched at the peak of the bull market. Early signs of difficulty ribbon recovery and block subsidy models currently suggest strong fundamental support exists below current DCR pricing. It is expected that development/deployment of new ASIC technology will require sustained DCR/USD price increase to properly justify.
+- **Miners** have likely experienced challenging financial conditions through 2018 to 2019 after ASICs launched at the peak of the bull market. Early signs of difficulty ribbon recovery and block subsidy models suggest strong fundamental support exists below current DCR pricing. It is expected that miners deploying additional or next generation ASIC technology will require a sustained increase to the DCR/USD price to justify the investment.
 
-- **Stakeholders** have shown remarkable resilience throughout the 2018-19 bear market with over $5.6 Billion in value spent on DCR ticket purchases (1.0 Million BTC equivalent). Coin distribution and key a governance vote against the fee income interest of miners suggests very strong coin and thus vote decentralisation has occurred for Decred.
+- **Stakeholders** have shown remarkable resilience throughout the 2018-19 bear market with over $5.6 Billion in value spent on DCR ticket purchases (1.0 Million BTC equivalent). The governance vote to change the stake difficulty algorithm was very clearly against the fee income interest of miners, yet passed with 97.9% approval. This suggests strong alignment between miner and user values and/or strong coin and thus vote decentralisation has occurred for Decred.
 
 - **Treasury** spending to date has achieved a remarkable output of world-class technology relative to a modest $7.25 Million spend. The value of each DCR ticket relative to the Treasury balance (vote power) suggests strong incentives by stakeholders to protect the Treasury by personal sacrifice.
 
@@ -68,7 +62,7 @@ With growing market size and increasing network decentralisation, Decred now boa
 
 ## Resistance to Reorganisations
 
-The Decred protocol is four years old and impressively has experienced very few blockchain reogranisations through history. Re-organisations to a depth of one block are natural phenomena  in blockchains (including Bitcoin) as a result of network latency and probability and usually work themselves out. As of block height 414,977, the following [block re-orgs have been detected](https://matrix.to/#/!vGasNHFXqjoEWUBTIi:decred.org/$157910732378277MwoqT:decred.org?via=decred.org&via=matrix.org&via=zettaport.com) with the majority of depth 2 and all of depth 3 being associated with a [bug encountered during the DCP004 upgrade](https://matheusd.com/post/dcp0004-and-hardforks/):
+The Decred protocol is four years old and impressively, has experienced very few blockchain reogranisations through history. Re-organisations to a depth of one block are natural phenomena  in blockchains (including Bitcoin) as a result of network latency and probability and usually work themselves out. As of block height 414,977, the following [block re-orgs have been detected](https://matrix.to/#/!vGasNHFXqjoEWUBTIi:decred.org/$157910732378277MwoqT:decred.org?via=decred.org&via=matrix.org&via=zettaport.com) with the majority of depth 2 and all of depth 3 being associated with a [bug encountered during the DCP004 upgrade](https://matheusd.com/post/dcp0004-and-hardforks/):
 
 - Depth 1 blocks = 1922 instances (0.4631%, natural phenomena).
 - Depth 2 blocks = 25 (0.006%, most during DCP004 upgrade).
@@ -96,7 +90,7 @@ Thus, it is reasonable to expect Bitcoin to have settled a higher number of coin
 
 The transaction value settled by Bitcoin and Decred on a daily basis are shown in the chart below, compared to the most adverse security budget curves developed in [Part 2 of this study](https://medium.com/@_Checkmatey_/decred-hypersecure-unforgeably-scarce-e076b91a2be). It can be seen that both protocols settle millions in USD denominated value, and orders of magnitude more than their respective security budgets. 
 
-This suggests that both protocols display a strong **Settlement Premium** where the value settled exceeds the block reward available as incentivise honest security providers. It is likely this premium is representative of the secondary costs of acquiring hardware, hash-power and coordinating the logistics of an attack. Additionally, one must consider the scope of potential reward for an attacker such as censoring specific transactions, shorting the coin price for profit or system wide disruption (mining empty block etc).
+This suggests that both protocols display a strong **Settlement Premium** where the value settled exceeds the block reward available to incentivise honest security providers. It is likely this premium is representative of the secondary costs of acquiring hardware, hash-power and coordinating the logistics of an attack. Additionally, one must consider the scope of potential reward for an attacker such as censoring specific transactions, shorting the coin price for profit or system wide disruption (mining empty block etc).
 
 For Decred, the $6.8M in value settled daily aligns approximately with the 15% ticket share security line. In other words, the cost to re-organise the Decred ledger in a double spend attack, assuming the attacker holds 15% of all tickets (at no cost), is approximately equal to the total value flowing through on the chain. Interestingly, this aligns with a typical ticket share of the [largest stake-pool](https://decred.org/vsp/). However, this likely consequential rather than a driving factor as this attack vector requires approximately 40x the honest hash-power to conduct and is thus unlikely.
 
@@ -309,11 +303,11 @@ Every DCR ticket in the pool has equal opportunity to contribute vote power towa
 
 ## Decred, the Fair and Equitable Employer
 
-The Treasury an invaluable differentiator for Decred. It creates an open, fair and equitable way for individuals to deploy and acquire DCR coins by leveraging the whole range of human skills and capabilities. 
+The Treasury is an invaluable differentiator for Decred. It creates an open, fair and equitable way for individuals to deploy and acquire DCR coins by leveraging the whole range of human skills and capabilities. 
 
 Protocols secured by a pure PoW consensus rely on users acquiring coins via technically challenging and often expensive mining operations or by purchasing coins off the market. Pure PoS consensus blockchains often struggle to find a fair balance between a fair initial distribution, sustainable funding and avoiding perpetual wealth concentrations.
 
-For Decred, the Treasury creates and entirely new and unique opportunity for coin acquisition. People from all backgrounds, nationalities and socio-economic positions can propose, deliver and contribute their skill and time to the project, and be paid for their efforts. This is a mode of employment requiring no reference checks, no background checks and fully supports pseudo-anonymity and personal privacy. One merely needs to build trust with current stakeholders by active development and delivery of services deemed valuable to the project. 
+For Decred, the Treasury creates an entirely new and unique opportunity for coin acquisition. People from all backgrounds, nationalities and socio-economic positions can propose, deliver and contribute their skill and time to the project, and be paid for their efforts. This is a mode of employment requiring no reference checks, no background checks and fully supports pseudo-anonymity and personal privacy. One merely needs to build trust with current stakeholders by active development and delivery of services deemed valuable to the project. 
 
 In fact, the author of this paper has never revealed their identity nor provided any personal information. Instead, the author opts for pseudo-anonymity and an approach of building trust via consistent delivery of work as detailed in phased proposals.
 

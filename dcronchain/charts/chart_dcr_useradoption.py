@@ -2,6 +2,8 @@
 from checkonchain.general.standard_charts import *
 from checkonchain.dcronchain.dcr_add_metrics import *
 from checkonchain.btconchain.btc_add_metrics import *
+from checkonchain.general.general_helpers import *
+
 
 
 """
@@ -38,7 +40,7 @@ BTC_half['age_days'] = (
     )
 ))
 
-
+general_helpers.df_to_csv(BTC_data,'BTC_data')
 
 """
 #############################################################################
