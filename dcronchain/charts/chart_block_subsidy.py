@@ -5,7 +5,7 @@ from checkonchain.general.general_helpers import *
 
 DCR_subs = dcr_add_metrics().dcr_ticket_models()
 
-general_helpers.df_to_csv(DCR_subs,'DCR_data')
+
 """
 #############################################################################
                     DCR USD BLOCK SUBSIDY MODELS
