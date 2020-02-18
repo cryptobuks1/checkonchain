@@ -7,9 +7,9 @@
 
 The following article is the final part of a three-part study into Decred from a data-driven and first principles perspective. The series aims to critically compare the performance of both Decred and Bitcoin across the following value metrics:
 
-1. [Monetary policy and Scarcity](https://medium.com/@_Checkmatey_/monetary-premiums-can-altcoins-compete-with-bitcoin-54c97a92c6d4)
-2. [Cost of Security and Unforgeable Costliness](https://medium.com/@_Checkmatey_/decred-hypersecure-unforgeably-scarce-e076b91a2be)
-3. Governance, User Adoption, and Resilience (this paper)
+1. [Monetary policy and Scarcity](https://medium.com/@_Checkmatey_/monetary-premiums-can-altcoins-compete-with-bitcoin-54c97a92c6d4).
+2. [Cost of Security and Unforgeable Costliness](https://medium.com/@_Checkmatey_/decred-hypersecure-unforgeably-scarce-e076b91a2be).
+3. Resilience, Aggregate Psychology and User Adoption (this paper).
 
 ![Decred Cover](images/image_cover.png)
 [*Background image courtesy of NASA*](https://www.nasa.gov/sites/default/files/styles/full_width_feature/public/thumbnails/image/iss052e007857.jpg)
@@ -47,7 +47,7 @@ These examples are distillations of an essential yet informal value of Decred ho
 
 ## Disclosure
 
-*This paper was written and researched as part of the author's [research proposal](https://proposals.decred.org/proposals/78b50f218106f5de40f9bd7f604b048da168f2afbec32c8662722b70d62e4d36) accepted by the Decred DAO. Thus, the writer was paid in DCR for their billed time undertaking the research. Nevertheless, the study aims to be objective and mathematically rigorous based on publicly available market and blockchain data. All findings can be readily verified by readers in the attached [spreadsheets](data/) and all assumptions shall be clearly stated.*
+*This paper was written and researched as part of the author's [research proposal](https://proposals.decred.org/proposals/78b50f218106f5de40f9bd7f604b048da168f2afbec32c8662722b70d62e4d36) accepted by the Decred DAO. Thus, the writer was paid in DCR for their billed time undertaking the research. Nevertheless, the study aims to be objective and mathematically rigorous based on publicly available market and blockchain data. All findings can be readily verified by readers in the attached [spreadsheets](https://github.com/checkmatey/checkonchain/tree/master/research_articles/dcr_useradoption/data) and all assumptions shall be clearly stated.*
 
 
 # 1) The Immutable Wealth of DCR Holders
@@ -225,9 +225,13 @@ Rational market actors are more likely to sell DCR they believe is overvalued, r
 
 To date, Decred stakeholders have committed over $5.6 Billion in value to the chain in ticket purchases, approximately 38x the market cap of the entire network at the time of writing. Price in BTC, this equates to 1M BTC in value purchased in tickets, two orders of magnitude greater than network value and cumulative rewards paid denominated in BTC.
 
-Interestingly, these psychological stakeholder commitment lines have acted as points of price resistance during the 2017 bull trend. For ticket holders, selling DCR at prices that exceed the aggregate 
+Interestingly, these psychological stakeholder commitment lines have acted as points of logarithmic price resistance during the 2017 bull trend. 
+
+During bullish trends, demand for DCR accumulation and tickets increase, leading to an acceleration of the cumulative ticket value line. As DCR coins approach or exceed the market's aggregate belief of 'fair price', holders will favor liquid coins or, selling for profit leading to overhead resistance.  As prices plateau or fall and ticket demand decreases, the cumulative value line in logarithmic space will plateau.
 
 Conversely, PoW miners, who's cost basis is USD denominated, cannot be expected to commit more hash-power investment than is allowed for in the USD denominated block reward. The cumulative miner USD income line has thus shown to be a level of fundamental support during bearish trends.
+
+It remains to be seen if this psychological reaction lines attain further validity through additional bull/bear cycles.
 
 ![staker_cumulative_usd.png](images/staker_cumulative_usd.png)
 
@@ -326,17 +330,62 @@ The Treasury has spent a very modest $7.25 Million with an extraordinary volume 
 # Conclusion
 This paper has analysed the actual performance of the Decred blockchain after four years of operation in the context of the four key groups of participants in the network. It reveals  that the chain remains relatively small in size, however those who participate support the project intensely, even through challenging financial conditions.
 
-- Growth metrics of DCR Hodlers has been relatively sluggish compared to Bitcoin at the same age and especially with respect to the strong ledger assurances provided by Decred. Decred has security finality guarantees orders of magnitude higher than it's current transaction throughput and has shown impressive resilience against re-organisations.
+Final summary insights for consideration of Decred stakeholders:
 
-- Miners have likely experienced challenging financial conditions through 2018 to 2019 after ASICs launched at the peak of the bull market. Early signs of difficulty ribbon recovery and block subsidy models suggest strong fundamental support exists below current DCR pricing. It is expected that miners deploying additional or next generation ASIC technology will require a sustained increase to the DCR/USD price to justify the investment.
+- Decred settlement and finality guarantees are capable to handling orders of magnitude more network traffic than it presently handles. Sluggish growth metrics are countered by strong demand for DCR tickets. This suggests Decred has slow adoption of new users but strong retention once users enter the network.
 
-- Stakeholders have shown remarkable resilience throughout the 2018–19 bear market with over $5.6 Billion in value spent on DCR ticket purchases (1.0 Million BTC equivalent). The governance vote to change the stake difficulty algorithm was very clearly against the fee income interest of miners, yet passed with 97.9% approval. This suggests strong alignment between miner and user values and/or strong coin and thus vote decentralisation has occurred for Decred.
+- Miners have endured exceptionally challenging financial conditions after ASICs launched at the peak of the 2017 bull market. Block subsidy model and early recovery of the difficulty ribbon suggest strong support below current DCR/USD pricing.
 
-- Treasury spending to date has achieved a remarkable output of world-class technology relative to a modest $7.25 Million spend. The value of each DCR ticket relative to the Treasury balance (vote power) suggests strong incentives by stakeholders to protect the Treasury by personal sacrifice.
+- The stake-diff algorithm change is a pivotal moment in Decred's history with very positive implications long term. The very clear reduction in miner fee revenue indicates that miners are either strongly aligned with users or, more likely, early DCR coin (and vote) distribution was very wide.
 
-> In summary, the Decred network continues to display an impressive resiliency to adverse conditions, a credit to the stronghand of participants, elegant design of hybrid PoW/PoS consensus, and Treasury funding incentive structures.
+- Stakeholders have bound over $5.6 Billion (1 Million BTC) in DCR tickets, each providing around 10% of the purchase price in vote weight over the Treasury. Evidence suggests that the PoS incentives and desire to accumulate DCR is strong and stakeholders actively defend the security and longevity of the chain.
 
-> The dedication of stakeholders and miners is evident in the aggregate behaviour on-chain and manifests in along-term, conservative and well considered decision making process.
+- The Treasury has spent a very modest $7.25 Million to bootstrap Decred from genesis to now and deliver world-class, open source technology. Approximately one third of accumulated DCR has been spent with an acceleration of outflows as a result of price capitulation in early 2019.
+
+> In summary, the Decred network continues to display an impressive resiliency to adverse market conditions. This is a credit to the strong-hand and commitment of all participants and elegant design of hybrid PoW/PoS consensus, and the Treasury funding mechanism.
+
+> The dedication of stakeholders, miners and contractors is evident in the aggregate network behaviour on-chain. The Decred decision making process is clearly one of long-term, conservative and well considered thinking, with remarkable output and future potential as a result.
+
+# References
+
+All data sourced from [coinmetrics.io Community data](https://coinmetrics.io/) and dcrdata via [Decred block explorer](https://explorer.dcrdata.org/#) and analysed by the author's custom code.
+
+[1] Decred Assembly - Ep15 - Decred and ASICs Part I, https://www.youtube.com/watch?v=7K2sDhyjQys&feature=youtu.be, 2017
+
+[2] Decred Assembly - Ep16 - Decred and ASICs Part II, https://www.youtube.com/watch?v=8TPFIVYy_i4&feature=youtu.be, 2017
+
+[3] Ammar Nasser, Decred - An alternative Contender, https://medium.com/@Ammarooni/decred-an-alternative-contender-a3547a014745, 2019
+
+[4] Ammar Nasser, Building a transparent future with the Decred blockchain, https://medium.com/decred/building-a-transparent-future-with-the-decred-blockchain-e77471d28059, 2020
+
+[5] Permabull Nino, Introduction to Crypto-Accounting: An Analysis of Decred as an Accounting System, https://medium.com/@permabullnino/introduction-to-crypto-accounting-an-analysis-of-decred-as-an-accounting-system-4d3e67fce28, 2019
+
+[6] Permabull Nino, Decred On-Chain: A Look at Block Subsidies, https://medium.com/@permabullnino/decred-on-chain-a-look-at-block-subsidies-6f5180932c9b, 2019
+
+[7] Decred, New Stake Difficulty Algorithm, https://medium.com/decred/new-stake-difficulty-algorithm-cdf432d623fe, 2017
+
+[8] Coinmetrics, Introducing Realized Capitalization, https://coinmetrics.io/realized-capitalization/, 2018
+
+[9] Matheus Degiovani, DCP0004 or "On RCs and fully testing consensus changes", https://matheusd.com/post/dcp0004-and-hardforks/, 2019
+
+[10] Decred Block Explorer: Treasury Address Dcur2mcGjmENx4DhNqDctW5wJCVyT3Qeqkx, https://explorer.dcrdata.org/address/Dcur2mcGjmENx4DhNqDctW5wJCVyT3Qeqkx?chart=balance&zoom=ijhhasg0-k6ok9i80&bin=month&txntype=merged_debit
+
+[11] Checkmate, Decred, Hyper-secure, Unforgeably Scarce, https://medium.com/@_Checkmatey_/decred-hypersecure-unforgeably-scarce-e076b91a2be, 2019
+
+[12] Decred blog, dcrtime: Blockchain-based Timestamps, https://blog.decred.org/2017/06/14/dcrtime-Blockchain-based-Timestamps/, 2017
+
+[13] Decred blog, On-Chain Atomic Swaps, https://blog.decred.org/2017/09/20/On-Chain-Atomic-Swaps/, 2017
+
+[14] Decred blog, Politeia in Production, https://blog.decred.org/2018/10/15/Politeia-in-Production/, 2018
+
+[15] Decred blog, A new kind of DEX, https://blog.decred.org/2018/06/05/A-New-Kind-of-DEX/, 2018
+
+[16] Decred blog, Iterating Privacy, https://blog.decred.org/2019/08/28/Iterating-Privacy/, 2019
+
+[17] Decred blog, LN & Multi-Owner Tickets, https://blog.decred.org/2019/11/11/LN-Multi-Owner-Tickets/, 2019
+
+
+ 
 
 ## Signature
 **Decred**
@@ -344,3 +393,4 @@ This paper has analysed the actual performance of the Decred blockchain after fo
 > [Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE](https://explorer.dcrdata.org/address/Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE)
 
 > Signed Message (Article Title): IMQtg3wxDHS9hd0BlPynuJiU0OkBqpbf+HSK7ZFYlWijQPXkdteq8YuUqW2izK/K+qF+MoJWQFyd2w/isfmwmKs=
+

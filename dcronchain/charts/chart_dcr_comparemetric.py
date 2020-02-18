@@ -103,7 +103,7 @@ for i in range(0,8):
 fig.update_layout(title_text="Compare Value Metrics")
 fig.update_xaxes(
     title_text="<b>Date</b>",
-    range=['2016-01-01','2018-01-01']
+    range=['2016-01-01','2020-03-01']
     )
 fig.update_yaxes(
     title_text="<b>DCR / Coin Market Cap</b>",
