@@ -1,6 +1,6 @@
 # Episode 2 - 
 
-**Topic** - Triple Entry Accounting and Consensus Coins
+**Topic** - Triple Entry Accounting and Consensus Models
 
 **Recording Date** - 29-Feb-2020
 
