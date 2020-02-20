@@ -1,12 +1,6 @@
 #Calculate the dust limit and estimate future value
-
-# Plotly Libraries (+ force browser charts)
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-import plotly.io as pio
-pio.renderers.default = "browser"
-
 from checkonchain.btconchain.btc_add_metrics import *
+from checkonchain.general.standard_charts import *
 
 #Set Constants
 blk_max = 210000*6 #max block height to calculate up to
@@ -41,7 +35,7 @@ BTC_coin['FeeSatsMean']
 BTC_coin['FeeMeanNtv']
 
 #Calculate supply function
-BTC_sply = btc_add_metrics().btc_sply(blk_max)
+BTC_sply = btc_add_metrics().btc_sply_curtailed(blk_max)
 BTC_sply['S2F_1sats_byte'] = BTC_sply['PricePlanBmodel'] * dustlim/sats
 BTC_sply['S2F_2sats_byte'] = BTC_sply['S2F_1sats_byte'] * 2
 BTC_sply['S2F_10sats_byte'] = BTC_sply['S2F_1sats_byte'] * 10
@@ -61,77 +55,87 @@ DUST COMPARED TO FEE LIMITS
 # Y-axs 2 = BTCUSD Price
 
 # Create Input Dataset
+loop_data=[[0,1,2,3,4,5,6,7,8],[9]]
 x_data = [
     BTC_sply['blk'],BTC_sply['blk'],BTC_sply['blk'],
     BTC_sply['blk'],BTC_sply['blk'],BTC_sply['blk'],
-    BTC_coin['blk'],BTC_coin['blk'],BTC_coin['blk']
+    BTC_coin['blk'],BTC_coin['blk'],BTC_coin['blk'],
+    BTC_coin['blk']
     ]
-
 y_data = [
-    BTC_sply['S2F_1sats_byte'],BTC_sply['S2F_2sats_byte'],BTC_sply['S2F_10sats_byte'],
-    BTC_sply['S2F_30sats_byte'],BTC_sply['S2F_100sats_byte'],BTC_sply['S2F_200sats_byte'],
-    BTC_coin['DustPrice'],BTC_coin['FeeMeanUSD'],BTC_coin['FeeMedUSD']
+    BTC_sply['S2F_1sats_byte'],
+    BTC_sply['S2F_2sats_byte'],
+    BTC_sply['S2F_10sats_byte'],
+    BTC_sply['S2F_30sats_byte'],
+    BTC_sply['S2F_100sats_byte'],
+    BTC_sply['S2F_200sats_byte'],
+    BTC_coin['DustPrice'],
+    BTC_coin['FeeMeanUSD'],
+    BTC_coin['FeeMedUSD'],
+    BTC_coin['PriceUSD']
 ]
-
-names = [
-    'S2F 1sats/byte','S2F 2sats/byte','S2F 10sats/byte',
-    'S2F 30sats/byte','S2F 100sats/byte','S2F 200sats/byte',
-    'Actual Dust Value','Actual Mean Fee','Actual Median Fee'
+name_data = [
+    'S2F 1sats/byte',
+    'S2F 2sats/byte',
+    'S2F 10sats/byte',
+    'S2F 30sats/byte',
+    'S2F 100sats/byte',
+    'S2F 200sats/byte',
+    'Actual Dust Value',
+    'Actual Mean Fee',
+    'Actual Median Fee',
+    'BTC/USD Price'
 ]
-
-line_size = [
-    2,1,1,
+width_data = [
     1,1,1,
-    2,2,2
+    1,1,1,
+    1,1,1,
+    2
 ]
-dash_type = [
+opacity_data = [1,1,1,1,1,1,1,1,1,1]
+dash_data = [
     'dash','dash','dash',
-    'dash','dash','dash'
+    'dash','dash','dash',
+    'solid','solid','solid',
+    'solid'
 ]
 color_data = [
-    'rgb(153, 255, 102)', 'rgb(255, 255, 102)', 'rgb(255, 204, 102)',
-    'rgb(255, 153, 102)', 'rgb(255, 102, 102)', 'rgb(255, 80, 80)',
-    'rgb(255, 255, 255)', 'rgb(102, 255, 153)', 'rgb(102, 204, 255)'
+    'rgb(153, 255, 102)', #Gradient Green
+    'rgb(255, 255, 102)', #Gradient Lime
+    'rgb(255, 204, 102)', #Gradient Yellow
+    'rgb(255, 153, 102)', #Gradient Orange
+    'rgb(255, 102, 102)', #Gradient L.Red
+    'rgb(255, 80, 80)',   #Gradient Red
+    'rgb(255, 255, 255)', #White
+    'rgb(102, 255, 153)', #Turquoise Green
+    'rgb(102, 204, 255)', #L.Blue
+    'rgb(255, 102, 0)'    #Burnt Orange
 ]
-
-fig_01 = make_subplots(specs=[[{"secondary_y": True}]])
-fig_01.update_layout(template="plotly_dark",title="Dust Limits Assuming 172 byte Size")
-#Create plots for Fee bands and Actual Performance
-for i in range(0,6):
-    fig_01.add_trace(go.Scatter(x=x_data[i], y=y_data[i],mode='lines',  name=names[i],line=dict(color=color_data[i], width=line_size[i],dash=dash_type[i])))
-for i in range(6,9):
-    fig_01.add_trace(go.Scatter(x=x_data[i], y=y_data[i],mode='lines',  name=names[i],line=dict(color=color_data[i], width=line_size[i])))
-
-fig_01.add_trace(go.Scatter(
-    x=BTC_coin['blk'], y=BTC_coin['PriceUSD'],
-    name="BTCUSD Price",line=dict(width=2,color='rgb(102, 102, 153)')),
-    secondary_y=True)
-fig_01.add_trace(go.Scatter(
-    x=BTC_sply['blk'], y=BTC_sply['PricePlanBmodel'],
-    name="S2F Model Price",line=dict(width=1,color='rgb(102, 153, 255)')),
-    secondary_y=True)
-
-fig_01.update_xaxes(
-    title_text="<b>Block Height</b>",
-    type="linear",
-    range=[70000,blk_max]
+legend_data = [True,True,True,True,True,True,True,True,True,True]
+title_data = [
+    'Bitcoin Dust Limits (Assuming 172 byte Size)',
+    '<b>Block Height</b>',
+    '<b>Fee Value (USD)</b>',
+    '<b>BTC/USD Price</b>']
+type_data = ['linear','log','log']
+range_data = [[70000,blk_max],[-6,4],[-2,8]]
+autorange_data = [False,False,False]
+type_data = ['linear','log','log']#
+fig = check_standard_charts().subplot_lines_doubleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
     )
-fig_01.update_yaxes(
-    title_text="<b>Fee Value (USD)</b>",
-    tickformat = '$0:.2f',
-    type="log",
-    secondary_y=False,
-    range=[-6,4]
-    )
-fig_01.update_yaxes(
-    title_text="<b>BTCUSD Price</b>",
-    tickformat = '$0:.2f',
-    type="log",
-    secondary_y=True,
-    range=[-2,8],
-    color='rgb(102, 102, 153)'
-    )
-fig_01.show()
+fig.update_yaxes(tickformat = '$0:.2f',secondary_y=False,)
+fig.update_yaxes(tickformat = '$0:.2f',secondary_y=True,color='rgb(255, 102, 0)')
+fig.show()
+
+
+
+
+BTC_sply['CapPlanBmodel'].where(BTC_sply['CapPlanBmodel'] <= maxVal, maxVal)
+
+
 
 
 """%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

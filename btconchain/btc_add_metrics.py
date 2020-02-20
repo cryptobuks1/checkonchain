@@ -82,12 +82,12 @@ class btc_add_metrics():
         df['PriceS2Fmodel'] = df['CapS2Fmodel']/df['Sply_ideal']
         #Calc S2F Model - Bitcoins Plan B Model
         planb_s2f_model = regression_analysis().regression_constants()['planb']
-        df['CapPlanBmodel'] = np.exp(
+        df['PricePlanBmodel'] = np.exp(
             float(planb_s2f_model['coefficient'])
             * np.log(df['S2F_ideal'])
             + float(planb_s2f_model['intercept'])
         )
-        df['PricePlanBmodel'] = df['CapPlanBmodel']/df['Sply_ideal']
+        df['CapPlanBmodel'] = df['PricePlanBmodel']*df['Sply_ideal']
         return df
     
 
