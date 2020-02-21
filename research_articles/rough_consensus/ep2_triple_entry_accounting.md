@@ -41,3 +41,6 @@
 
 - Launch listener questions (respond to episode launch on twitter, any topic is fair game and we will discuss those that get us thinking)
 - 
+
+## Community Questions
+1. Lewis Harland - To what extent does securing Decred (PoS) by constantly buying tickets deter ordinary users to participate/support the network in the long term? Are there tradeoffs (if any)?

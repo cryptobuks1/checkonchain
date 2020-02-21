@@ -136,7 +136,7 @@ fig.show()
 
 
 
-BTC_sply['CapPlanBmodel'].where(BTC_sply['CapPlanBmodel'] <= maxVal, maxVal)
+#BTC_sply['CapPlanBmodel'].where(BTC_sply['CapPlanBmodel'] <= maxVal, maxVal)
 
 
 
@@ -258,7 +258,7 @@ y_data = [
 ]
 name_data = [
     'Actual M.Cap vs TxTfrCnt',
-    'Theoretical M.Cap vs TxTfrCnt',
+    'Power Law M.Cap vs TxTfrCnt',
 ]
 width_data      = [
     3,3,
@@ -271,13 +271,7 @@ dash_data = [
 ]
 color_data = [
     'rgb(102, 255, 153)',   #Turquoise Green
-    'rgb(255, 102, 0)' ,    #Burnt Orange
-    'rgb(1, 255, 116)',     #Green
-    'rgb(102, 204, 255)',   #L.Blue
-    'rgb(20, 169, 233)',     #D.Blue
-    'rgb(255, 80, 80)',      #White
-    'rgb(254, 215, 140)',
-    'rgb(255, 102, 0)' ,
+    'rgb(255, 255, 255)' ,    #White
 ]
 legend_data = [
     True,True,False,True,True,
