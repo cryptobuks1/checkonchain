@@ -40,10 +40,8 @@ BTC_half['age_days'] = (
     )
 ))
 
-<<<<<<< HEAD
+general_helpers.df_to_csv(DCR_data,'DCR_data')
 general_helpers.df_to_csv(BTC_data,'BTC_data')
-=======
->>>>>>> master
 
 """
 #############################################################################

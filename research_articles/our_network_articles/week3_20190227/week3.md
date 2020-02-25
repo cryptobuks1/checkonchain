@@ -1,7 +1,7 @@
 # Our Network - Week 3
 
-## Insight 1 - x
-x
+## Insight 1 - The Great Inflation
+Decred maintains a similar supply curve to Bitcoin and other 
 
 ![insight_1.png](images/insight_1.png)
 
