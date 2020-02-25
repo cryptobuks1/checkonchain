@@ -15,7 +15,7 @@ import numpy as np
 import json
 from tinydecred.pydecred.dcrdata import DcrdataClient
 
-client = DcrdataClient("https://explorer.dcrdata.org/")
+client = DcrdataClient("https://alpha.dcrdata.org/")
 
 
 """

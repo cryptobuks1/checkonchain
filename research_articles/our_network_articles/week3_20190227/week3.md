@@ -17,7 +17,7 @@ An interesting trend has developed around all consensus change votes whereby the
 ## Insight 3 - Privacy Update
 The Decred privacy implementation has been live since late August 2019 and has been met with strong reception and usage. The system facilitates coin-join mixing using the CoinShuffle++ protocol combined with the constant flow of DCR in the PoS ticket pool.
 
-At present, 19% of all circulating Decred UTXOs are post-mixed, accounting for 2,113,530 DCR in the anonymity set. This counts only UTXOs that are unspent and directly associated with a privacy mix and does not include spent UTXOs nor those which subsequently purchased tickets. The actual anonymity set is likely even larger!
+The supply of mixed DCR has resumed its uptrend after rolling out stability upgrades for the mixing server allowing larger participation. The anonymity set is now at 19% of all circulating Decred UTXOs (2,113,530 DCR).
 
 ![insight_3.png](images/insight_3.png)
 
