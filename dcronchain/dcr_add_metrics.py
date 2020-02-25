@@ -52,7 +52,7 @@ class dcr_add_metrics():
             'date', 'blk','age_days','age_sply','btc_blk_est',
             'DailyIssuedNtv', 'DailyIssuedUSD', 'inf_pct_ann', 'S2F',
             'AdrActCnt', 'BlkCnt', 'BlkSizeByte', 'BlkSizeMeanByte',
-            'CapMVRVCur', 'CapMrktCurUSD', 'CapRealUSD', 'DiffMean', 
+            'CapMVRVCur', 'CapMrktCurUSD', 'CapRealUSD', 'DiffMean', 'CapMVRVCur',
             'FeeMeanNtv','FeeMeanUSD', 'FeeMedNtv', 'FeeMedUSD', 'FeeTotNtv', 'FeeTotUSD',
             'PriceBTC', 'PriceUSD', 'PriceRealUSD', 'SplyCur',
             'TxCnt', 'TxTfrCnt', 'TxTfrValAdjNtv', 'TxTfrValAdjUSD',
@@ -235,6 +235,7 @@ class dcr_add_metrics():
                 'window'                - Count of difficulty window
                 'CapMrktCurUSD'         - Market Cap (USD)
                 'CapRealUSD'            - Realised Cap (USD)
+                'CapMVRVCur'            - MVRV Ratio
                 'PriceBTC'              - Price in BTC
                 'PriceUSD'              - Price in USD
                 'PriceRealUSD'          - Realised Price (USD)
@@ -270,7 +271,7 @@ class dcr_add_metrics():
         #_blk_max = int(_coin['blk'][_coin.index[-1]])
         #Cull _coin to Key Columns
         _coin = _coin[[
-            'date','blk','age_days','age_sply','CapMrktCurUSD','CapRealUSD',
+            'date','blk','age_days','age_sply','CapMrktCurUSD','CapRealUSD','CapMVRVCur',
             'DiffMean','PriceBTC','PriceUSD','PriceRealUSD',
             'SplyCur','DailyIssuedNtv','DailyIssuedUSD','S2F',
             'inf_pct_ann','TxCnt','TxTfrCnt','TxTfrValMedNtv','TxTfrValMeanNtv',
@@ -323,7 +324,8 @@ class dcr_add_metrics():
         #Compile into final ordered dataframe
         df = df[[
             'date', 'blk', 'age_days','age_sply','window',                          #Time Metrics
-            'CapMrktCurUSD', 'CapRealUSD','PriceBTC', 'PriceUSD', 'PriceRealUSD',   #Value Metrics
+            'CapMrktCurUSD', 'CapRealUSD','CapMVRVCur',                                   #Value Metrics
+            'PriceBTC', 'PriceUSD', 'PriceRealUSD',                                 #Price Metrics
             'DailyIssuedNtv','DailyIssuedUSD','AdrActCnt','TxCnt','TxTfrCnt',       #Block Reward Metrics
             'TxTfrValNtv','TxTfrValUSD','TxTfrValAdjNtv','TxTfrValAdjUSD',          #Global Transaction Metrics
             'TxTfrValMedNtv','TxTfrValMeanNtv',                                     #Local Transaction Metrics
