@@ -1,4 +1,4 @@
-# Episode 2 - 
+# Episode 2 - Distributed Consensus
 
 **Topic** - Triple Entry Accounting and Consensus Models
 
@@ -10,7 +10,7 @@
 
 **Conversation Description** - Mister Black, Checkmate and Permabull Nino discuss the concept of triple entry accounting and how this provides a framework for analysing consensus mechanisms. The theory is that Proof-of-Work, Proof-of-Stake and Hybrid security systems provide different security and ledger assurances.
 
-## Intro (DRAFT)
+## Intro (CHECK)
 Welcome to Rough Consensus.
 
 This is our experiment with **Honest and Candid conversations** about the cryptocurrency space.
@@ -20,24 +20,25 @@ We discuss anything that comes to mind regarding **Fundamentals, Technicals and 
 I'm joined by my good friends Permabull Nino and Mister Black, gentlemen, how are we doing?
 
 
-## Intro Discussion Notes:
-In Today's episode, we will be exploring the nature of consensus and how different networks go about achieving it in a distributed manner.
+## Intro Discussion Notes (BLACK):
+In Today's episode, we will be exploring the nature of distributed consensus and how different networks go about achieving it and maintaining network security.
 
-Look at PoW, PoS and Hybrid systems with some of the market leaders as examples.
+Look at PoW, PoS and Hybrid systems with some of the market leading protocols as examples.
 
-**Events happening in CC space**
+**Events happening in CC space (ALL, BLACK TO LEAD?)**
 - Flash Loans and DeFi
 - ProgPoW governance discussions
 - Trace Mayer and mimblewimblecoin
-- Bitcoin 2.0
 
-## Topics for discussion:
+## Topics for discussion (BLACK TO INTRODUCE):
 
 What is Triple entry accounting and ledger assurances and how do they influence the security of a network?
-    - **PN:** Difference between double and triple (Ian Grigg)
+    - **NINO:** Difference between double and triple (Ian Grigg)
     - How consensus mechanisms provide different assurances
 
-PoW is the best known and most battle hardened consensus mechanism. How has it been implemented in Bitcoin and other CC's and what characteristics give it the staying power?
+### Proof of Work
+
+**BLACK:** PoW is the best known and most battle hardened consensus mechanism. How has it been implemented in Bitcoin and other CC's and what characteristics give it the staying power?
 
     - Bitcoin as the premier pure PoW protocol
     - PoW is perfect for keeping already defined rules
@@ -46,18 +47,24 @@ PoW is the best known and most battle hardened consensus mechanism. How has it b
     - Distributed PoW as energy buyer of last resort
     - PoW is likely to be a single chain due to the physical expense
 
+
+### Proof of Stake
 PoS is often touted as the main alternative to PoW requiring commitment of capital stake rather than electricity and specialised equipment. How does PoS achieve consensus and how do its ledger assurances compare to PoW?
 
+    - PoS is equally wasteful as PoW (Marginal Cost = Marginal Revenue)
+        - Auctioning off a briefcase of money, bid will be just under value
     - Ethereum and Tezos as competitors for pure PoS
     - Tezos is live, Ethereum 2.0 still underway
-    - Rotation of validator pool
+    - Risks of DeFi and lending as equivalent to rented hash-rate
 
 
-Hybrid consensus mechanisms 
+### Hybrid consensus mechanisms 
     
     - Decred and Dash are the main examples of Hybridised PoW/PoS consensus each with their own trade-offs and design ethos.
     - Decred as the most elegant implementation of Hybrid PoW/PoS
-    - Advantages and limitations of PoW, PoS and Hybrid consensus systems 
+    - Advantages and limitations of PoW, PoS and how Hybrid consensus resolves
+        - Miner centralisation
+        - Governance potential 
 
 ![Permabulls Table](images/ep2_01.jpg)
 
