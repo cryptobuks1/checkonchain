@@ -1,4 +1,4 @@
-# Episode 2 - The Long Road Ahead
+# Episode 3 - The Long Road Ahead
 
 **Topic** - Looking forward at where Cryptocurrency may end up
 
