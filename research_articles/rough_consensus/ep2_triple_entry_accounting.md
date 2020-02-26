@@ -21,9 +21,15 @@ I'm joined by my good friends Permabull Nino and Mister Black, gentlemen, how ar
 
 
 ## Intro Discussion Notes:
-- In Today's episode, we will be exploring the nature of consensus and how different networks go about achieving it in a distributed manner.
+In Today's episode, we will be exploring the nature of consensus and how different networks go about achieving it in a distributed manner.
 
 Look at PoW, PoS and Hybrid systems with some of the market leaders as examples.
+
+**Events happening in CC space**
+- Flash Loans and DeFi
+- ProgPoW governance discussions
+- Trace Mayer and mimblewimblecoin
+- Bitcoin 2.0
 
 ## Topics for discussion:
 
