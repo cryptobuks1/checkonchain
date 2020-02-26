@@ -32,12 +32,14 @@ In Today's episode, we will be looking forwards at some of the possible outcomes
 ## Topics for discussion:
 
 Fiat remains government sanctioned money
+
     - USD denominated stablecoins likely king
     - Parallel economy = check and balance
     - Store of Value narrative as inflation continues
     
 
 Fiat crumbles
+
     - Hyperbitcoinisation - Winner takes all
     - Pareto distribution - Top 5 win
         - What drives alternate value?
