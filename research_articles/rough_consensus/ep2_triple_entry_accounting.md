@@ -64,7 +64,9 @@ PoS is often touted as the main alternative to PoW requiring commitment of capit
     - Decred as the most elegant implementation of Hybrid PoW/PoS
     - Advantages and limitations of PoW, PoS and how Hybrid consensus resolves
         - Miner centralisation
-        - Governance potential 
+        - Governance potential
+        - Checks and Balances
+        - Solves Nothing at Stake
 
 ![Permabulls Table](images/ep2_01.jpg)
 

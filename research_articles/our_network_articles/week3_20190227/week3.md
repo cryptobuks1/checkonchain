@@ -7,17 +7,17 @@ It shows a very distinct relationship between DCR in tickets (blue) and PoW issu
 
 ![insight_1.png](images/insight_1.png)
 
-## Insight 2 - Stake Participation and Consensus Votes
-Decred has just completed the v7 consensus change vote which has passed with 99.94% approval. This consensus change upgrades the Decred block headers to enhance SPV wallet security, and optimise the process for PoW miners to include PoS votes. This will lead to fewer missed tickets due to network latency and provide both stakers and miners with more reliable block reward income.
-
-An interesting trend has developed around all consensus change votes so far whereby stake participation rate increases during the vote, and cools-off following it. After the v7 consensus vote completed, the stake participation rate dipped from 52% to 48% of circulating DCR, before bouncing back to XX%. **EDIT ON THURS**
-
-![insight_2.png](images/insight_2.png)
-
-## Insight 3 - Privacy Update
+## Insight 2 - Privacy Update
 The Decred privacy implementation has been live since late August 2019 and has been met with strong reception and usage. The system facilitates coin-join mixing using the CoinShuffle++ protocol, combined with the constant flow of DCR in the PoS ticket pool.
 
 The supply of mixed DCR has resumed its uptrend after rolling out further stability upgrades for the mixing server allowing wider participation. The anonymity set is now over 19% of all circulating Decred UTXOs (2,113,530 DCR). Note, this counts all mixed UTXOs (incl. tickets) which have not been spent since the mix.
+
+![insight_2.png](images/insight_2.png)
+
+## Insight 3 - Privacy Mixer Volume
+Current volumes passing through Decred coin-joins are consistently between 50,000 and 100,000 DCR per day. At recent prices of $20, the protocol is mixing between $1 to $2 Million in value per day. On the 22-Feb, a new all time high was hit with 154,223 DCR in mixed volume, equivalent to over $3 Million.
+
+The fee for mixing is just a standard blockchain transaction fee for users, meaning each [mix can completed for a few cents](https://explorer.dcrdata.org/tx/6d155cb869b40031ce6c2ccda13558d01d8732c3222cf7b888a3251efab9a5ef). 
 
 ![insight_3.png](images/insight_3.png)
 
@@ -36,3 +36,15 @@ When the thermometer is trending upwards, Decred on-chain flows are increasing v
 The chart below shows that over the past 142 days, Decred has settled 20% more native units on-chain relative to Bitcoin when adjusted for supply - an all time high for the Decred network. Note this is influenced by both increased DCR flows and reduced BTC flows.
 
 ![insight_5.png](images/insight_5.jpg)
+
+
+
+
+
+## NOT USED
+Decred has just completed the v7 consensus change vote which has passed with 99.94% approval. This consensus change upgrades the Decred block headers to enhance SPV wallet security, and optimise the process for PoW miners to include PoS votes. This will lead to fewer missed tickets due to network latency and provide both stakers and miners with more reliable block reward income.
+
+An interesting trend has developed around all consensus change votes so far whereby stake participation rate increases during the vote, and cools-off following it. After the v7 consensus vote completed, the stake participation rate dipped from 52% to 48% of circulating DCR, before bouncing back to XX%. **EDIT ON THURS**
+
+
+![insight_2_spare.png](images/insight_2_spare.png)
