@@ -13,9 +13,9 @@
 ## Intro (DRAFT)
 Welcome to Rough Consensus.
 
-This is our experiment with **honest and candid conversations** about cryptocurrencies.
+This is our experiment with **Honest and Candid conversations** about the cryptocurrency space.
 
-We discuss anything which comes to mind regarding **Fundamentals, Technicals and On-chain Analysis**.
+We discuss anything that comes to mind regarding **Fundamentals, Technicals and On-chain Analysis**.
 
 I'm joined by my good friends Permabull Nino and Mister Black, gentlemen, how are we doing?
 
