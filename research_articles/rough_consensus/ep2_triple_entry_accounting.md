@@ -25,16 +25,26 @@ In Today's episode, we will be exploring the nature of distributed consensus and
 
 Look at PoW, PoS and Hybrid systems with some of the market leading protocols as examples.
 
-**Events happening in CC space (ALL, BLACK TO LEAD?)**
-- Flash Loans and DeFi
-- ProgPoW governance discussions
-- Trace Mayer and mimblewimblecoin
+
+## Opening Discussion - Global Markets
+    
+    - How will crypto fair?
+
+
 
 ## Topics for discussion (BLACK TO INTRODUCE):
 
 What is Triple entry accounting and ledger assurances and how do they influence the security of a network?
     - **NINO:** Difference between double and triple (Ian Grigg)
     - How consensus mechanisms provide different assurances
+
+![Permabulls Table](images/ep2_01.jpg)
+
+GENERAL STRATEGY FOR EACH CONSENSUS MECHANISM
+    - The Mechanics
+    - The Economics
+    - The Advantages
+    - The Limitations
 
 ### Proof of Work
 
@@ -46,6 +56,10 @@ What is Triple entry accounting and ledger assurances and how do they influence 
     - Difficulty adjustment controls supply
     - Distributed PoW as energy buyer of last resort
     - PoW is likely to be a single chain due to the physical expense
+
+**Thoughts on ASICs vs GPU/CPUs**
+    
+**Impact of ProgPOW for and against**
 
 
 ### Proof of Stake
@@ -68,13 +82,8 @@ PoS is often touted as the main alternative to PoW requiring commitment of capit
         - Checks and Balances
         - Solves Nothing at Stake
 
-![Permabulls Table](images/ep2_01.jpg)
 
 
-## Exit Discussion Notes
-
-- Launch listener questions (respond to episode launch on twitter, any topic is fair game and we will discuss those that get us thinking)
-- 
 
 ## Community Questions
 1. Lewis Harland - To what extent does securing Decred (PoS) by constantly buying tickets deter ordinary users to participate/support the network in the long term? Are there tradeoffs (if any)?
