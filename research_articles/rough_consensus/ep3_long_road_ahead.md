@@ -56,4 +56,12 @@ Fiat crumbles
 - 
 
 ## Community Questions
-1. x
+1. Pablito - PoS voting leverages smart holders to make good decisions. A massive network would have tons of decisions to be made.
+
+Do you see this model scaling while avoiding known pitfalls like delegation? If so, what does it need to scale appropriately?
+
+
+2. Issedjur - If Decred creates a new way of human collaboration, towards fairer games. 
+
+Which games do you see possible for Decred to create fairer? 
+If you were to expand your imagination beyond what is in the pipeline.

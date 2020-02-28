@@ -35,27 +35,29 @@ Look at PoW, PoS and Hybrid systems with some of the market leading protocols as
 ## Topics for discussion (BLACK TO INTRODUCE):
 
 What is Triple entry accounting and ledger assurances and how do they influence the security of a network?
-    - **NINO:** Difference between double and triple (Ian Grigg)
-    - How consensus mechanisms provide different assurances
+
+- **NINO:** Difference between double and triple (Ian Grigg)
+- How consensus mechanisms provide different assurances
 
 ![Permabulls Table](images/ep2_01.jpg)
 
 GENERAL STRATEGY FOR EACH CONSENSUS MECHANISM
-    - The Mechanics
-    - The Economics
-    - The Advantages
-    - The Limitations
+
+- The Mechanics
+- The Economics
+- The Advantages
+- The Limitations
 
 ### Proof of Work
 
 **BLACK:** PoW is the best known and most battle hardened consensus mechanism. How has it been implemented in Bitcoin and other CC's and what characteristics give it the staying power?
 
-    - Bitcoin as the premier pure PoW protocol
-    - PoW is perfect for keeping already defined rules
-    - PoW is poor at creating new rules and adaptation (feature and bug)
-    - Difficulty adjustment controls supply
-    - Distributed PoW as energy buyer of last resort
-    - PoW is likely to be a single chain due to the physical expense
+- Bitcoin as the premier pure PoW protocol
+- PoW is perfect for keeping already defined rules
+- PoW is poor at creating new rules and adaptation (feature and bug)
+- Difficulty adjustment controls supply
+- Distributed PoW as energy buyer of last resort
+- PoW is likely to be a single chain due to the physical expense
 
 **Thoughts on ASICs vs GPU/CPUs**
     
@@ -65,22 +67,22 @@ GENERAL STRATEGY FOR EACH CONSENSUS MECHANISM
 ### Proof of Stake
 PoS is often touted as the main alternative to PoW requiring commitment of capital stake rather than electricity and specialised equipment. How does PoS achieve consensus and how do its ledger assurances compare to PoW?
 
-    - PoS is equally wasteful as PoW (Marginal Cost = Marginal Revenue)
-        - Auctioning off a briefcase of money, bid will be just under value
-    - Ethereum and Tezos as competitors for pure PoS
-    - Tezos is live, Ethereum 2.0 still underway
-    - Risks of DeFi and lending as equivalent to rented hash-rate
+- PoS is equally wasteful as PoW (Marginal Cost = Marginal Revenue)
+    - Auctioning off a briefcase of money, bid will be just under value
+- Ethereum and Tezos as competitors for pure PoS
+- Tezos is live, Ethereum 2.0 still underway
+- Risks of DeFi and lending as equivalent to rented hash-rate
 
 
 ### Hybrid consensus mechanisms 
     
-    - Decred and Dash are the main examples of Hybridised PoW/PoS consensus each with their own trade-offs and design ethos.
-    - Decred as the most elegant implementation of Hybrid PoW/PoS
-    - Advantages and limitations of PoW, PoS and how Hybrid consensus resolves
-        - Miner centralisation
-        - Governance potential
-        - Checks and Balances
-        - Solves Nothing at Stake
+- Decred and Dash are the main examples of Hybridised PoW/PoS consensuseach with their own trade-offs and design ethos.
+- Decred as the most elegant implementation of Hybrid PoW/PoS
+- Advantages and limitations of PoW, PoS and how Hybrid consensusresolves
+    - Miner centralisation
+    - Governance potential
+    - Checks and Balances
+    - Solves Nothing at Stake
 
 
 
