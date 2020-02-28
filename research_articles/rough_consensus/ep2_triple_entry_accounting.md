@@ -11,6 +11,7 @@
 **Conversation Description** - Mister Black, Checkmate and Permabull Nino discuss the concept of triple entry accounting and how this provides a framework for analysing consensus mechanisms. The theory is that Proof-of-Work, Proof-of-Stake and Hybrid security systems provide different security and ledger assurances.
 
 ## Intro (CHECK)
+
 Welcome to Rough Consensus.
 
 This is our experiment with **Honest and Candid conversations** about the cryptocurrency space.
@@ -21,6 +22,7 @@ I'm joined by my good friends Permabull Nino and Mister Black, gentlemen, how ar
 
 
 ## Intro Discussion Notes (BLACK):
+
 In Today's episode, we will be exploring the nature of distributed consensus and how different networks go about achieving it and maintaining network security.
 
 Look at PoW, PoS and Hybrid systems with some of the market leading protocols as examples.
@@ -65,6 +67,7 @@ GENERAL STRATEGY FOR EACH CONSENSUS MECHANISM
 
 
 ### Proof of Stake
+
 PoS is often touted as the main alternative to PoW requiring commitment of capital stake rather than electricity and specialised equipment. How does PoS achieve consensus and how do its ledger assurances compare to PoW?
 
 - PoS is equally wasteful as PoW (Marginal Cost = Marginal Revenue)
@@ -88,4 +91,5 @@ PoS is often touted as the main alternative to PoW requiring commitment of capit
 
 
 ## Community Questions
+
 1. Lewis Harland - To what extent does securing Decred (PoS) by constantly buying tickets deter ordinary users to participate/support the network in the long term? Are there tradeoffs (if any)?
