@@ -10,6 +10,7 @@ from checkonchain.general.coinmetrics_api import * #Coinmetrics.io
 from checkonchain.general.regression_analysis import *
 from checkonchain.dcronchain.dcr_schedule import * #DCR Schedule
 from checkonchain.dcronchain.dcr_dcrdata_api import * #DCRdata.org
+from checkonchain.general.general_helpers import *
 
 import os
 os.getcwd()
@@ -334,6 +335,7 @@ class dcr_add_metrics():
             'dcr_tic_sply_avg','tic_day', 'tic_price_avg', 'tic_pool_avg',          #Ticket Metrics
             'DiffMean','pow_diff_avg', 'pow_hashrate_THs_avg', 'pow_work_TH'        #PoW Metrics
             ]]
+        general_helpers.df_to_csv(df,'DCR_data')
         return df
 
     def dcr_subsidy_models(self):
@@ -510,3 +512,5 @@ class dcr_add_metrics():
 #DCR_real = dcr_add_metrics().dcr_real()
 #DCR_sply = dcr_add_metrics().dcr_sply(500000)
 #DCR_tics = dcr_add_metrics().dcr_ticket_models()
+
+DCR_real = dcr_add_metrics().dcr_ticket_models()

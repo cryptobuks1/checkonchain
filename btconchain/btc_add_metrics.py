@@ -11,6 +11,7 @@ import quandl
 from checkonchain.general.coinmetrics_api import *
 from checkonchain.general.regression_analysis import *
 from checkonchain.btconchain.btc_schedule import *
+from checkonchain.general.general_helpers import *
 
 
 class btc_add_metrics():
@@ -119,6 +120,7 @@ class btc_add_metrics():
             'S2F','inf_pct_ann', 'SplyCur',                                         #Supply Metrics
             'DiffMean', 'notes'                                                     #PoW Metrics
         ]]
+        general_helpers.df_to_csv(df,'BTC_data')
         return df
 
     def btc_hash(self):
@@ -213,3 +215,5 @@ class btc_add_metrics():
         return df
 
 #BTC_subs = btc_add_metrics().btc_oscillators()
+#BTC_real = btc_add_metrics().btc_real()
+

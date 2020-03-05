@@ -16,7 +16,7 @@ BTC_coin = BTC_coin.loc[:,[
     'date','blk',
     'CapMrktCurUSD',
     'PriceUSD','PriceRealised','SplyCur',
-    'BlkCnt','BlkSizeByte','BlkSizeMeanByte	',
+    'BlkCnt','BlkSizeByte','BlkSizeMeanByte',
     'FeeMeanNtv','FeeMeanUSD',
     'FeeMedNtv','FeeMedUSD',
     'FeeTotNtv','FeeTotUSD',
@@ -24,7 +24,6 @@ BTC_coin = BTC_coin.loc[:,[
     ]]
 
 
-#Calculate Actual Fee performance
 #USD cost of a dust transaction
 BTC_coin['DustPrice']=dustlim/sats * BTC_coin['PriceUSD']
 #Minimum viable USD transaction assuming max_fee rate
@@ -38,6 +37,12 @@ BTC_coin['DustSizeByte'] = dustlim #dust limit in bytes
 #Mean Fee(BTC) * Sats = Mean Fee(sats) / Mean Bytes per Tx = Mean sats/byte
 BTC_coin['FeeSatsByteMean']=BTC_coin['FeeMeanNtv'] * sats / BTC_coin['TxTfrSizeByte']
 BTC_coin['FeeSatsByteMed']=BTC_coin['FeeMedNtv'] * sats / BTC_coin['TxTfrSizeByte']
+#Calculate Max Transactions per block assuming 2MB blocks
+BTC_coin['TPByte_TxTfr_1MB'] =  1000000 / BTC_coin['TxTfrSizeByte'].rolling(90).mean()
+BTC_coin['TPByte_TxTfr_2MB'] =  2000000 / BTC_coin['TxTfrSizeByte'].rolling(90).mean()
+#Calculate BLock Utilisation Rate (Avg block size / 1MB)
+BTC_coin['BlkByteUtil_1MB'] = BTC_coin['BlkSizeMeanByte'] / 1e6
+BTC_coin['BlkByteUtil_2MB'] = BTC_coin['BlkSizeMeanByte'] / 2e6
 
 
 #Calculate Supply Function
@@ -116,7 +121,7 @@ color_data = [
 ]
 legend_data = [True,True,True,True,True,True,True,True,True,True]
 title_data = [
-    'Bitcoin Dust Limits (Assuming 172 byte Size)',
+    'Bitcoin Dust Pricing Bands (Assuming 172 byte Size)',
     '<b>Block Height</b>',
     '<b>Fee Value (USD)</b>',
     '<b>BTC/USD Price</b>']
@@ -134,19 +139,13 @@ fig.update_yaxes(tickformat = '$0:.2f',secondary_y=True,color='rgb(255, 102, 0)'
 fig.show()
 
 
-
-
-#BTC_sply['CapPlanBmodel'].where(BTC_sply['CapPlanBmodel'] <= maxVal, maxVal)
-
-
-
-
 """
 #############################################################################
-                    BYTES PER TX AND SATS/BYTE
+                BYTES PER TX + BLOCK UTILISATION
 #############################################################################
 """
-loop_data=[[0,1,2,3,4],[5,6]]
+
+loop_data=[[3,4,5,6],[0,1,2]]
 x_data = [
     BTC_coin['blk'],
     BTC_coin['blk'],
@@ -157,64 +156,136 @@ x_data = [
     BTC_coin['blk'],
     ]
 y_data = [
-    BTC_coin['TxCntSizeByte'],
-    BTC_coin['TxCntSizeByte'].rolling(90).mean(),
     BTC_coin['TxTfrSizeByte'],
     BTC_coin['TxTfrSizeByte'].rolling(90).mean(),
     BTC_coin['DustSizeByte'],
-    BTC_coin['FeeSatsByteMean'].rolling(14).mean(),
-    BTC_coin['FeeSatsByteMed'].rolling(14).mean(),
+    BTC_coin['BlkByteUtil_1MB'],
+    BTC_coin['BlkByteUtil_1MB'].rolling(90).mean(),
+    BTC_coin['BlkByteUtil_2MB'],
+    BTC_coin['BlkByteUtil_2MB'].rolling(90).mean(),
 ]
 name_data = [
-    'Bytes per TxCnt',
-    'Bytes per TxCnt (90 DMA)',
     'Bytes per TxTfr',
     'Bytes per TxTfr (90 DMA)',
-    'Dust Limit',
-    'Mean Sats/byte',
-    'Median Sats/byte',
+    'Assumed Dust Limit (176bytes)',
+    'Blockspace Utilisation (1MB)',
+    'Blockspace Utilisation (1MB)',
+    'Blockspace Utilisation (2MB)',
+    'Blockspace Utilisation (2MB)',
 ]
 width_data      = [
-    1,3,1,3,3,
-    1,1
+    1,3,3,
+    1,3,1,3
     ]
 opacity_data    = [
-    0.5,1,0.5,1,1,
-    0.5,0.5
+    0.5,1,1,
+    0.5,1,0.5,1
     ]
 dash_data = [
-    'solid','dash','solid','dash','dash',
-    'solid','solid',
+    'solid','dash','dash',
+    'dot','dash','dot','dash',
 ]
 color_data = [
-    'rgb(102, 255, 153)',   #Turquoise Green
-    'rgb(1, 255, 116)',     #Green
+    #'rgb(102, 255, 153)',   #Turquoise Green
+    #'rgb(1, 255, 116)',     #Green
     'rgb(102, 204, 255)',   #L.Blue
-    'rgb(20, 169, 233)',       #D.Blue
-    'rgb(255, 80, 80)',      #White
-    'rgb(254, 215, 140)',   #Matte Yellow
+    'rgb(20, 169, 233)',    #D.Blue
+    'rgb(255, 80, 80)',     #Red
+    #'rgb(102, 255, 153)',   #Turquoise Green
+    #'rgb(1, 255, 116)',     #Green
+    'rgb(254,215,140)',     #Matte Yellow
+    'rgb(254,215,140)',     #Matte Yellow
+    'rgb(255, 102, 0)' ,    #Burnt Orange
     'rgb(255, 102, 0)' ,    #Burnt Orange
 ]
 legend_data = [
-    False,True,False,True,True,
-    True,True
+    #False,True,
+    False,True,True,
+    False,True,False,True
     ]
 title_data = [
-    'Bitcoin Transaction Byte Size',
+    'Bitcoin Blockspace Utilisation',
     '<b>Block Height</b>',
-    '<b>Transaction Size (bytes)</b>',
-    '<b>Sats per byte</b>']
-type_data = ['linear','log','log']
-range_data = [[0,650000],[-6,4],[0,3]]
-autorange_data = [False,True,False]
-type_data = ['linear','log','log']#
+    '<b>Blockspace Utilisation</b>',
+    '<b>Transaction Size (bytes)</b>']
+range_data = [[0,735000],[0,1.5],[0,1000]]
+autorange_data = [False,False,False]
+type_data = ['linear','linear','linear']#
 fig = check_standard_charts().subplot_lines_doubleaxis(
     title_data, range_data ,autorange_data ,type_data,
     loop_data,x_data,y_data,name_data,color_data,
     dash_data,width_data,opacity_data,legend_data
     )
+fig.update_xaxes(dtick=52500)
+fig.update_yaxes(secondary_y=False,tickformat=',.0%',dtick=0.25,color='rgb(254,215,140)',showgrid=True)  #Primary Yellow
+fig.update_yaxes(secondary_y=True,color='rgb(102, 204, 255)') #Secondary L.Blue
 fig.show()
 
+
+
+"""
+#############################################################################
+                    SATS/BYTE AND TPS
+#############################################################################
+"""
+loop_data=[[0,1],[2,3]]
+x_data = [
+    BTC_coin['blk'],
+    BTC_coin['blk'],
+    BTC_coin['blk'],
+    BTC_coin['blk'],
+    ]
+y_data = [
+    BTC_coin[BTC_coin['FeeSatsByteMean']>1]['FeeSatsByteMean'], #Cull all values < 1
+    BTC_coin[BTC_coin['FeeSatsByteMed']>1]['FeeSatsByteMed'], #Cull all values < 1
+    BTC_coin['TPByte_TxTfr_1MB'],
+    BTC_coin['TPByte_TxTfr_2MB'],
+]
+name_data = [
+    'Mean Sats/byte',
+    'Median Sats/byte',
+    'TxCnt per Block',
+    'TxTfr per Block',
+]
+width_data      = [
+    2,2,
+    2,2
+    ]
+opacity_data    = [
+    1,1,
+    1,1,
+    ]
+dash_data = [
+    'solid','solid',
+    'dot','dot',
+]
+color_data = [
+    'rgb(102, 255, 153)',   #Turquoise Green
+    'rgb(102, 204, 255)',   #L.Blue
+    'rgb(1, 255, 116)',     #Green
+    'rgb(102, 204, 255)',   #L.Blue
+]
+legend_data = [
+    True,True,
+    True,True,
+    ]
+title_data = [
+    'Bitcoin Fees',
+    '<b>Block Height</b>',
+    '<b>Fee Rate (sats/byte)</b>',
+    '<b>Transactions per Block</b>']
+type_data = ['linear','log','linear']
+range_data = [[0,650000],[0,4],[2000,14000]]
+autorange_data = [False,False,False]
+fig = check_standard_charts().subplot_lines_doubleaxis(
+    title_data, range_data ,autorange_data ,type_data,
+    loop_data,x_data,y_data,name_data,color_data,
+    dash_data,width_data,opacity_data,legend_data
+    )
+fig.update_xaxes(dtick=52500)
+fig.update_yaxes(secondary_y=True,color='rgb(254, 215, 140)')
+fig.update_yaxes(secondary_y=True,color='rgb(102, 204, 255)')
+fig.show()
 
 
 
