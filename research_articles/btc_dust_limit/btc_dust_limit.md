@@ -1,4 +1,52 @@
-# Forecasting the Bitcoin Fee Market
+# The Bitcoin Fee Market
+
+
+
+
+
+
+# Blockchain Transaction Capacity
+
+## UTXO Data Footprint
+
+![btc_tx_size_bytes](images/btc_tx_size_bytes.png)
+
+
+
+## Blockspace Utilisation
+![btc_blockspace_utilisation.png](images/btc_blockspace_utilisation.png)
+
+
+# Fee Market Performance
+
+## Fee Rate (Sats/byte)
+
+![btc_satbyte](images/btc_satbyte.png)
+
+![btc_feecycle_table](images/btc_feecycle_table.png)
+![btc_feecycle_chart](images/btc_feecycle_chart.png)
+
+
+
+# Forecasting Fee Development
+
+![btc_dust_limit_uncapped](images/btc_dust_limit_uncapped.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -13,9 +61,3 @@
 ## Points of Research and Assumptions
 - Ceiling market value (total cash, total SoV)
 - Limits of a
-
-![btc_tx_size_bytes](images/btc_tx_size_bytes.png)
-
-
-![btc_dust_limit_uncapped](images/btc_dust_limit_uncapped.png)
-

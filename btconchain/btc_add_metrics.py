@@ -212,6 +212,11 @@ class btc_add_metrics():
         df['MayerMultiple'] = df['PriceUSD']/df['PriceUSD_200DMA']
         df['S2FMultiple'] = df['PriceUSD']/df['PricePlanBmodel']
         df['DiffMultiple'] = df['PriceUSD']/df['PriceDiffmodel']
+
+        df['Puell_Multiple'] = (
+            df['DailyIssuedUSD']
+            / df['DailyIssuedUSD'].rolling(365).mean()
+        )
         return df
 
 #BTC_subs = btc_add_metrics().btc_oscillators()

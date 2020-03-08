@@ -512,5 +512,3 @@ class dcr_add_metrics():
 #DCR_real = dcr_add_metrics().dcr_real()
 #DCR_sply = dcr_add_metrics().dcr_sply(500000)
 #DCR_tics = dcr_add_metrics().dcr_ticket_models()
-
-DCR_real = dcr_add_metrics().dcr_ticket_models()
