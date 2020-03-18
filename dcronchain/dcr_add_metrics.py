@@ -90,6 +90,16 @@ class dcr_add_metrics():
             )
             #Add Notes
             df.loc[df.date==i,'notes'] = df_early.loc[df_early.date==i,'notes']
+        #Populate Columns which early prices feed into
+        df = general_helpers.early_price_metric(df,'DailyIssuedUSD','DailyIssuedNtv')
+        df = general_helpers.early_price_metric(df,'FeeTotUSD','FeeTotNtv')
+        df = general_helpers.early_price_metric(df,'FeeMeanUSD','FeeMeanNtv')
+        df = general_helpers.early_price_metric(df,'FeeMedUSD','FeeMedNtv')
+        df = general_helpers.early_price_metric(df,'TxTfrValAdjUSD','TxTfrValAdjNtv')
+        df = general_helpers.early_price_metric(df,'TxTfrValUSD','TxTfrValNtv')
+        df = general_helpers.early_price_metric(df,'TxTfrValMeanUSD','TxTfrValMeanNtv')
+        df = general_helpers.early_price_metric(df,'TxTfrValMedUSD','TxTfrValMedNtv')
+        
         # Restructure final dataset
         df = df[[
             'date', 'blk','age_days','age_sply','btc_blk_est',

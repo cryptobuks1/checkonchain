@@ -37,8 +37,8 @@ class check_standard_charts():
     def __init__(self):
         self._background = 'rgb(20,20,20)'
         self._font = 'Raleway'
-        self._titlesize = 26
-        self._legendsize = 16
+        self._titlesize = 32
+        self._legendsize = 18
         self._axesfontsize = 20
         self._tickfontsize = 16
         self._gridcolor = 'rgb(50,50,50)'
@@ -46,6 +46,25 @@ class check_standard_charts():
         self._zerolinecolor = 'rgb(50,50,50)'
         self._annotation = '@_checkmatey_'
         self._annotation_y = 1.0 #Y Position
+
+    def add_annotation(self,fig,annotation):
+        """Add additional annotation under checkmatey"""
+        fig.add_annotation(
+            x=0.5,
+            y=(self._annotation_y - 0.05),
+            text=annotation,
+            showarrow=False,
+            xref="paper",
+            yref="paper",
+            opacity=0.75,
+            font=dict(
+                family=self._font,
+                size=16,
+                color=self._gridcolor
+            )
+        )
+
+        return fig
 
     def basic_chart(self,x_data,y_data,name_data,loop_data,title_data,type_data):
         fig = make_subplots(specs=[[{"secondary_y": True}]])
