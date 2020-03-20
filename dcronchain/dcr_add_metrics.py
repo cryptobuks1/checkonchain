@@ -433,6 +433,8 @@ class dcr_add_metrics():
         #df['dcr_hodl']          = (df['dcr_tic_vol'] / df['PoS_income_dcr'])
         #df['dcr_hodl_pool']     = df['dcr_hodl']*df['dcr_tic_sply_avg']/1e8*df['PriceUSD']
         #df['dcr_hodl_posideal'] = df['dcr_hodl']*df['SplyCur']*self.blkrew_ratio[1]*df['PriceUSD']
+        
+        general_helpers.df_to_csv(df,'DCR_tics')
         return df
 
     def dcr_multiples(self):
@@ -521,4 +523,4 @@ class dcr_add_metrics():
 #DCR_natv = dcr_add_metrics().dcr_natv()
 #DCR_real = dcr_add_metrics().dcr_real()
 #DCR_sply = dcr_add_metrics().dcr_sply(500000)
-#DCR_tics = dcr_add_metrics().dcr_ticket_models()
+DCR_tics = dcr_add_metrics().dcr_ticket_models()

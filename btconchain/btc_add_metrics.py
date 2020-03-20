@@ -220,5 +220,5 @@ class btc_add_metrics():
         return df
 
 #BTC_subs = btc_add_metrics().btc_oscillators()
-#BTC_real = btc_add_metrics().btc_real()
+BTC_real = btc_add_metrics().btc_real()
 
