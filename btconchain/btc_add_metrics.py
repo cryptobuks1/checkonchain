@@ -57,10 +57,10 @@ class btc_add_metrics():
             df.loc[df.date==i,'notes'] = 'PriceUSD and CapMrktCurUSD from Plan B data (@100TrillionUSD)'
         #Restructure final dataset
         df = df[[
-            'date', 'blk','age_days','age_sply',
+            'date', 'blk','BlkCnt','age_days','age_sply',
             'DailyIssuedNtv', 'DailyIssuedUSD', 'inf_pct_ann', 'S2F',
             'AdrActCnt', 'BlkCnt', 'BlkSizeByte', 'BlkSizeMeanByte',
-            'CapMVRVCur', 'CapMrktCurUSD', 'CapRealUSD', 'DiffMean', 
+            'CapMVRVCur', 'CapMrktCurUSD', 'CapRealUSD', 'DiffMean', 'HashRate',
             'FeeMeanNtv','FeeMeanUSD', 'FeeMedNtv', 'FeeMedUSD', 'FeeTotNtv', 'FeeTotUSD',
             'PriceBTC', 'PriceUSD', 'PriceRealUSD', 'SplyCur',
             'TxCnt', 'TxTfrCnt', 'TxTfrValAdjNtv', 'TxTfrValAdjUSD',
@@ -111,14 +111,14 @@ class btc_add_metrics():
         _coin = self.btc_coin()
         _blk_max = int(_coin['blk'][_coin.index[-1]])
         df = _coin[[
-            'date', 'blk', 'age_days','age_sply',                                   #Time Metrics
+            'date', 'blk','BlkCnt', 'age_days','age_sply',                                   #Time Metrics
             'CapMrktCurUSD', 'CapRealUSD', 'PriceUSD', 'PriceRealUSD',              #Value Metrics
             'DailyIssuedNtv', 'DailyIssuedUSD','AdrActCnt','TxCnt', 'TxTfrCnt',     #Block Reward Metrics
             'TxTfrValAdjNtv', 'TxTfrValAdjUSD', 'TxTfrValNtv', 'TxTfrValUSD',       #Global Transaction Metrics
             'TxTfrValMeanNtv', 'TxTfrValMeanUSD', 'TxTfrValMedNtv','TxTfrValMedUSD',#Local Transaction Metrics             
             'FeeTotNtv','FeeTotUSD',                                                #Fee Metrics
             'S2F','inf_pct_ann', 'SplyCur',                                         #Supply Metrics
-            'DiffMean', 'notes'                                                     #PoW Metrics
+            'DiffMean', 'HashRate','notes'                                          #PoW Metrics
         ]]
         general_helpers.df_to_csv(df,'BTC_data')
         return df
@@ -220,5 +220,5 @@ class btc_add_metrics():
         return df
 
 #BTC_subs = btc_add_metrics().btc_oscillators()
-BTC_real = btc_add_metrics().btc_real()
+#BTC_real = btc_add_metrics().btc_real()
 

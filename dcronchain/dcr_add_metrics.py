@@ -53,9 +53,9 @@ class dcr_add_metrics():
             'date', 'blk','age_days','age_sply','btc_blk_est',
             'DailyIssuedNtv', 'DailyIssuedUSD', 'inf_pct_ann', 'S2F',
             'AdrActCnt', 'BlkCnt', 'BlkSizeByte', 'BlkSizeMeanByte',
-            'CapMVRVCur', 'CapMrktCurUSD', 'CapRealUSD', 'DiffMean', 'CapMVRVCur',
+            'CapMVRVCur', 'CapMrktCurUSD', 'CapRealUSD','CapRealBTC', 'DiffMean', 'CapMVRVCur',
             'FeeMeanNtv','FeeMeanUSD', 'FeeMedNtv', 'FeeMedUSD', 'FeeTotNtv', 'FeeTotUSD',
-            'PriceBTC', 'PriceUSD', 'PriceRealUSD', 'SplyCur',
+            'PriceBTC', 'PriceUSD', 'PriceRealUSD','PriceRealBTC', 'BTC_PriceUSD', 'SplyCur',
             'TxCnt', 'TxTfrCnt', 'TxTfrValAdjNtv', 'TxTfrValAdjUSD',
             'TxTfrValMeanNtv', 'TxTfrValMeanUSD', 'TxTfrValMedNtv',
             'TxTfrValMedUSD', 'TxTfrValNtv', 'TxTfrValUSD',
@@ -100,14 +100,20 @@ class dcr_add_metrics():
         df = general_helpers.early_price_metric(df,'TxTfrValMeanUSD','TxTfrValMeanNtv')
         df = general_helpers.early_price_metric(df,'TxTfrValMedUSD','TxTfrValMedNtv')
         
+        #Calculate Realised Cap and Price in BTC
+        df['BTC_PriceUSD'] = df['PriceUSD'] / df['PriceBTC'] #BTC Price USD
+        df['CapRealBTC']   = df['CapRealUSD'].diff(periods=1)/df['BTC_PriceUSD']
+        df['CapRealBTC']   = df['CapRealBTC'].cumsum()
+        df['PriceRealBTC'] = df['CapRealBTC'] / df['SplyCur']
+
         # Restructure final dataset
         df = df[[
             'date', 'blk','age_days','age_sply','btc_blk_est',
             'DailyIssuedNtv', 'DailyIssuedUSD', 'inf_pct_ann', 'S2F',
             'AdrActCnt', 'BlkCnt', 'BlkSizeByte', 'BlkSizeMeanByte',
-            'CapMVRVCur', 'CapMrktCurUSD', 'CapRealUSD', 'DiffMean', 
+            'CapMVRVCur', 'CapMrktCurUSD', 'CapRealUSD','CapRealBTC', 'DiffMean', 
             'FeeMeanNtv','FeeMeanUSD', 'FeeMedNtv', 'FeeMedUSD', 'FeeTotNtv', 'FeeTotUSD',
-            'PriceBTC', 'PriceUSD', 'PriceRealUSD', 'SplyCur',
+            'PriceBTC', 'PriceUSD', 'PriceRealUSD','PriceRealBTC', 'BTC_PriceUSD', 'SplyCur',
             'TxCnt', 'TxTfrCnt', 'TxTfrValAdjNtv', 'TxTfrValAdjUSD',
             'TxTfrValMeanNtv', 'TxTfrValMeanUSD', 'TxTfrValMedNtv',
             'TxTfrValMedUSD', 'TxTfrValNtv', 'TxTfrValUSD',
@@ -246,10 +252,13 @@ class dcr_add_metrics():
                 'window'                - Count of difficulty window
                 'CapMrktCurUSD'         - Market Cap (USD)
                 'CapRealUSD'            - Realised Cap (USD)
+                'CapRealBTC'            - Realised Cap (BTC)
                 'CapMVRVCur'            - MVRV Ratio
                 'PriceBTC'              - Price in BTC
                 'PriceUSD'              - Price in USD
                 'PriceRealUSD'          - Realised Price (USD)
+                'PriceRealBTC'          - Realised Price (BTC)
+                'BTC_PriceUSD'          - BTC Price
                 'DailyIssuedNtv'        - Daily DCR Issued
                 'DailyIssuedUSD'        - Daily Issued USD
                 'AdrActCnt'             - Active Address Count
@@ -274,7 +283,7 @@ class dcr_add_metrics():
                 'DiffMean'              - Average PoW Difficulty on day (Coinmetrics)
                 'pow_diff_avg'          - Average PoW Difficulty on day (dcrdata)
                 'pow_hashrate_THs_avg'  - Average PoW Hashrate on day (TH/s)
-                'pow_work_TH'           - Cummulative PoW in TH
+                'pow_work_TH'           - Cumulative PoW in TH
         """
         print('...Combining Decred specific metrics - (coinmetrics + dcrdata)...')
         _coin = self.dcr_coin() #Coinmetrics by date
@@ -282,8 +291,8 @@ class dcr_add_metrics():
         #_blk_max = int(_coin['blk'][_coin.index[-1]])
         #Cull _coin to Key Columns
         _coin = _coin[[
-            'date','blk','age_days','age_sply','CapMrktCurUSD','CapRealUSD','CapMVRVCur',
-            'DiffMean','PriceBTC','PriceUSD','PriceRealUSD',
+            'date','blk','age_days','age_sply','CapMrktCurUSD','CapRealUSD','CapRealBTC','CapMVRVCur',
+            'DiffMean','PriceBTC','PriceUSD','PriceRealUSD','PriceRealBTC','BTC_PriceUSD',
             'SplyCur','DailyIssuedNtv','DailyIssuedUSD','S2F',
             'inf_pct_ann','TxCnt','TxTfrCnt','TxTfrValMedNtv','TxTfrValMeanNtv',
             'TxTfrValNtv','TxTfrValUSD','TxTfrValAdjNtv','TxTfrValAdjUSD',
@@ -335,8 +344,8 @@ class dcr_add_metrics():
         #Compile into final ordered dataframe
         df = df[[
             'date', 'blk', 'age_days','age_sply','window',                          #Time Metrics
-            'CapMrktCurUSD', 'CapRealUSD','CapMVRVCur',                                   #Value Metrics
-            'PriceBTC', 'PriceUSD', 'PriceRealUSD',                                 #Price Metrics
+            'CapMrktCurUSD', 'CapRealUSD','CapRealBTC','CapMVRVCur',                #Value Metrics
+            'PriceBTC', 'PriceUSD', 'PriceRealBTC',  'PriceRealUSD','BTC_PriceUSD', #Price Metrics
             'DailyIssuedNtv','DailyIssuedUSD','AdrActCnt','TxCnt','TxTfrCnt',       #Block Reward Metrics
             'TxTfrValNtv','TxTfrValUSD','TxTfrValAdjNtv','TxTfrValAdjUSD',          #Global Transaction Metrics
             'TxTfrValMedNtv','TxTfrValMeanNtv',                                     #Local Transaction Metrics
@@ -523,4 +532,4 @@ class dcr_add_metrics():
 #DCR_natv = dcr_add_metrics().dcr_natv()
 #DCR_real = dcr_add_metrics().dcr_real()
 #DCR_sply = dcr_add_metrics().dcr_sply(500000)
-DCR_tics = dcr_add_metrics().dcr_ticket_models()
+#DCR_tics = dcr_add_metrics().dcr_ticket_models()

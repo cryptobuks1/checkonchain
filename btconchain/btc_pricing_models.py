@@ -69,7 +69,7 @@ color_data_1 = [
 
 """%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 CREATE PLOT 01 (Bottom)
-DECRED OSCILLATORS
+NVT/RVT OSCILLATORS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"""
 #Create Plot against block height
 # Y-axis 1 = NVT | RVT RATIO

@@ -47,23 +47,26 @@ class check_standard_charts():
         self._annotation = '@_checkmatey_'
         self._annotation_y = 1.0 #Y Position
 
-    def add_annotation(self,fig,annotation):
-        """Add additional annotation under checkmatey"""
-        fig.add_annotation(
-            x=0.5,
-            y=(self._annotation_y - 0.05),
-            text=annotation,
-            showarrow=False,
-            xref="paper",
-            yref="paper",
-            opacity=0.75,
-            font=dict(
-                family=self._font,
-                size=16,
-                color=self._gridcolor
-            )
+    def add_annotation(self,fig,new_annotation):
+        """Add additional annotation under @checkmatey"""
+        fig.update_layout(
+            annotations=[
+                go.layout.Annotation(
+                    x=0.5,
+                    y=(self._annotation_y),
+                    text=new_annotation,
+                    showarrow=False,
+                    xref="paper",
+                    yref="paper",
+                    opacity=0.75,
+                    font=dict(
+                        family=self._font,
+                        size=16,
+                        color=self._gridcolor
+                    )
+                )
+            ]
         )
-
         return fig
 
     def basic_chart(self,x_data,y_data,name_data,loop_data,title_data,type_data):
@@ -343,6 +346,147 @@ class check_standard_charts():
         
         return fig
 
+    def subplot_lines_doubleaxis_2nd_area(self,
+        title_data, range_data ,autorange_data ,type_data,
+        loop_data,x_data,y_data,name_data,color_data,
+        dash_data,width_data,opacity_data,legend_data):
+
+        fig = make_subplots(specs=[[{"secondary_y": True}]])
+        fig.update_layout(template="plotly_dark")
+        
+        """#######  Add PRIMARY Traces   #######"""
+        for i in loop_data[0]:
+            fig.add_trace(go.Scatter(
+                x=x_data[i], 
+                y=y_data[i],
+                name=name_data[i],
+                opacity=opacity_data[i],
+                showlegend=legend_data[i],
+                line=dict(
+                    width=width_data[i],
+                    color=color_data[i],
+                    dash=dash_data[i]
+                    )),
+                secondary_y=False)
+
+        """#######  Add SECONDARY Traces   #######"""
+        for i in loop_data[1]:
+            fig.add_trace(go.Scatter(
+                x=x_data[i], 
+                y=y_data[i],
+                name=name_data[i],
+                opacity=opacity_data[i],
+                showlegend=legend_data[i],
+                fill='tozeroy', #ADDED ELEEMNT IN THIS METHOD
+                line=dict(
+                    width=width_data[i],
+                    color=color_data[i],
+                    dash=dash_data[i]
+                    )),
+                secondary_y=True)
+                
+        """#######  Title Block   #######"""
+        fig.update_layout(
+            paper_bgcolor=self._background,
+            plot_bgcolor=self._background,
+            autosize=True,            
+            title=go.layout.Title(
+                text=title_data[0],
+                x=0.5, 
+                xref='paper',
+                font=dict(
+                    family=self._font,
+                    size = self._titlesize
+                )),
+            legend=dict(
+                yanchor='middle',
+                y=0.5,
+                font=dict(
+                    family=self._font,
+                    size=self._legendsize
+                )))
+
+        """#######  Annotation   #######"""
+        fig.update_layout(
+            annotations=[
+                go.layout.Annotation(
+                    x=0.5,
+                    y=self._annotation_y,
+                    text=self._annotation,
+                    showarrow=False,
+                    xref="paper",
+                    yref="paper",
+                    opacity=0.75,
+                    font=dict(
+                        family=self._font,
+                        size=16,
+                        color=self._gridcolor
+                    )
+                )
+            ]
+        )
+
+        """#######  X-Axis   #######"""
+        fig.update_xaxes(
+            title_text=title_data[1],
+            type=type_data[0],
+            range=range_data[0],
+            title_font=dict(
+                family=self._font,
+                size=self._axesfontsize
+                ),
+            tickfont=dict(
+                family=self._font,
+                size=self._tickfontsize
+                ),
+            gridcolor=self._gridcolor,
+            gridwidth=self._gridwidth,
+            zerolinecolor=self._zerolinecolor
+            )
+        fig.update_xaxes(autorange=autorange_data[0]) #override range
+
+        """#######  Y-Axis-1   #######"""
+        fig.update_yaxes(
+            title_text=title_data[2],
+            type=type_data[1],
+            range=range_data[1],
+            title_font=dict(
+                family=self._font,
+                size=self._axesfontsize
+                ),
+            tickfont=dict(
+                family=self._font,
+                size=self._tickfontsize
+                ),
+            gridcolor=self._gridcolor,
+            gridwidth=self._gridwidth,
+            zerolinecolor=self._zerolinecolor,
+            secondary_y=False
+            )
+        fig.update_yaxes(autorange=autorange_data[1],secondary_y=False) #override range
+        
+        """#######  Y-Axis-2   #######"""
+        fig.update_yaxes(
+            title_text=title_data[3],
+            type=type_data[2],
+            range=range_data[2],
+            title_font=dict(
+                family=self._font,
+                size=self._axesfontsize
+                ),
+            tickfont=dict(
+                family=self._font,
+                size=self._tickfontsize
+                ),
+            gridcolor=self._gridcolor,
+            gridwidth=self._gridwidth,
+            zerolinecolor=self._zerolinecolor,
+            showgrid=False,
+            secondary_y=True
+            )
+        fig.update_yaxes(autorange=autorange_data[2],secondary_y=True) #override range
+        
+        return fig
 
 
 
