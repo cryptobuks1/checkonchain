@@ -565,7 +565,7 @@ class dcr_chart_suite():
             '<b>Date</b>',
             '<b>Price (USD)</b>',
             '<b>BEAM Indicator</b>']
-        range_data = [[self.start,self.last],[-1,3],[-1,0,10]]
+        range_data = [[self.start,self.last],[-1,3],[-1,10]]
         autorange_data = [False,False,False]
         type_data = ['date','log','linear']
         fig = check_standard_charts().subplot_lines_doubleaxis(
@@ -1353,26 +1353,161 @@ class dcr_chart_suite():
         
         fig.show()
 
+    def tx_sum_adjsply_142d(self):
+        """"Decred 142day Sum of coins moved, adjusted for supply
+        after @permabullnino"""
+        df = self.df
+
+        loop_data=[[0,1],[2]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+        ]
+        y_data = [
+            df['PriceUSD'],
+            df['PriceRealUSD'],
+            df['CapMVRVCur'],
+        ]
+        name_data = [
+            'DCR Price (USD)',
+            'Realised Price (USD)',
+            'MVRV Ratio',
+            'STRONG BUY (0.5)',
+            'BUY (0.7)',
+            'SELL (1.8)',
+            'STRONG SELL (2.4)'
+        ]
+        width_data      = [2,2,1,2,2,2,2]
+        opacity_data    = [1,1,1,1,1,1,1]
+        dash_data = ['solid','solid','solid','dash','dash','dash','dash']
+        color_data = [
+            'rgb(46, 214, 161)',    #Turquoise
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(255, 255, 255)',   #White
+            'rgb(153, 255, 102)',   #Gradient Green
+            'rgb(255, 255, 102)',   #Gradient Lime
+            'rgb(255, 102, 102)',   #Gradient L.Red
+            'rgb(255, 80, 80)',     #Gradient Red
+        ]
+        legend_data = [True,True,True,True,True,True,True,]
+        title_data = [
+            '<b>Decred MVRV Ratio</b>',
+            '<b>Date</b>',
+            '<b>Price (USD)</b>',
+            '<b>MVRV Ratio</b>']
+        range_data = [[self.start,self.last],[-1,3],[-0.522878745,1.301029996]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','log']
+        fig = check_standard_charts().subplot_lines_doubleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
+        self.add_slider(fig)
+        fig.show()
+
+    def max_vol_ratio(self):
+        """"Decred Maximum Volume Ratio
+            after @permabullnino"""
+        df = self.df
+
+        df['max_vol_ratio_USD'] = (
+            df['CapMrktCurUSD']
+            /
+            df['tic_usd_cost'].rolling(28).sum()
+        )
+
+        df['max_vol_ratio_BTC'] = (
+            df['CapMrktCurBTC']
+            /
+            df['tic_btc_cost'].rolling(28).sum()
+        )
+
+        #CHART
+        loop_data=[[0,1],[2,3,4,5]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            ['2016-01-01','2022-01-01','2022-01-01','2016-01-01'],    #BUY ZONE
+            ['2016-01-01','2022-01-01','2022-01-01','2016-01-01'],    #SELL ZONE
+        ]
+        y_data = [
+            df['PriceUSD'],
+            df['PriceRealUSD'],
+            df['tx_volatile_ratio'],
+            df['tx_volatile_ratio_Ntv'],
+            [0.15,0.15,0.17,0.17],
+            [0.26,0.26,0.28,0.28],
+        ]
+        name_data = [
+            'DCR Price (BTC)',
+            'Realised Price (BTC)',
+            'Transaction Volatility',
+            'Transaction Volatility Ntc',
+            'Buy Zone',
+            'Sell Zone',
+        ]
+        width_data      = [2,2,2,2,1,1]
+        opacity_data    = [1,1,1,1,1,1]
+        dash_data = ['solid','solid','solid','dash','dash','dash',]
+        color_data = [
+            'rgb(255, 255, 255)',   #White
+            'rgb(17, 255, 125)',    #Powerpoint Green
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(153, 255, 102)',   #Gradient Green
+            'rgb(255, 80, 80)',     #Gradient Red
+        ]
+        legend_data = [True,True,True,True,True,True]
+        title_data = [
+            '<b>Decred Transactional Volatility</b>',
+            '<b>Date</b>',
+            '<b>Price (BTC)</b>',
+            '<b>Transaction Volatility Ratio</b>'
+            ]
+        range_data = [[self.start,self.last],[-3.698970004,-2.522878745],[0.1,0.7]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','linear']
+        fig = check_standard_charts().subplot_lines_doubleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True,dtick=0.05)
+        self.add_slider(fig)
+
+        fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")     
+        
+        fig.show()
 
 
-fig = dcr_chart_suite()
 
-fig.mvrv()
-fig.block_subsidy_usd()
-fig.block_subsidy_btc()
-fig.mayer_multiple()
-fig.mayer_multiple_bands()
-fig.puell_multiple()
-fig.beam_indicator()
-fig.bottom_cycle()
-fig.top_cycle()
-fig.s2f_model()
-fig.usd_commitment()
-fig.btc_commitment()
-fig.TVWAP()
-fig.hodler_conversion()
-fig.ticket_overunder()
-fig.tic_vol_sum_142day()
-fig.tx_volatility_ratio()
+
+fig_dcr = dcr_chart_suite()
+#fig_dcr.mvrv()
+#fig_dcr.block_subsidy_usd()
+#fig_dcr.block_subsidy_btc()
+fig_dcr.mayer_multiple()
+fig_dcr.mayer_multiple_bands()
+#fig_dcr.puell_multiple()
+#fig_dcr.beam_indicator()
+#fig_dcr.bottom_cycle()
+#fig_dcr.top_cycle()
+#fig_dcr.s2f_model()
+#fig_dcr.usd_commitment()
+#fig_dcr.btc_commitment()
+#fig_dcr.TVWAP()
+#fig_dcr.hodler_conversion()
+#fig_dcr.ticket_overunder()
+#fig_dcr.tic_vol_sum_142day()
+#fig_dcr.tx_volatility_ratio()
 
 

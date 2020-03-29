@@ -251,6 +251,7 @@ class dcr_add_metrics():
                 'age_sply'              - Coin age in Supply (SplyCur/21M)
                 'window'                - Count of difficulty window
                 'CapMrktCurUSD'         - Market Cap (USD)
+                'CapMrktCurBTC'         - Market Cap (BTC)
                 'CapRealUSD'            - Realised Cap (USD)
                 'CapRealBTC'            - Realised Cap (BTC)
                 'CapMVRVCur'            - MVRV Ratio
@@ -298,6 +299,10 @@ class dcr_add_metrics():
             'TxTfrValNtv','TxTfrValUSD','TxTfrValAdjNtv','TxTfrValAdjUSD',
             'FeeTotNtv','FeeTotUSD','AdrActCnt']]
         _coin['CapS2FModel'] = regression_analysis()
+
+        #Calculate 'CapMrktCurBTC'
+        _coin['CapMrktCurBTC'] = _coin['PriceBTC'] * _coin['SplyCur']
+        
         #Add new columns for transferring _natv data to_coin
         _coin['tic_day']                = 0.0
         _coin['tic_price_avg']          = 0.0
@@ -343,16 +348,16 @@ class dcr_add_metrics():
             )
         #Compile into final ordered dataframe
         df = df[[
-            'date', 'blk', 'age_days','age_sply','window',                          #Time Metrics
-            'CapMrktCurUSD', 'CapRealUSD','CapRealBTC','CapMVRVCur',                #Value Metrics
-            'PriceBTC', 'PriceUSD', 'PriceRealBTC',  'PriceRealUSD','BTC_PriceUSD', #Price Metrics
-            'DailyIssuedNtv','DailyIssuedUSD','AdrActCnt','TxCnt','TxTfrCnt',       #Block Reward Metrics
-            'TxTfrValNtv','TxTfrValUSD','TxTfrValAdjNtv','TxTfrValAdjUSD',          #Global Transaction Metrics
-            'TxTfrValMedNtv','TxTfrValMeanNtv',                                     #Local Transaction Metrics
-            'FeeTotNtv','FeeTotUSD',                                                #Fee Metrics
-            'S2F', 'inf_pct_ann','SplyCur', 'dcr_sply',                             #Supply Metrics
-            'dcr_tic_sply_avg','tic_day', 'tic_price_avg', 'tic_pool_avg',          #Ticket Metrics
-            'DiffMean','pow_diff_avg', 'pow_hashrate_THs_avg', 'pow_work_TH'        #PoW Metrics
+            'date', 'blk', 'age_days','age_sply','window',                              #Time Metrics
+            'CapMrktCurUSD', 'CapMrktCurBTC', 'CapRealUSD','CapRealBTC','CapMVRVCur',   #Value Metrics
+            'PriceBTC', 'PriceUSD', 'PriceRealBTC',  'PriceRealUSD','BTC_PriceUSD',     #Price Metrics
+            'DailyIssuedNtv','DailyIssuedUSD','AdrActCnt','TxCnt','TxTfrCnt',           #Block Reward Metrics
+            'TxTfrValNtv','TxTfrValUSD','TxTfrValAdjNtv','TxTfrValAdjUSD',              #Global Transaction Metrics
+            'TxTfrValMedNtv','TxTfrValMeanNtv',                                         #Local Transaction Metrics
+            'FeeTotNtv','FeeTotUSD',                                                    #Fee Metrics
+            'S2F', 'inf_pct_ann','SplyCur', 'dcr_sply',                                 #Supply Metrics
+            'dcr_tic_sply_avg','tic_day', 'tic_price_avg', 'tic_pool_avg',              #Ticket Metrics
+            'DiffMean','pow_diff_avg', 'pow_hashrate_THs_avg', 'pow_work_TH'            #PoW Metrics
             ]]
         general_helpers.df_to_csv(df,'DCR_data')
         return df
@@ -403,9 +408,12 @@ class dcr_add_metrics():
             'dcr_tic_vol'       = Daily DCR Transaction Volume associated with ticket purchases
             'dcr_tfr_vol'       = Daily DCR Transaction Volume Not associated with tickets
             'tic_tfr_vol_ratio' = Ratio of tickets to total DCR transaction volume
-            'tic_usd_cost'      = Daily USD Spend on Tickets
-            'CapTicUSD'         = Ticket Cap, cummulative spend on tickets
-            'CapTicPrice'       = Ticket Investment Price = Ticket Cap / Circulating Supply
+            'tic_usd_cost'      = Total Daily USD Spend on Tickets
+            'tic_btc_cost'      = Total Daily BTC Spend on Tickets
+            'CapTicUSD'         = Ticket Cap, cumulative USD spend on tickets
+            'CapTicBTC'         = Ticket Cap, cumulative BTC spend on tickets
+            'CapTicPriceUSD'    = Ticket Investment Price (USD) = Ticket Cap / Circulating Supply
+            'CapTicPriceBTC'    = Ticket Investment Price (BTC) = Ticket Cap / Circulating Supply
         """
         print('...Calculating Decred Ticket models...')
         df = self.dcr_subsidy_models()
@@ -428,21 +436,7 @@ class dcr_add_metrics():
         df['CapTicPriceUSD']   = df['CapTicUSD'] / df['SplyCur']
         df['CapTicPriceBTC']   = df['CapTicBTC'] / df['SplyCur']
 
-        #Ticket Oscillators after Permabull Nino
-        #SOURCE:
-        #% DCR moved onchain attribted to tickets - % DCR SUpply in Ticket Pool
-        #df['dcr_tic_surplus'] = df['dcr_tic_vol']
-
-
-        #Calculate Aggregate Stakeholder Ticket Risk-Reward
-        #[UNDER CONSTRUCTION]
-        #       Risk = 28 to 142 day volatility of ticket value
-        #       Reward = PoS_income_dcr
-        #DCR_HODL Rating = Daily DCR Spent on tickets / PoS Income in DCR
-        #df['dcr_hodl']          = (df['dcr_tic_vol'] / df['PoS_income_dcr'])
-        #df['dcr_hodl_pool']     = df['dcr_hodl']*df['dcr_tic_sply_avg']/1e8*df['PriceUSD']
-        #df['dcr_hodl_posideal'] = df['dcr_hodl']*df['SplyCur']*self.blkrew_ratio[1]*df['PriceUSD']
-        
+        #Write to csv for others
         general_helpers.df_to_csv(df,'DCR_tics')
         return df
 
