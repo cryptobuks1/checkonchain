@@ -82,3 +82,13 @@
 ![decred_01.PNG](decred_01.PNG)
 ![decred_01.PNG](decred_02.PNG)
 
+# CHARTING COLOURS
+|COLOUR   	      |    RGB COLOUR   	      |
+|:-:	          |    :-:	                  |
+|POW Red          |    'rgb(250, 38, 53)',    |
+|POS Purple       |    'rgb(114, 49, 163)',   |
+|Treasury Yellow  |    'rgb(255, 192, 0)',    |
+|Total Blue       |    'rgb(20, 169, 233)',   |
+|Price Orange     |    'rgb(239, 125, 50)',   |
+|Turquoise Blue   |    'rgb(46, 214, 161)',   |
+|Turquoise Green  |    'rgb(156,225,143)',    |

@@ -1,5 +1,6 @@
 #Suite of pre-built charts for analysing Decred On-chain and price performance
 from checkonchain.dcronchain.dcr_add_metrics import *
+from checkonchain.btconchain.btc_add_metrics import *
 from checkonchain.general.standard_charts import *
 from checkonchain.general.regression_analysis import *
 from datetime import date, datetime, time, timedelta
@@ -10,6 +11,19 @@ class dcr_chart_suite():
         self.today = datetime.combine(date.today(), time())
         self.last = pd.to_datetime(self.today + pd.to_timedelta(90,unit='D'))
         self.start = '2016-01-01'
+
+        #USD RANGE LEVELS (USD)
+        self.cap_lb     = 5     #Market Cap Lower Bound (log)
+        self.cap_ub     = 10    #Market Cap Upper Bound (log)
+        self.price_lb   = -1    #Price Lower Bound (log)
+        self.price_ub   = 3     #Price Lower Bound (log)
+
+        #BTC RANGE LEVELS (BTC)
+        self.cap_lb_btc     = 2     #Market Cap Lower Bound (log)
+        self.cap_ub_btc     = 6     #Market Cap Upper Bound (log)
+        self.price_lb_btc   = -4    #Price Lower Bound (log)
+        self.price_ub_btc   = -1     #Price Lower Bound (log)
+        
         self.df = dcr_add_metrics().dcr_ticket_models()
         #Create dataframe with key events like market tops, btms and halvings
         events = pd.DataFrame(
@@ -45,38 +59,17 @@ class dcr_chart_suite():
         )
         fig.update_yaxes(fixedrange=False)
 
-    def mvrv(self):
-        """"Decred Realised Price and MVRV"""
+    def mvrv(self,model):
+        """"Decred Realised Price and MVRV
+            model = 0   = Network Valuation (Market Cap, Realised Cap etc)
+            model = 1   = Pricing Model (Coin price, realised price etc)
+        """
         df = self.df
+        mvrv_lb = -0.522878745
+        mvrv_ub = 1.301029996
 
+        #STANDARD SETTINGS
         loop_data=[[0,1],[2,3,4,5,6]]
-        x_data = [
-            df['date'],
-            df['date'],
-            df['date'],
-            ['2016-01-01','2022-01-01'],    #Strong BUY
-            ['2016-01-01','2022-01-01'],    #BUY
-            ['2016-01-01','2022-01-01'],    #SELL
-            ['2016-01-01','2022-01-01'],    #Strong SELL
-        ]
-        y_data = [
-            df['PriceUSD'],
-            df['PriceRealUSD'],
-            df['CapMVRVCur'],
-            [0.5,0.5],
-            [0.7,0.7],
-            [1.8,1.8],
-            [2.4,2.4],
-        ]
-        name_data = [
-            'DCR Price (USD)',
-            'Realised Price (USD)',
-            'MVRV Ratio',
-            'STRONG BUY (0.5)',
-            'BUY (0.7)',
-            'SELL (1.8)',
-            'STRONG SELL (2.4)'
-        ]
         width_data      = [2,2,1,2,2,2,2]
         opacity_data    = [1,1,1,1,1,1,1]
         dash_data = ['solid','solid','solid','dash','dash','dash','dash']
@@ -90,14 +83,74 @@ class dcr_chart_suite():
             'rgb(255, 80, 80)',     #Gradient Red
         ]
         legend_data = [True,True,True,True,True,True,True,]
-        title_data = [
-            '<b>Decred MVRV Ratio</b>',
-            '<b>Date</b>',
-            '<b>Price (USD)</b>',
-            '<b>MVRV Ratio</b>']
-        range_data = [[self.start,self.last],[-1,3],[-0.522878745,1.301029996]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            ['2016-01-01','2022-01-01'],    #Strong BUY
+            ['2016-01-01','2022-01-01'],    #BUY
+            ['2016-01-01','2022-01-01'],    #SELL
+            ['2016-01-01','2022-01-01'],    #Strong SELL
+        ]
+
+        #MARKET CAP SETTINGS
+        if model ==0:
+            loop_data=[[0,1],[2]]
+            y_data = [
+                df['CapMrktCurUSD'],
+                df['CapRealUSD'],
+                df['CapMVRVCur'],
+                [0.5,0.5],
+                [0.7,0.7],
+                [1.8,1.8],
+                [2.4,2.4],
+            ]
+            name_data = [
+                'Market Cap',
+                'Realised Cap',
+                'MVRV Ratio',
+                'STRONG BUY (0.5)',
+                'BUY (0.7)',
+                'SELL (1.8)',
+                'STRONG SELL (2.4)'
+            ]
+            title_data = [
+                '<b>Decred MVRV Ratio Valuation</b>',
+                '<b>Date</b>',
+                '<b>Network Valuation (USD)</b>',
+                '<b>MVRV Ratio</b>']
+            range_data = [[self.start,self.last],[self.cap_lb,self.cap_ub],[mvrv_lb,mvrv_ub]]
+        
+        #MARKET CAP SETTINGS
+        elif model ==1:
+            y_data = [
+                df['PriceUSD'],
+                df['PriceRealUSD'],
+                df['CapMVRVCur'],
+                [0.5,0.5],
+                [0.7,0.7],
+                [1.8,1.8],
+                [2.4,2.4],
+            ]
+            name_data = [
+                'DCR Price',
+                'Realised Price',
+                'MVRV Ratio',
+                'STRONG BUY (0.5)',
+                'BUY (0.7)',
+                'SELL (1.8)',
+                'STRONG SELL (2.4)'
+            ]
+            title_data = [
+                '<b>Decred MVRV Ratio Pricing</b>',
+                '<b>Date</b>',
+                '<b>Price (USD)</b>',
+                '<b>MVRV Ratio</b>']
+            range_data = [[self.start,self.last],[-1,3],[mvrv_lb,mvrv_ub]]
+        
+        #BUILD CHART
         fig = check_standard_charts().subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
@@ -109,14 +162,16 @@ class dcr_chart_suite():
         self.add_slider(fig)
         fig.show()
 
-    def block_subsidy_usd(self):
-        """
-        #############################################################################
-                            DCR USD BLOCK SUBSIDY MODELS
-        #############################################################################
+    def block_subsidy_usd(self,model):
+        """Decred Block Subsidy Models priced in USD with Difficulty Ribbon
+        after @permabullnino
+        INPUTS:
+            model = 0   = Network Valuation (Market Cap, Realised Cap etc)
+            model = 1   = Pricing Model (Coin price, realised price etc)
         """
         df = self.df
 
+        #STANDARD SETTINGS
         loop_data=[[0,1,2,3,4],[5]]
         x_data = [
             df['date'],
@@ -126,22 +181,6 @@ class dcr_chart_suite():
             df['date'],
             df['date'],
         ]
-        y_data = [
-            df['PoW_income_usd'].cumsum()/df['SplyCur'],
-            df['PoS_income_usd'].cumsum()/df['SplyCur'],
-            df['Fund_income_usd'].cumsum()/df['SplyCur'],
-            df['Total_income_usd'].cumsum()/df['SplyCur'],
-            df['PriceUSD'],
-            df['DiffMean'],
-        ]
-        name_data = [
-            'POW-USD',
-            'POS-USD',
-            'Treasury-USD',
-            'Total-USD',
-            'DCR/USD Price', 
-            'Difficulty Ribbon   ',
-            ]
         color_data = [
             'rgb(250, 38, 53)',     #POW Red
             'rgb(114, 49, 163)',    #POS Purple
@@ -149,20 +188,66 @@ class dcr_chart_suite():
             'rgb(20, 169, 233)',    #Total Blue
             'rgb(239, 125, 50)',    #Price Orange
             'rgb(46, 214, 161)',    #Turquoise
-            #'rgb(156,225,143)',     #Turquoise Green
         ]
         dash_data = ['solid','solid','solid','solid','solid','solid']
         width_data = [2,2,2,2,2,1,]
         opacity_data = [1,1,1,1,1,1,]
         legend_data = [True,True,True,True,True,True,]#
-        title_data = [
-            'Decred Miner Subsidy Models',
-            'Date',
-            'DCR/USD Pricing',
-            'Difficulty']
-        range_data = [['01-02-2016','01-02-2020'],[-2,3],[5,11]]
         autorange_data = [True,False,False]
         type_data = ['date','log','log']#
+        
+        #MARKET CAP SETTINGS
+        if model ==0:
+            y_data = [
+                df['PoW_income_usd'].cumsum(),
+                df['PoS_income_usd'].cumsum(),
+                df['Fund_income_usd'].cumsum(),
+                df['Total_income_usd'].cumsum(),
+                df['CapMrktCurUSD'],
+                df['DiffMean'],
+            ]
+            name_data = [
+                'POW-USD',
+                'POS-USD',
+                'Treasury-USD',
+                'Total-USD',
+                'Market Cap', 
+                'Difficulty Ribbon   ',
+            ]
+            title_data = [
+                'Decred Block Subsidy Valuation Models (USD)',
+                'Date',
+                'Network Valuation (USD)',
+                'Difficulty'
+            ]
+            range_data = [['01-02-2016','01-02-2020'],[self.cap_lb,self.cap_ub],[5,11]]
+        #MARKET CAP SETTINGS
+        elif model == 1:
+            y_data = [
+                df['PoW_income_usd'].cumsum()/df['SplyCur'],
+                df['PoS_income_usd'].cumsum()/df['SplyCur'],
+                df['Fund_income_usd'].cumsum()/df['SplyCur'],
+                df['Total_income_usd'].cumsum()/df['SplyCur'],
+                df['PriceUSD'],
+                df['DiffMean'],
+            ]
+            name_data = [
+                'POW-USD',
+                'POS-USD',
+                'Treasury-USD',
+                'Total-USD',
+                'DCR/USD Price', 
+                'Difficulty Ribbon   ',
+                ]
+            title_data = [
+                'Decred Block Subsidy Pricing Models (USD)',
+                'Date',
+                'DCR Price (USD)',
+                'Difficulty'
+            ]
+            range_data = [['01-02-2016','01-02-2020'],[self.price_lb,self.price_ub],[5,11]]
+        
+        #BUILD CHARTS
         fig = check_standard_charts().subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
@@ -170,6 +255,7 @@ class dcr_chart_suite():
             )
         fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
 
+        
         """ =================================
             ADD DIFFICULTY RIBBON
         ================================="""
@@ -187,38 +273,43 @@ class dcr_chart_suite():
                     dash='solid'
                     )),
                 secondary_y=True)
-        """ =================================
-            ADD VOLUME BAR CHARTS
-        ================================="""
-        x_data = [
-            df['date'],
-            df['date']
-        ]
-        y_data = [
-            100000+df['dcr_tic_vol'],
-            100000+df['dcr_tfr_vol']
-        ]
-        color_data = ['rgb(237,96,136)','rgb(37,187,217)']
-        loop_data = [0,1]
-        name_data = ['Ticket Vol (DCR)','Transfer Vol (DCR)']
+        
+        #Only Add Volume Bars to PRICING MODELS
+        if model == 1:
+            """ =================================
+                ADD VOLUME BAR CHARTS
+            ================================="""
+            x_data = [
+                df['date'],
+                df['date']
+            ]
+            y_data = [
+                100000+df['dcr_tic_vol'],
+                100000+df['dcr_tfr_vol']
+            ]
+            color_data = ['rgb(237,96,136)','rgb(37,187,217)']
+            loop_data = [0,1]
+            name_data = ['Ticket Vol (DCR)','Transfer Vol (DCR)']
+            for i in loop_data:
+                fig.add_trace(
+                    go.Bar(x=x_data[i],y=y_data[i],name=name_data[i],opacity=0.5,marker_color=color_data[i],yaxis="y2"))
+            fig.update_layout(barmode='stack',bargap=0.01,yaxis2=dict(side="right",position=0.15))
 
-        for i in loop_data:
-            fig.add_trace(
-                go.Bar(x=x_data[i],y=y_data[i],name=name_data[i],opacity=0.5,marker_color=color_data[i],yaxis="y2"))
-        fig.update_layout(barmode='stack',bargap=0.01,yaxis2=dict(side="right",position=0.15))
-
+        #FINALISE CHART
         self.add_slider(fig)
         fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")
         fig.show()
 
-    def block_subsidy_btc(self):
-        """
-        #############################################################################
-                            DCR BTC BLOCK SUBSIDY MODELS
-        #############################################################################
+    def block_subsidy_btc(self,model):
+        """Decred Block Subsidy Models priced in BTC with Difficulty Ribbon
+        after @permabullnino
+        INPUTS:
+            model = 0   = Network Valuation (Market Cap, Realised Cap etc)
+            model = 1   = Pricing Model (Coin price, realised price etc)
         """
         df = self.df
 
+        #STANDARD SETTINGS
         loop_data = [[0,1,2,3,4],[5]]
         x_data = [
             df['date'],
@@ -227,22 +318,6 @@ class dcr_chart_suite():
             df['date'],
             df['date'],
             df['date'],
-            ]
-        y_data = [
-            df['PoW_income_btc'].cumsum()/df['SplyCur'],
-            df['PoS_income_btc'].cumsum()/df['SplyCur'],
-            df['Fund_income_btc'].cumsum()/df['SplyCur'],
-            df['Total_income_btc'].cumsum()/df['SplyCur'],
-            df['PriceBTC'],
-            df['dcr_tic_sply_avg'],
-            ]
-        name_data = [
-            'POW (BTC)',
-            'POS (BTC)',
-            'Treasury (BTC)',
-            'Total (BTC)',
-            'DCR/BTC Price',
-            'Ticket Pool Value (DCR)',
             ]
         color_data = [
             'rgb(250, 38, 53)' , #POW Red
@@ -257,10 +332,63 @@ class dcr_chart_suite():
         width_data = [2,2,2,2,2,2,1]
         opacity_data = [1,1,1,1,1,1,1]
         legend_data = [True,True,True,True,True,True,True]#
-        title_data = ['Decred Stakeholder Subsidy Models','Date','Network Valuation (BTC)','Total DCR in Tickets']
-        range_data = [['01-02-2016','01-02-2020'],[-4,-1],[0,1]]
-        autorange_data = [True,False,True]
+        autorange_data = [False,False,True]
         type_data = ['date','log','linear']#
+
+        #NETWORK VALUATION SETTINGS
+        if model == 0:
+            y_data = [
+                df['PoW_income_btc'].cumsum(),
+                df['PoS_income_btc'].cumsum(),
+                df['Fund_income_btc'].cumsum(),
+                df['Total_income_btc'].cumsum(),
+                df['CapMrktCurBTC'],
+                df['dcr_tic_sply_avg'],
+                ]
+            name_data = [
+                'POW (BTC)',
+                'POS (BTC)',
+                'Treasury (BTC)',
+                'Total (BTC)',
+                'Market Cap (BTC)',
+                'Ticket Pool Value (DCR)',
+                ]
+            title_data = [
+                'Decred Block Subsidy Valuation Models (BTC)',
+                'Date',
+                'Network Valuation (BTC)',
+                'Total DCR in Tickets'
+                ]
+            range_data = [[self.start,self.last],[self.cap_lb_btc,self.cap_ub_btc],[0,1]]
+
+        #PRICING SETTINGS
+        elif model == 1:
+            y_data = [
+                df['PoW_income_btc'].cumsum()/df['SplyCur'],
+                df['PoS_income_btc'].cumsum()/df['SplyCur'],
+                df['Fund_income_btc'].cumsum()/df['SplyCur'],
+                df['Total_income_btc'].cumsum()/df['SplyCur'],
+                df['PriceBTC'],
+                df['dcr_tic_sply_avg'],
+                ]
+            name_data = [
+                'POW (BTC)',
+                'POS (BTC)',
+                'Treasury (BTC)',
+                'Total (BTC)',
+                'DCR Price (BTC)',
+                'Ticket Pool Value (DCR)',
+                ]
+            title_data = [
+                'Decred Block Subsidy Valuation Models (BTC)',
+                'Date',
+                'DCR Price (BTC)',
+                'Total DCR in Tickets'
+                ]
+            range_data = [[self.start,self.last],[self.price_lb_btc,self.price_ub_btc],[0,1]]
+        
+
+        #BUILD CHARTS
         fig = check_standard_charts().subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,
@@ -275,25 +403,464 @@ class dcr_chart_suite():
         )
         fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
 
-        """ =================================
-            ADD VOLUME BAR CHARTS
-        ================================="""
+        #ADD VOLUME BARS ONLY TO PRICING MODELS
+        if model == 1:
+            """ =================================
+                ADD VOLUME BAR CHARTS
+            ================================="""
+            x_data = [
+                df['date'],
+                df['date']
+            ]
+            y_data = [
+                df['dcr_tic_vol'],
+                df['dcr_tfr_vol']
+            ]
+            color_data = ['rgb(237,96,136)','rgb(37,187,217)']
+            loop_data = [0,1]
+            name_data = ['Ticket Vol (DCR)','Transfer Vol (DCR)']
+            for i in loop_data:
+                fig.add_trace(
+                    go.Bar(x=x_data[i],y=y_data[i],name=name_data[i],marker_color=color_data[i]),secondary_y=True)
+            fig.update_layout(barmode='stack',bargap=0.01)
+        
+        #FINALISE CHART
+        fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")
+        self.add_slider(fig)
+        fig.show()
+
+    def usd_commitment(self,model):
+        """Decred USD Stakeholder Commitment Models
+
+        Block Subsidy model paid after @permabullnino
+        Cumulative ticket value locked after @checkmatey
+        Realised cap after @Coinmetrics
+
+        INPUTS:
+            model = 0   = Network Valuation (Market Cap, Realised Cap etc)
+            model = 1   = Pricing Model (Coin price, realised price etc)
+        """
+        df = self.df
+
+        #STANDARD SETTINGS
+        loop_data=[[0,1,2,3,4,5,6],[]]
         x_data = [
             df['date'],
-            df['date']
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+        ]
+        color_data = [
+            'rgb(255, 255, 255)',   #White
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(250, 38, 53)',     #POW Red
+            'rgb(114, 49, 163)',    #POS Purple
+            'rgb(255, 192, 0)',     #Treasury Yellow
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(46, 214, 161)',    #Turquoise
+            #'rgb(156,225,143)',     #Turquoise Green
+        ]
+        dash_data = ['solid','dash','solid','solid','solid','solid','solid']
+        width_data = [2,2,2,2,2,2,3]
+        opacity_data = [1,1,1,1,1,1,1]
+        legend_data = [True,True,True,True,True,True,True,]#
+        autorange_data = [True,False,False]
+        type_data = ['date','log','log']#
+
+        #NETWORK VALUATION SETTINGS
+        if model == 0:
+            y_data = [
+                df['CapMrktCurUSD'],
+                df['CapRealUSD'],
+                df['PoW_income_usd'].cumsum(),
+                df['PoS_income_usd'].cumsum(),
+                df['Fund_income_usd'].cumsum(),
+                df['Total_income_usd'].cumsum(),
+                df['tic_usd_cost'].cumsum(),
+            ]
+            name_data = [
+                'Market Cap',
+                'Realised Cap',
+                'POW-USD',
+                'POS-USD',
+                'Treasury-USD',
+                'Total-USD',
+                'Tickets Bound Cap',
+                ]
+            title_data = [
+                '<b>Decred Stakeholder Commitments Valuations (USD)</b>',
+                '<b>Date</b>',
+                '<b>Network Valuation</b>',
+                '<b></b>']
+            range_data = [['01-02-2016','01-02-2020'],[self.cap_lb,self.cap_ub],[0,0]]
+
+        #PRICING MODELS SETTINGS
+        if model == 1:
+            y_data = [
+                df['PriceUSD'],
+                df['PriceRealUSD'],
+                df['PoW_income_usd'].cumsum()/df['SplyCur'],
+                df['PoS_income_usd'].cumsum()/df['SplyCur'],
+                df['Fund_income_usd'].cumsum()/df['SplyCur'],
+                df['Total_income_usd'].cumsum()/df['SplyCur'],
+                df['tic_usd_cost'].cumsum()/df['SplyCur'],
+            ]
+            name_data = [
+                'DCR/USD Price',
+                'Realised Price',
+                'POW-USD',
+                'POS-USD',
+                'Treasury-USD',
+                'Total-USD',
+                'Tickets Bound Price',
+                ]
+            title_data = [
+                '<b>Decred Stakeholder Commitments Pricing Models (USD)</b>',
+                '<b>Date</b>',
+                '<b>DCR/USD Pricing</b>',
+                '<b></b>']
+            range_data = [['01-02-2016','01-02-2020'],[self.price_lb,self.price_ub],[0,0]]
+
+
+        #BUILD FINAL CHART
+        fig = check_standard_charts().subplot_lines_singleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+
+        self.add_slider(fig)
+        fig.show()
+
+    def btc_commitment(self,model):
+        """Decred BTC Stakeholder Commitment Models
+
+        Block Subsidy model paid after @permabullnino
+        Cumulative ticket value locked after @checkmatey
+        Realised cap after @Coinmetrics
+        
+        INPUTS:
+            model = 0   = Network Valuation (Market Cap, Realised Cap etc)
+            model = 1   = Pricing Model (Coin price, realised price etc)
+        """
+        df = self.df
+        #STANDARD SETTINGS
+        loop_data=[[0,1,2,3,4,5,6],[]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+        ]
+        color_data = [
+            'rgb(255, 255, 255)',   #White
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(250, 38, 53)',     #POW Red
+            'rgb(114, 49, 163)',    #POS Purple
+            'rgb(255, 192, 0)',     #Treasury Yellow
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(46, 214, 161)',    #Turquoise
+            #'rgb(156,225,143)',     #Turquoise Green
+        ]
+        dash_data = ['solid','dash','solid','solid','solid','solid','solid']
+        width_data = [2,2,2,2,2,2,3]
+        opacity_data = [1,1,1,1,1,1,1]
+        legend_data = [True,True,True,True,True,True,True,]#
+        autorange_data = [True,False,False]
+        type_data = ['date','log','log']
+
+
+        #NETWORK VALUATION SETTINGS
+        if model == 0:
+            y_data = [
+                df['CapMrktCurBTC'],
+                df['CapRealBTC'],
+                df['PoW_income_btc'].cumsum(),
+                df['PoS_income_btc'].cumsum(),
+                df['Fund_income_btc'].cumsum(),
+                df['Total_income_btc'].cumsum(),
+                df['tic_btc_cost'].cumsum(),
+            ]
+            name_data = [
+                'Market Cap',
+                'Realised Cap',
+                'POW-BTC',
+                'POS-BTC',
+                'Treasury-BTC',
+                'Total-BTC',
+                'Tickets Bound Cap',
+                ]
+            title_data = [
+                '<b>Decred Stakeholder Commitments Valuations (BTC)</b>',
+                '<b>Date</b>',
+                '<b>Network Valuation</b>',
+                '<b></b>']
+            range_data = [['01-02-2016','01-02-2020'],[self.cap_lb_btc,self.cap_ub_btc],[0,0]]
+        #PRICING MODELS SETTINGS
+        if model == 1:
+            y_data = [
+                df['PriceBTC'],
+                df['PriceRealBTC'],
+                df['PoW_income_btc'].cumsum()/df['SplyCur'],
+                df['PoS_income_btc'].cumsum()/df['SplyCur'],
+                df['Fund_income_btc'].cumsum()/df['SplyCur'],
+                df['Total_income_btc'].cumsum()/df['SplyCur'],
+                df['tic_btc_cost'].cumsum()/df['SplyCur'],
+            ]
+            name_data = [
+                'DCR/BTC Price',
+                'Realised Price',
+                'POW-BTC',
+                'POS-BTC',
+                'Treasury-BTC',
+                'Total-BTC',
+                'Tickets Bound Price',
+                ]
+            title_data = [
+                '<b>Decred Stakeholder Commitments Pricing Models (BTC)</b>',
+                '<b>Date</b>',
+                '<b>DCR/BTC Pricing</b>',
+                '<b></b>']
+            range_data = [['01-02-2016','01-02-2020'],[self.price_lb_btc,self.price_ub_btc],[0,0]]
+
+        #BUILD FINAL CHART
+        fig = check_standard_charts().subplot_lines_singleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+
+        self.add_slider(fig)
+        fig.show()
+
+    def s2f_model(self,model):
+        """Decred Stock to Flow Models
+
+        Linear Regression for Price OR Market Cap after @checkmatey
+        Stock to flow model by PlanB @100TrillionUSD for Bitcoin applied to DCR S2F for ref
+        
+        INPUTS:
+            model = 0   = Network Valuation (Market Cap, Realised Cap etc)
+            model = 1   = Pricing Model (Coin price, realised price etc)
+        """
+        df = self.df[['date','age_sply','S2F','PriceUSD','SplyCur','CapMrktCurUSD']]
+        df = df.dropna(axis=0)
+     
+        #Run OLS Linear Regression for full dataset
+        df = regression_analysis().ln_regression_OLS(df,'S2F','CapMrktCurUSD',True)['df']
+        df['S2F_Price_predict'] = df['S2F_CapMr_predict'] / df['SplyCur']
+
+        #Calc S2F Model - Bitcoins Plan B Model
+        df['S2F_Price_predict_PB']    = np.exp(-1.84)*df['S2F']**3.36
+        df['S2F_CapMr_predict_PB']    = df['S2F_Price_predict_PB'] * df['SplyCur']
+        df['S2F_Price_multiple_PB']   = df['PriceUSD'] / df['S2F_Price_predict_PB']
+        #Trim first value due to genesis spiking S2F results
+        df = df[1:]
+
+        #STANDARD SETTINGS
+        loop_data=[[0,2,1],[4,3,5,6,7,8]]
+        x_data = [
+            df['date'], #Price
+            df['date'], #CM S2F Model
+            df['date'], #PB S2F Model
+            #Secondary
+            df['date'], #CM Multiple
+            df['date'], #PB Multiple
+            ['2016-01-01','2022-01-01'],    #Strong BUY
+            ['2016-01-01','2022-01-01'],    #BUY
+            ['2016-01-01','2022-01-01'],    #SELL
+            ['2016-01-01','2022-01-01'],    #Strong SELL
+        ]
+        width_data      = [2,0.5,0.5,    1,0.5,   2,2,2,2]
+        opacity_data    = [1,1,0.45,  1,0.45,  1,1,1,1]
+        dash_data = ['solid','dot','dot','solid','solid','dash','dash','dash','dash']
+        color_data = [
+            'rgb(255,255,255)',    #White
+            'rgb(46, 214, 161)',    #Turquoise
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(46, 214, 161)',    #Turquoise
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(153, 255, 102)',   #Gradient Green
+            'rgb(255, 255, 102)',   #Gradient Lime
+            'rgb(255, 102, 102)',   #Gradient L.Red
+            'rgb(255, 80, 80)',     #Gradient Red
+        ]
+        legend_data = [True,True,True,True,True,True,True,True,True,True,True,]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','log']
+
+        #NETWORK VALUATION SETTINGS
+        if model == 0:
+            y_data = [
+                df['CapMrktCurUSD'],
+                df['S2F_CapMr_predict'],
+                df['S2F_CapMr_predict_PB'],
+                #Secondary
+                df['S2F_CapMr_multiple'],
+                df['S2F_Price_multiple_PB'],
+                [0.1,0.1],
+                [0.4,0.4],
+                [3,3],
+                [8,8],
+            ]
+            name_data = [
+                'Market Cap (USD)',
+                'S2F Model (Checkmate)',
+                'S2F Model (Plan B)',
+                'S2F Multiple (Checkmate)',
+                'S2F Multiple (Plan B)',
+                'STRONG BUY (0.1)',
+                'BUY (0.4)',
+                'SELL (3.0)',
+                'STRONG SELL (8.0)',
+            ]
+            title_data = [
+                '<b>Decred Stock-to-Flow Network Valuation (USD)</b>',
+                '<b>Date</b>',
+                '<b>Network Valuation (USD)</b>',
+                '<b>S2F Multiple</b>']
+            range_data = [[self.start,self.last],[self.cap_lb,self.cap_ub],[-2,5]]
+        
+        elif model == 1:
+            y_data = [
+                df['PriceUSD'],
+                df['S2F_Price_predict'],
+                df['S2F_Price_predict_PB'],
+                #Secondary
+                df['S2F_CapMr_multiple'],
+                df['S2F_Price_multiple_PB'],
+                [0.1,0.1],
+                [0.4,0.4],
+                [3,3],
+                [8,8],
+            ]
+            name_data = [
+                'DCR Price (USD)',
+                'S2F Model (Checkmate)',
+                'S2F Model (Plan B)',
+                'S2F Multiple (Checkmate)',
+                'S2F Multiple (Plan B)',
+                'STRONG BUY (0.1)',
+                'BUY (0.4)',
+                'SELL (3.0)',
+                'STRONG SELL (8.0)',
+            ]
+            title_data = [
+                '<b>Decred Stock-to-Flow Price Model (USD)</b>',
+                '<b>Date</b>',
+                '<b>Price (USD)</b>',
+                '<b>S2F Multiple</b>']
+            range_data = [[self.start,self.last],[self.price_lb,self.price_ub],[-2,5]]
+        
+        
+        fig = check_standard_charts().subplot_lines_doubleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
+        self.add_slider(fig)
+        fig.show()
+
+    def s2f_model_residuals(self):
+        """Decred Stock to Flow Models - Residuals
+
+        Shows the distance Price or Market Cap have moved away from the mean
+        """
+        df = self.df[['date','age_sply','S2F','PriceUSD','SplyCur','CapMrktCurUSD']]
+        df = df.dropna(axis=0)
+
+        #Run OLS Linear Regression for Decred dataset
+        df = regression_analysis().ln_regression_OLS(df,'S2F','CapMrktCurUSD',True)['df']
+        df['S2F_Price_predict'] = df['S2F_CapMr_predict'] / df['SplyCur']
+        #Trim first value due to genesis spiking S2F results
+        df = df[1:]
+
+        #Run OLS Linear Regression for Bitcoin dataset
+        df2 = btc_add_metrics().btc_coin()
+        df2 = df2[['date','age_sply','S2F','PriceUSD','SplyCur','CapMrktCurUSD']]
+        df2['CapMrktCurUSD'] = df2['PriceUSD'] * df2['SplyCur']
+        df2 = df2.dropna(axis=0)
+        df2 = regression_analysis().ln_regression_OLS(df2,'S2F','CapMrktCurUSD',True)['df']
+        
+        #Add Bitcoin Halvings
+        df3 = btc_add_metrics().btc_sply_halvings_step()
+        df3 = df3[:10]
+        df3['y_arb'].replace(to_replace=0,value=-10,inplace=True)
+        df3['y_arb'].replace(to_replace=1e20,value=10,inplace=True)
+        
+        #STANDARD SETTINGS
+        loop_data=[[3,4,5,6],[0,1,2]]
+        x_data = [
+            df['age_sply'],     #DCR Price
+            df2['age_sply'],    #BTC Price
+            df3['age_sply'],    #Halvings
+            [-1,2],    # Arbitrary Ceiling for Sell Fill
+            [-1,2],    # BUY
+            [-1,2],    # Arbitrary Ceiling for Sell Fill
+            [-1,2],    # SELL
         ]
         y_data = [
-            df['dcr_tic_vol'],
-            df['dcr_tfr_vol']
+            df['S2F_CapMr_residual'].rolling(14).mean(),
+            df2['S2F_CapMr_residual'].rolling(14).mean(),
+            df3['y_arb'],
+            [-10,-10],
+            [-1.5,-1.5],
+            [10,10],
+            [1.5,1.5],
         ]
-        color_data = ['rgb(237,96,136)','rgb(37,187,217)']
-        loop_data = [0,1]
-        name_data = ['Ticket Vol (DCR)','Transfer Vol (DCR)']
-        for i in loop_data:
-            fig.add_trace(
-                go.Bar(x=x_data[i],y=y_data[i],name=name_data[i],marker_color=color_data[i]),secondary_y=True)
-        fig.update_layout(barmode='stack',bargap=0.01)
-        fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")
+        name_data = [
+            'Decred S2F Residuals',
+            'Bitcoin S2F Residuals',
+            'Bitcoin Halvings',
+            'N/A',
+            'BUY ZONE (-1.5 stdev)',
+            'N/A',
+            'SELL ZONE (-1.5 stdev)',
+        ]
+        title_data = [
+            '<b>Decred Stock-to-Flow Model Residuals</b>',
+            '<b>Coin Age (% of 21M Supply Mined)</b>',
+            '<b>Standard Deviations from Mean</b>',
+            '<b></b>'
+        ]
+        width_data      = [4,1.5,1,  2,2,2,2]
+        opacity_data    = [1,0.75,1,  0.25,0.25,0.25,0.25]
+        fill_data       = ['none','none','none','none','tonexty','none','tonexty',]
+        dash_data = ['solid','solid','dash','dash','dash','dash','dash']
+        color_data = [
+            'rgb(46, 214, 161)',    #Turquoise
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(255, 255, 255)',    #White
+            'rgb(50, 50, 50)',    #Background
+            'rgba(153, 255, 102,0.25)',   #Gradient Green
+            'rgb(50, 50, 50)',    #Background
+            'rgba(255, 80, 80,0.25)',     #Gradient Red
+        ]
+        legend_data = [True,True,True,False,True,False,True]
+        autorange_data = [False,False,False]
+        type_data = ['linear','linear','linear']
+        range_data = [[0,1],[-4,4],[-4,4]]      
+        fig = check_standard_charts().subplot_lines_doubleaxis_1st_area(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+            )
+        fig.update_xaxes(dtick='0.1',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
+        self.add_slider(fig)
         fig.show()
 
     def mayer_multiple(self):
@@ -446,7 +1013,7 @@ class dcr_chart_suite():
             _a = min(i,364)
             _b = df['DailyIssuedUSD'].rolling(_a).mean().loc[i]
             _c = df.loc[i,'DailyIssuedUSD']
-            df['Puell_Multiple'].loc[i] = _c / _b
+            df.loc[i,'Puell_Multiple'] = _c / _b
 
         loop_data=[[0],[1,2,3,4,5]]
         x_data = [
@@ -466,7 +1033,7 @@ class dcr_chart_suite():
             [5,5],
         ]
         name_data = [
-            'DCR Market Cap (USD)',
+            'DCR Price (USD)',
             'Puell Multiple',
             'STRONG BUY (0.4)',
             'BUY (0.6)',
@@ -491,6 +1058,63 @@ class dcr_chart_suite():
             '<b>Price (USD)</b>',
             '<b>Puell Multiple</b>']
         range_data = [[self.start,self.last],[-1,3],[-1,2]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','log']
+        fig = check_standard_charts().subplot_lines_doubleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        self.add_slider(fig)
+        fig.show()
+
+    def contractor_multiple(self):
+        """"Contractor Multiple"""
+        df = self.df
+
+        #Calculate Contractor Multiple expanding from 0 to 30 day MA
+        df['Contractor_Multiple'] = df['PriceUSD'] / df['PriceUSD'].rolling(30).mean()
+
+        loop_data=[[0,1],[2,3,4]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            ['2016-01-01','2022-01-01'],    #BUY
+            ['2016-01-01','2022-01-01'],    #SELL
+        ]
+        y_data = [
+            df['PriceUSD'],
+            df['PriceUSD'].rolling(30).mean(),
+            df['Contractor_Multiple'],
+            [0.6,0.6],
+            [1.7,1.7],
+        ]
+        name_data = [
+            'DCR Price (USD)',
+            'DCR Price 30DMA (USD)',
+            'Contractor_Multiple',
+            'BUY (0.6)',
+            'SELL (1.7)'
+        ]
+        width_data      = [2,1,1,2,2]
+        opacity_data    = [1,1,1,1,1,1,1]
+        dash_data = ['solid','solid','solid','dash','dash']
+        color_data = [
+            'rgb(46, 214, 161)',    #Turquoise
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(255, 255, 255)',   #White
+            'rgb(153, 255, 102)',   #Gradient Green
+            'rgb(255, 80, 80)',     #Gradient Red
+        ]
+        legend_data = [True,True,True,True,True]
+        title_data = [
+            '<b>Decred Contractor Multiple</b>',
+            '<b>Date</b>',
+            '<b>Price (USD)</b>',
+            '<b>Contractor Multiple</b>']
+        range_data = [[self.start,self.last],[-1,3],[-0.6931471805599453,3]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
         fig = check_standard_charts().subplot_lines_doubleaxis(
@@ -718,95 +1342,7 @@ class dcr_chart_suite():
         self.add_slider(fig)
         fig.show()
 
-    def s2f_model(self):
-        """"Stock-to-flow Model(s) and multiple"""
-        df = self.df
-
-        #Calc S2F Model - Specific to Bitcoin (CHECKMATE)
-        btc_s2f_model = regression_analysis().ln_regression(df,'S2F','CapMrktCurUSD','date')['model_params']
-        df['S2FCapMrktUSD_CM'] = (
-            np.exp(float(btc_s2f_model['intercept']))
-            * df['S2F']**float(btc_s2f_model['coefficient'])
-            )
-        df['S2FPriceUSD_CM'] = df['S2FCapMrktUSD_CM'] / df['SplyCur']
-        df['S2FMultiple_CM'] = df['PriceUSD']/df['S2FPriceUSD_CM'].rolling(10).mean()
-
-        #Calc S2F Model - Bitcoins Plan B Model
-        planb_s2f_model = regression_analysis().regression_constants()['planb']
-        df['S2FPriceUSD_PB'] = np.exp(-1.84)*df['S2F']**3.36
-        df['S2FMultiple_PB'] = df['PriceUSD']/df['S2FPriceUSD_PB'].rolling(10).mean()
-
-
-        loop_data=[[1,2,0],[3,4,5,6,7,8]]
-        x_data = [
-            df['date'], #Price
-            df['date'], #CM S2F Model
-            df['date'], #PB S2F Model
-            df['date'], #CM Multiple
-            df['date'], #PB Multiple
-            ['2000-01-01','2100-01-01'],    #Strong BUY
-            ['2000-01-01','2100-01-01'],    #BUY
-            ['2000-01-01','2100-01-01'],    #SELL
-            ['2000-01-01','2100-01-01'],    #Strong SELL
-        ]
-        y_data = [
-            df['PriceUSD'],
-            df['S2FPriceUSD_CM'].rolling(10).mean(),
-            df['S2FPriceUSD_PB'].rolling(10).mean(),
-            df['S2FMultiple_CM'],
-            df['S2FMultiple_PB'],
-            [0.1,0.1],
-            [0.4,0.4],
-            [5,5],
-            [20,20],
-        ]
-        name_data = [
-            'BTC Price (USD)',
-            'S2F Model (Checkmate)',
-            'S2F Model (Plan B)',
-            'S2F Multiple (Checkmate)',
-            'S2F Multiple (Plan B)',
-            'STRONG BUY (0.1)',
-            'BUY (0.4)',
-            'SELL (5.0)',
-            'STRONG SELL (20.0)',
-        ]
-        width_data      = [2,2,2,1,1,2,2,2,2]
-        opacity_data    = [1,0.5,0.5,1,1,1,1,1,1]
-        dash_data = ['solid','dot','dot','solid','solid','dash','dash','dash','dash']
-        color_data = [
-            'rgb(255,255,255)',    #White
-            #'rgb(239, 125, 50)',    #Price Orange
-            'rgb(112, 203, 255)',   #Decred L Blue
-            'rgb(46, 214, 161)',    #Turquoise
-            'rgb(112, 203, 255)',   #Decred L Blue
-            'rgb(46, 214, 161)',    #Turquoise
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 255, 102)',   #Gradient Lime
-            'rgb(255, 102, 102)',   #Gradient L.Red
-            'rgb(255, 80, 80)',     #Gradient Red
-        ]
-        legend_data = [True,True,True,True,True,True,True,True,True,]
-        title_data = [
-            '<b>Decred Stock-to-Flow Models</b>',
-            '<b>Date</b>',
-            '<b>Price (USD)</b>',
-            '<b>S2F Multiple</b>']
-        range_data = [[self.start,self.last],[-1,3],[-2,5]]
-        autorange_data = [False,False,False]
-        type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
-            )
-        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
-        fig.update_yaxes(showgrid=True,secondary_y=False)
-        fig.update_yaxes(showgrid=False,secondary_y=True)
-        self.add_slider(fig)
-        fig.show()
-
-    def usd_commitment(self):
+    def usd_commitment_cap(self):
         """
         #############################################################################
                             USD COMMITMENTS
@@ -826,17 +1362,17 @@ class dcr_chart_suite():
             df['date'],
         ]
         y_data = [
-            df['PriceUSD'],
-            df['PriceRealUSD'],
-            df['PoW_income_usd'].cumsum()/df['SplyCur'],
-            df['PoS_income_usd'].cumsum()/df['SplyCur'],
-            df['Fund_income_usd'].cumsum()/df['SplyCur'],
-            df['Total_income_usd'].cumsum()/df['SplyCur'],
-            df['tic_usd_cost'].cumsum()/df['SplyCur'],
+            df['CapMrktCurUSD'],
+            df['CapRealUSD'],
+            df['PoW_income_usd'].cumsum(),
+            df['PoS_income_usd'].cumsum(),
+            df['Fund_income_usd'].cumsum(),
+            df['Total_income_usd'].cumsum(),
+            df['tic_usd_cost'].cumsum(),
         ]
         name_data = [
-            'DCR/USD Price',
-            'Realised Price',
+            'Market Cap',
+            'Realised Cap',
             'POW-USD',
             'POS-USD',
             'Treasury-USD',
@@ -860,9 +1396,9 @@ class dcr_chart_suite():
         title_data = [
             '<b>Decred Stakeholder Commitments (USD)</b>',
             '<b>Date</b>',
-            '<b>DCR/USD Pricing</b>',
+            '<b>Decred Valuation</b>',
             '<b></b>']
-        range_data = [['01-02-2016','01-02-2020'],[-1,3],[5,11]]
+        range_data = [['01-02-2016','01-02-2020'],[5,10],[5,11]]
         autorange_data = [True,False,False]
         type_data = ['date','log','log']#
         fig = check_standard_charts().subplot_lines_singleaxis(
@@ -875,7 +1411,7 @@ class dcr_chart_suite():
         self.add_slider(fig)
         fig.show()
 
-    def btc_commitment(self):
+    def btc_commitment_cap(self):
         """
         #############################################################################
                             BTC COMMITMENTS
@@ -895,17 +1431,17 @@ class dcr_chart_suite():
             df['date'],
         ]
         y_data = [
-            df['PriceBTC'],
-            df['PriceRealBTC'],
-            df['PoW_income_btc'].cumsum()/df['SplyCur'],
-            df['PoS_income_btc'].cumsum()/df['SplyCur'],
-            df['Fund_income_btc'].cumsum()/df['SplyCur'],
-            df['Total_income_btc'].cumsum()/df['SplyCur'],
-            df['tic_btc_cost'].cumsum()/df['SplyCur'],
+            df['CapMrktCurBTC'],
+            df['CapRealBTC'],
+            df['PoW_income_btc'].cumsum(),
+            df['PoS_income_btc'].cumsum(),
+            df['Fund_income_btc'].cumsum(),
+            df['Total_income_btc'].cumsum(),
+            df['tic_btc_cost'].cumsum(),
         ]
         name_data = [
-            'DCR/BTC Price',
-            'Realised Price',
+            'Market Cap',
+            'Realised Cap',
             'POW-BTC',
             'POS-BTC',
             'Treasury-BTC',
@@ -929,10 +1465,10 @@ class dcr_chart_suite():
         title_data = [
             '<b>Decred Stakeholder Commitments (BTC)</b>',
             '<b>Date</b>',
-            '<b>DCR/BTC Pricing</b>',
+            '<b>Decred Valuation (BTC)</b>',
             '<b></b>'
         ]
-        range_data = [['01-02-2016','01-02-2020'],[-4,-1],[0,0]]
+        range_data = [['01-02-2016','01-02-2020'],[2,6],[0,0]]
         autorange_data = [True,False,False]
         type_data = ['date','log','log']
         fig = check_standard_charts().subplot_lines_singleaxis(
@@ -1116,6 +1652,7 @@ class dcr_chart_suite():
             'Hodler Conversion Rate +ve',
             'Hodler Conversion Rate -ve',
         ]
+        fill_data = ['','','','tozeroy','tozeroy']
         width_data      = [2,2,2,2,2]
         opacity_data    = [1,1,1,1,1]
         dash_data = ['solid','solid','solid','solid','solid',]
@@ -1132,17 +1669,18 @@ class dcr_chart_suite():
             '<b>Date</b>',
             '<b>Price (USD)</b>',
             '<b>HODLer Conversion Rate</b>']
-        range_data = [[self.start,self.last],[-1,3],[-0.6,1]]
+        range_data = [[self.start,self.last],[-2,3],[-0.5,1.5]]
         autorange_data = [False,False,False]
         type_data = ['date','log','linear']
         fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
             )
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
         fig.update_yaxes(showgrid=True,secondary_y=False)
-        fig.update_yaxes(showgrid=False,secondary_y=True,tickformat=',.0%',dtick=0.1)
+        fig.update_yaxes(showgrid=False,secondary_y=True,tickformat=',.0%',dtick=0.25)
         self.add_slider(fig)
 
         fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")     
@@ -1234,15 +1772,15 @@ class dcr_chart_suite():
         y_data = [
             df['PriceUSD'],
             df['tic_usd_cost_142sum'],
-            df['tic_usd_cost_142sum']*0.25,
-            df['tic_usd_cost_142sum']*0.318,
+            df['tic_usd_cost_142sum']*0.236,
+            df['tic_usd_cost_142sum']*0.382,
             df['tic_usd_cost_142sum']*0.618,
         ]
         name_data = [
             'DCR/USD Price',
             '142d Ticket USD Sum',
-            '142d Ticket USD Sum x25.0%',
-            '142d Ticket USD Sum x31.8%',
+            '142d Ticket USD Sum x23.6%',
+            '142d Ticket USD Sum x38.2%',
             '142d Ticket USD Sum x61.8%',
             ]
         color_data = [
@@ -1257,9 +1795,9 @@ class dcr_chart_suite():
         opacity_data = [1,1,1,1,1]
         legend_data = [True,True,True,True,True]#
         title_data = [
-            'Decred 142-Day Ticket USD Sum',
-            'Date',
-            'DCR/USD Pricing',
+            '<b>Decred 142-Day Ticket USD Sum</b>',
+            '<b>Date</b>',
+            '<b>DCR/USD Pricing</b>',
             '']
         range_data = [['01-02-2016','01-02-2020'],[-1,3],[5,11]]
         autorange_data = [True,False,False]
@@ -1440,16 +1978,16 @@ class dcr_chart_suite():
         y_data = [
             df['PriceUSD'],
             df['PriceRealUSD'],
-            df['tx_volatile_ratio'],
-            df['tx_volatile_ratio_Ntv'],
+            df['max_vol_ratio_USD'],
+            df['max_vol_ratio_BTC'],
             [0.15,0.15,0.17,0.17],
             [0.26,0.26,0.28,0.28],
         ]
         name_data = [
             'DCR Price (BTC)',
             'Realised Price (BTC)',
-            'Transaction Volatility',
-            'Transaction Volatility Ntc',
+            'max_vol_ratio_USD',
+            'max_vol_ratio_BTC',
             'Buy Zone',
             'Sell Zone',
         ]
@@ -1466,12 +2004,12 @@ class dcr_chart_suite():
         ]
         legend_data = [True,True,True,True,True,True]
         title_data = [
-            '<b>Decred Transactional Volatility</b>',
+            '<b>Decred Max Vol Ratio</b>',
             '<b>Date</b>',
             '<b>Price (BTC)</b>',
             '<b>Transaction Volatility Ratio</b>'
             ]
-        range_data = [[self.start,self.last],[-3.698970004,-2.522878745],[0.1,0.7]]
+        range_data = [[self.start,self.last],[-3.698970004,-2.522878745],[0.0,5.0]]
         autorange_data = [False,False,False]
         type_data = ['date','log','linear']
         fig = check_standard_charts().subplot_lines_doubleaxis(
@@ -1489,25 +2027,55 @@ class dcr_chart_suite():
         fig.show()
 
 
-
-
+"""MODEL"""
 fig_dcr = dcr_chart_suite()
-#fig_dcr.mvrv()
-#fig_dcr.block_subsidy_usd()
-#fig_dcr.block_subsidy_btc()
+
+
+
+"""NETWORK VALUATION"""
+fig_dcr.mvrv(0)
+
+fig_dcr.block_subsidy_usd(0)
+fig_dcr.block_subsidy_btc(0)
+
+fig_dcr.usd_commitment(0)
+fig_dcr.btc_commitment(0)
+
+fig_dcr.s2f_model(0)
+fig_dcr.s2f_model_residuals()
+
+"""PRICING MODELS"""
+fig_dcr.mvrv(1)
+
+fig_dcr.block_subsidy_usd(1)
+fig_dcr.block_subsidy_btc(1)
+
+fig_dcr.usd_commitment(1)
+fig_dcr.btc_commitment(1)
+
+fig_dcr.s2f_model(1)
+
 fig_dcr.mayer_multiple()
 fig_dcr.mayer_multiple_bands()
-#fig_dcr.puell_multiple()
-#fig_dcr.beam_indicator()
-#fig_dcr.bottom_cycle()
-#fig_dcr.top_cycle()
-#fig_dcr.s2f_model()
-#fig_dcr.usd_commitment()
-#fig_dcr.btc_commitment()
-#fig_dcr.TVWAP()
-#fig_dcr.hodler_conversion()
-#fig_dcr.ticket_overunder()
-#fig_dcr.tic_vol_sum_142day()
-#fig_dcr.tx_volatility_ratio()
 
 
+
+
+
+fig_dcr.puell_multiple()
+fig_dcr.contractor_multiple()
+
+
+
+fig_dcr.beam_indicator()
+fig_dcr.bottom_cycle()
+fig_dcr.top_cycle()
+
+
+
+fig_dcr.TVWAP()
+fig_dcr.hodler_conversion()
+fig_dcr.ticket_overunder()
+fig_dcr.tic_vol_sum_142day()
+fig_dcr.tx_volatility_ratio()
+fig.max_vol_ratio()

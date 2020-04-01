@@ -51,6 +51,7 @@ class dcr_add_metrics():
 
             OUTPUT DATAFRAME COLUMNS:
             'date', 'blk','age_days','age_sply','btc_blk_est',
+            'BlkSizeByte', BlkSizeMeanByte',
             'DailyIssuedNtv', 'DailyIssuedUSD', 'inf_pct_ann', 'S2F',
             'AdrActCnt', 'BlkCnt', 'BlkSizeByte', 'BlkSizeMeanByte',
             'CapMVRVCur', 'CapMrktCurUSD', 'CapRealUSD','CapRealBTC', 'DiffMean', 'CapMVRVCur',
@@ -109,6 +110,7 @@ class dcr_add_metrics():
         # Restructure final dataset
         df = df[[
             'date', 'blk','age_days','age_sply','btc_blk_est',
+            'BlkSizeByte', 'BlkSizeMeanByte',
             'DailyIssuedNtv', 'DailyIssuedUSD', 'inf_pct_ann', 'S2F',
             'AdrActCnt', 'BlkCnt', 'BlkSizeByte', 'BlkSizeMeanByte',
             'CapMVRVCur', 'CapMrktCurUSD', 'CapRealUSD','CapRealBTC', 'DiffMean', 
@@ -250,6 +252,8 @@ class dcr_add_metrics():
                 'age_days'              - Coin Age in Days
                 'age_sply'              - Coin age in Supply (SplyCur/21M)
                 'window'                - Count of difficulty window
+                'BlkSizeByte'           - Daily Total Block Size (bytes)
+                'BlkSizeMeanByte'       - Avg Block Size (bytes)
                 'CapMrktCurUSD'         - Market Cap (USD)
                 'CapMrktCurBTC'         - Market Cap (BTC)
                 'CapRealUSD'            - Realised Cap (USD)
@@ -292,7 +296,9 @@ class dcr_add_metrics():
         #_blk_max = int(_coin['blk'][_coin.index[-1]])
         #Cull _coin to Key Columns
         _coin = _coin[[
-            'date','blk','age_days','age_sply','CapMrktCurUSD','CapRealUSD','CapRealBTC','CapMVRVCur',
+            'date','blk','age_days','age_sply',
+            'BlkSizeByte', 'BlkSizeMeanByte',
+            'CapMrktCurUSD','CapRealUSD','CapRealBTC','CapMVRVCur',
             'DiffMean','PriceBTC','PriceUSD','PriceRealUSD','PriceRealBTC','BTC_PriceUSD',
             'SplyCur','DailyIssuedNtv','DailyIssuedUSD','S2F',
             'inf_pct_ann','TxCnt','TxTfrCnt','TxTfrValMedNtv','TxTfrValMeanNtv',
@@ -349,6 +355,7 @@ class dcr_add_metrics():
         #Compile into final ordered dataframe
         df = df[[
             'date', 'blk', 'age_days','age_sply','window',                              #Time Metrics
+            'BlkSizeByte', 'BlkSizeMeanByte',                                           #Blockchain Size Metrics
             'CapMrktCurUSD', 'CapMrktCurBTC', 'CapRealUSD','CapRealBTC','CapMVRVCur',   #Value Metrics
             'PriceBTC', 'PriceUSD', 'PriceRealBTC',  'PriceRealUSD','BTC_PriceUSD',     #Price Metrics
             'DailyIssuedNtv','DailyIssuedUSD','AdrActCnt','TxCnt','TxTfrCnt',           #Block Reward Metrics
@@ -438,30 +445,6 @@ class dcr_add_metrics():
 
         #Write to csv for others
         general_helpers.df_to_csv(df,'DCR_tics')
-        return df
-
-    def dcr_multiples(self):
-        df = self.dcr_ticket_models()
-        """
-        Calculates DataFrame columns for ratios
-            Starting df = dcr_ticket_models
-        """
-        #Block Subsidy Multiples
-        #   Calculates Ratio of Market value to block subsidy Income
-        df['PoW_multiple']  = df['CapMrktCurUSD'] / df['PoW_income_usd'].cumsum()
-        df['PoS_multiple']  = df['CapMrktCurUSD'] / df['PoS_income_usd'].cumsum()
-        df['Fund_multiple'] = df['CapMrktCurUSD'] / df['Fund_income_usd'].cumsum()
-        df['Subs_multiple'] = df['CapMrktCurUSD'] / df['Total_income_usd'].cumsum()
-        
-        #Ticket Cap Mutliples
-        
-        
-        #Pricing Multiples
-        df['mayer_multiple'] = df['PriceUSD']/df['PriceUSD'].rolling(200).mean()
-        df['S2F_multiple']  = (
-            df['PriceUSD'] / math.exp(-1.84) * df['S2F']**3.36
-        )
-        #df['diff_multiple'] = 1
         return df
 
     def dcr_pricing_models(self):

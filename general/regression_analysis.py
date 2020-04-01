@@ -1,7 +1,9 @@
 #Modules for Linear Regression Analysis
 from checkonchain.general.__init__ import *
 from sklearn.linear_model import LinearRegression
+import statsmodels.api as sm
 
+from checkonchain.dcronchain.dcr_add_metrics import *
 
 class regression_analysis():
     """
@@ -81,7 +83,7 @@ class regression_analysis():
             'ltc_diff':ltc_diff,            
             }
     
-    def ln_regression(self,dataframe,x_metric,y_metric,time_metric):
+    def ln_regression(self,df,x_metric,y_metric,time_metric):
         """Linear Regression Analysis - Automatically calcs ln(x) and ln(y)
         INPUTS:
             Dataframe       = Pandas dataframe containing relevant datasets
@@ -92,25 +94,21 @@ class regression_analysis():
             'model'         = Regression model
             'model_params   = Dataframe containing RSQ, Intercept and Coefficient Params
         """
-        self.dataframe = dataframe
-        self.x_metric = x_metric
-        self.y_metric = y_metric
-        self.time_metric = time_metric #arbitrary for charting
-        print('...Calculating ln-ln Linear Regression for '+self.x_metric+'-'+self.y_metric+'...')
+        print('...Calculating ln-ln Linear Regression for '+x_metric+'-'+y_metric+'...')
 
         #Subset of dataset, drop na values
-        df = self.dataframe[[
-            self.time_metric,
-            self.x_metric,
-            self.y_metric
+        df = df[[
+            time_metric,
+            x_metric,
+            y_metric
         ]].dropna(axis=0)
         df = df.reset_index(drop=True)
 
         #Create arrays for x and y in regression
-        x=np.array(np.log(df[self.x_metric])).reshape((-1,1))
-        y=np.array(np.log(df[self.y_metric]))
+        x=np.array(np.log(df[x_metric])).reshape((-1,1))
+        y=np.array(np.log(df[y_metric]))
         regression_model = LinearRegression().fit(x, y)
-        
+       
         #Calculate r_sq, intercept and coefficient of model
         model_params = pd.DataFrame(
             index=['regression_model'],
@@ -125,7 +123,7 @@ class regression_analysis():
             'model_params':model_params
             }
         
-    def rsq_progression(self,dataframe,x_metric,y_metric,time_metric):
+    def rsq_progression(self,df,x_metric,y_metric,time_metric):
         """
         Calculates progression of R-squared coefficient quality over a dataset
         INPUTS:
@@ -136,29 +134,64 @@ class regression_analysis():
         OUTPUTS:
             'rsq_develop'   = DataFrame with 'rsq_x_metric' column represents RSQ
         """
-        self.dataframe = dataframe
-        self.x_metric = x_metric
-        self.y_metric = y_metric
-        self.time_metric = time_metric #arbitrary for charting
-        print('...Calculating R-Square Progression for '+self.x_metric+'-'+self.y_metric+'...')
+        print('...Calculating R-Square Progression for '+x_metric+'-'+y_metric+'...')
         #Calculate progression of rsq over time
-        df = self.dataframe[[self.time_metric,self.x_metric,self.y_metric]].dropna(axis=0)
+        df = df[[time_metric,x_metric,y_metric]].dropna(axis=0)
         df = df.reset_index(drop=True)
-        df['rsq_'+self.x_metric]=0
+        df['rsq_'+x_metric]=0
 
         for i in range(0,len(df.index)):
             #Calculate S2F RSQ development
-            df.loc[i,['rsq_'+self.x_metric]]=LinearRegression().fit(
-                np.log(df.loc[:i,[self.x_metric]]),
-                np.log(df.loc[:i,[self.y_metric]])
+            df.loc[i,['rsq_'+x_metric]]=LinearRegression().fit(
+                np.log(df.loc[:i,[x_metric]]),
+                np.log(df.loc[:i,[y_metric]])
                 ).score(
-                    np.log(df.loc[:i,[self.x_metric]]),
-                    np.log(df.loc[:i,[self.y_metric]])
+                    np.log(df.loc[:i,[x_metric]]),
+                    np.log(df.loc[:i,[y_metric]])
                     )
         print('RSQ Complete')
         return {
             'rsq_develop':df
             }
+
+
+    def ln_regression_OLS(self,df,x_metric,y_metric,const):
+        """Linear Regression Analysis OLS statsmodels - Automatically calcs ln(x) and ln(y)
+        Takes in dataframe columns, 
+            applies natural log, 
+            performs regression analysis, 
+            returns result in linear space (exp(result))
+        INPUTS:
+            Dataframe       = Pandas dataframe containing relevant datasets
+            x_metric        = String - column heading of x_metric
+            y_metric        = String - column heading of y_metric
+            const           = Boolean, add intercept or not
+        OUTPUT:
+            dataframe with the following additional columns:
+            'xy_predict'  - Predicted model based on x_metric (in linear space)
+            'xy_multiple' - Predicted model based on x_metric
+            'xy_residual' - Predicted model Residuals (y_metric - xy_predict) / std_error
+        """
+        print('...Calculating OLS ln-ln Linear Regression for '+x_metric+'-'+y_metric+'...')
+        #set x and y params for regression
+        x = df[x_metric].apply(np.log)
+        if const == True:
+            x = sm.add_constant(x)
+        y = df[y_metric].apply(np.log)
+        #Calculate regression model and print results
+        model = sm.OLS(y, x).fit()
+        predictions = model.predict(x).apply(np.exp)
+        print(model.summary())
+        #Create string names for model outputs
+        xy_predict      = x_metric[:3] + '_' + y_metric[:5] + '_predict'
+        xy_multiple     = x_metric[:3] + '_' + y_metric[:5] + '_multiple'
+        xy_residual     = x_metric[:3] + '_' + y_metric[:5] + '_residual'
+
+        df[xy_predict]      = model.predict(x).apply(np.exp)
+        df[xy_multiple]     = df[y_metric] / df[xy_predict]
+        df[xy_residual]     = (y - df[xy_predict].apply(np.log)) / np.exp(float(model.bse[x_metric]))
+        print('...Returning df with added cols: ' + xy_predict + ' ' + xy_multiple + ' ' + xy_residual)
+        return {'df':df,'model':model}
 
 
 #from checkonchain.general.coinmetrics_api import *
@@ -177,3 +210,34 @@ class regression_analysis():
 #LTC_rsq = regression_analysis().rsq_progression(LTC_coin,'DiffMean','CapMrktCurUSD','date')
 #LTC_rsq
 
+#df = dcr_add_metrics().dcr_coin()
+#x_metric = 'S2F'
+#y_metric = 'PriceUSD'
+#const = True
+#
+#print('...Calculating OLS ln-ln Linear Regression for '+x_metric+'-'+y_metric+'...')
+##set x and y params for regression
+#x = df[x_metric].apply(np.log)
+#if const == True:
+#    x = sm.add_constant(x)
+#y = df[y_metric].apply(np.log)
+##Calculate regression model and print results
+#model = sm.OLS(y, x).fit()
+#predictions = model.predict(x).apply(np.exp)
+#print(model.summary())
+##Create string names for model outputs
+#xy_predict      = x_metric[:3] + '_' + y_metric[:5] + '_predict'
+#xy_multiple     = x_metric[:3] + '_' + y_metric[:5] + '_multiple'
+#xy_residual     = x_metric[:3] + '_' + y_metric[:5] + '_residual'
+#
+#df[xy_predict]      = model.predict(x).apply(np.exp)
+#df[xy_multiple]     = df[y_metric] / df[xy_predict]
+#df[xy_residual]     = (y - df[xy_predict].apply(np.log)) / np.exp(float(model.bse[x_metric]))
+#print('...Returning df with added cols: ' + xy_predict + ' ' + xy_multiple + ' ' + xy_residual)
+#
+#name = xy_predict + '_2'
+#df[name] = np.exp(x[x_metric]*model.params[x_metric] + x['const']*model.params['const'])
+#
+#df[[xy_predict,name]]
+#
+#model.params
