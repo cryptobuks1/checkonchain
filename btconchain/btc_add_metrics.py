@@ -57,7 +57,7 @@ class btc_add_metrics():
             df.loc[df.date==i,'notes'] = 'PriceUSD and CapMrktCurUSD from Plan B data (@100TrillionUSD)'
         #Restructure final dataset
         df = df[[
-            'date', 'blk','BlkCnt','age_days','age_sply',
+            'date', 'blk','age_days','age_sply',
             'DailyIssuedNtv', 'DailyIssuedUSD', 'inf_pct_ann', 'S2F',
             'AdrActCnt', 'BlkCnt', 'BlkSizeByte', 'BlkSizeMeanByte',
             'CapMVRVCur', 'CapMrktCurUSD', 'CapRealUSD', 'DiffMean', 'HashRate',

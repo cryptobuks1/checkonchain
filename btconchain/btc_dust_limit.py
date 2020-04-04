@@ -10,6 +10,7 @@ dustlim_avg = 222   #bytes (based on actual performance)
 max_fee = 0.01      #Assume 1% of transaction cost is max viable fee
 sats = 1e8          #sats per BTC
 
+
 #Pull Coinmetrics data
 BTC_coin = btc_add_metrics().btc_coin()
 blk_cur = BTC_coin['blk'].max() #Current block
@@ -23,6 +24,8 @@ BTC_coin = BTC_coin.loc[:,[
     'FeeTotNtv','FeeTotUSD',
     'TxCnt','TxTfrCnt'
     ]]
+
+    
 #Add in segwit_adoption from blockchair csv
 BTC_segwit = pd.read_csv(r'D:\code_development\checkonchain\checkonchain\btconchain\data\blockchair\segwit_adption.csv')
 BTC_segwit.columns = ['date','segwit']
