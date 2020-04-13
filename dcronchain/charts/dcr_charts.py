@@ -65,7 +65,7 @@ class dcr_chart_suite():
 
     def write_html(self,fig,filename):
         "Writes chart to checkmatey.github.io"
-        html_path = "D:\code_development\checkonchain\checkmatey.github.io\dcr_charts"
+        html_path = "D:\code_development\checkonchain\checkonchain\hosted_charts"
         html_path = html_path + str('\\') + filename + '.html'
         pio.write_html(fig, file=html_path, auto_open=True)
 
