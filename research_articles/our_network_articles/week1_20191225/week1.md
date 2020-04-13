@@ -1,4 +1,5 @@
 # Our Network - Week 1
+https://ournetwork.substack.com/p/our-network-issue-2
 
 ## Insight 1 - The Decred Security Curve
 Decred is secured by a unique Hybrid PoW/PoS consensus mechanism. Each block must be PoW mined, followed by validation by 3 out of 5 pseudo-random PoS tickets. If validation fails, blocks must be re-mined, forfeiting PoW expenditure  and the block reward. The chart below presents the relative magnitude of honest hash-power to successfully double spend DCR for a given share of the ticket pool (Y-axis value of 1.0 equates to a standard 51% attack with added cost of holding 50% of tickets).

@@ -11,6 +11,7 @@ class btc_chart_suite():
         self.last = pd.to_datetime(self.today + pd.to_timedelta(90,unit='D'))
         self.start = '2010-01-01'
         self.df_init = btc_add_metrics().btc_coin()
+        self.df_clean = self.df_init
         #Create dataframe with key events like market tops, btms and halvings
         events = pd.DataFrame(
             data = [
@@ -88,9 +89,9 @@ class btc_chart_suite():
         opacity_data    = [1,1,1,1,1,1,1]
         dash_data = ['solid','solid','solid','dash','dash','dash','dash']
         color_data = [
-            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(255, 255, 255)',    #White
             'rgb(20, 169, 233)',    #Total Blue
-            'rgb(255, 255, 255)',   #White
+            'rgb(239, 125, 50)',    #Price Orange
             'rgb(153, 255, 102)',   #Gradient Green
             'rgb(255, 255, 102)',   #Gradient Lime
             'rgb(255, 102, 102)',   #Gradient L.Red
@@ -163,13 +164,13 @@ class btc_chart_suite():
         opacity_data    = [1,1,1,1,1,1,0.5]
         dash_data = ['solid','dot','dash','dash','solid','solid','dot']
         color_data = [
-            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(255, 255, 255)',    #White
             'rgb(20, 169, 233)',    #Total Blue
             'rgb(255, 80, 80)',   #Gradient Red
             'rgb(153, 255, 102)', #Gradient Green
             'rgb(255, 80, 80)',   #Gradient Red
             'rgb(153, 255, 102)', #Gradient Green
-            'rgb(255,255,255)'    #White
+            'rgb(239, 125, 50)',    #Price Orange
         ]
         legend_data = [True,True,True,True,True,True,True,True]
         title_data = [
@@ -228,7 +229,7 @@ class btc_chart_suite():
         opacity_data    = [1,1,1,1,1,1]
         dash_data = ['solid','dot','dash','dash','solid','solid']
         color_data = [
-            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(255, 255, 255)',    #White
             'rgb(20, 169, 233)',    #Total Blue
             'rgb(255, 80, 80)',   #Gradient Red
             'rgb(153, 255, 102)', #Gradient Green
@@ -296,9 +297,9 @@ class btc_chart_suite():
         opacity_data    = [1,1,1,1,1,1,1]
         dash_data = ['solid','solid','solid','dash','dash','dash','dash']
         color_data = [
-            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(255, 255, 255)',    #White
             'rgb(20, 169, 233)',    #Total Blue
-            'rgb(255, 255, 255)',   #White
+            'rgb(239, 125, 50)',    #Price Orange
             'rgb(153, 255, 102)',   #Gradient Green
             'rgb(255, 255, 102)',   #Gradient Lime
             'rgb(255, 102, 102)',   #Gradient L.Red
@@ -441,10 +442,10 @@ class btc_chart_suite():
         opacity_data    = [1,0.75,0.75,1,1,1,1,1]
         dash_data = ['solid','solid','dash','solid','dash','dash','dash','dash']
         color_data = [
+            'rgb(255, 255, 255)',    #White
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(20, 169, 233)',    #Total Blue
             'rgb(239, 125, 50)',    #Price Orange
-            'rgb(20, 169, 233)',    #Total Blue
-            'rgb(20, 169, 233)',    #Total Blue
-            'rgb(255, 255, 255)',   #White
             'rgb(153, 255, 102)',   #Gradient Green
             'rgb(255, 255, 102)',   #Gradient Lime
             'rgb(255, 102, 102)',   #Gradient L.Red
@@ -457,6 +458,86 @@ class btc_chart_suite():
             '<b>Price (USD)</b>',
             '<b>Puell Multiple</b>']
         range_data = [[self.start,self.last],[-1,5],[-1,2]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','log']
+        fig = check_standard_charts().subplot_lines_doubleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        self.add_slider(fig)
+        fig.show()
+
+    def block_subsidy(self):
+        """"Block Subsidy Models"""
+        df = pd.DataFrame()
+        df = self.df_init
+        
+        df['Puell_Multiple'] = (
+            df['DailyIssuedUSD']
+            / df['DailyIssuedUSD'].rolling(365).mean()
+        )
+
+        df['DailyIssuedUSD'] = df['DailyIssuedNtv'] * df['PriceUSD']
+
+        df['DailyIssuedUSDAdj'] = df['DailyIssuedUSD']*10*2**(np.floor(df['blk']/210000))
+
+        df['FeeTotUSD'] = df['FeeTotNtv'] * df['PriceUSD']
+        df['PoW_cap'] = df['DailyIssuedUSDAdj'].cumsum()
+        df['miner_cap'] = df['DailyIssuedUSDAdj'].cumsum() + df['FeeTotUSD'].cumsum()
+
+
+        loop_data=[[0,1,2],[]]#3,4,5,6,7
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            ['2008-01-01','2022-01-01'],    #Strong BUY
+            ['2008-01-01','2022-01-01'],    #BUY
+            ['2008-01-01','2022-01-01'],    #SELL
+            ['2008-01-01','2022-01-01'],    #Strong SELL
+        ]
+        y_data = [
+            df['CapMrktCurUSD'],
+            df['miner_cap'],
+            df['miner_cap']*0.236,
+            df['Puell_Multiple'],
+            [0.4,0.4],
+            [0.6,0.6],
+            [2.5,2.5],
+            [5,5],
+        ]
+        name_data = [
+            'Market Cap (USD)',
+            'PoW Block Reward Cap',
+            'PoW Block Reward Cap * 23.6%',
+            'Puell Multiple',
+            'STRONG BUY (0.4)',
+            'BUY (0.6)',
+            'SELL (2.5)',
+            'STRONG SELL (5.0)'
+        ]
+        width_data      = [2,2,2,1,2,2,2,2]
+        opacity_data    = [1,1,1,1,1,1,1,1]
+        dash_data = ['solid','dash','solid','solid','dash','dash','dash','dash']
+        color_data = [
+            'rgb(255, 255, 255)',    #White
+            'rgb(250, 38, 53)',     #PoW Red
+            'rgb(250, 38, 53)',     #PoW Red
+            'rgb(255, 255, 255)',   #White
+            'rgb(153, 255, 102)',   #Gradient Green
+            'rgb(255, 255, 102)',   #Gradient Lime
+            'rgb(255, 102, 102)',   #Gradient L.Red
+            'rgb(255, 80, 80)',     #Gradient Red
+        ]
+        legend_data = [True,True,True,True,True,True,True,True]
+        title_data = [
+            'Bitcoin Block Subsidy Models',
+            '<b>Date</b>',
+            '<b>Price (USD)</b>',
+            '<b>Puell Multiple</b>']
+        range_data = [[self.start,self.last],[5,12],[-1,2]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
         fig = check_standard_charts().subplot_lines_doubleaxis(
@@ -614,7 +695,7 @@ class btc_chart_suite():
         opacity_data    = [1,1,1,1,1,1,1,1]
         dash_data = ['solid','solid','solid','solid','dash','dash','dash','dash']
         color_data = [
-            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(255, 255, 255)',    #White
             'rgb(153, 255, 102)',   #Gradient Green
             'rgb(255, 80, 80)',     #Gradient Red
             'rgb(255, 255, 255)',   #White
@@ -651,32 +732,60 @@ class btc_chart_suite():
         df['730DMA'] = df['PriceUSD'].rolling(730).mean()
         df['730DMAx5'] = df['730DMA']*5
 
-        loop_data=[[0,1,2],[]]
+        df['upper'] = np.where(df['PriceUSD'] >= df['730DMAx5'], df['PriceUSD'], df['730DMAx5'])
+        df['lower'] = np.where(df['PriceUSD'] <= df['730DMA']  , df['PriceUSD'], df['730DMA'])
+
+        #Block Subsidy Model
+        df['DailyIssuedUSD'] = df['DailyIssuedNtv'] * df['PriceUSD']
+        df['DailyIssuedUSDAdj'] = df['DailyIssuedUSD']*10*2**(np.floor(df['blk']/210000))
+        df['FeeTotUSD'] = df['FeeTotNtv'] * df['PriceUSD']
+        df['PoW_cap'] = df['DailyIssuedUSDAdj'].cumsum()
+        df['miner_cap'] = df['DailyIssuedUSDAdj'].cumsum() + df['FeeTotUSD'].cumsum()
+        df['miner_price'] = df['miner_cap'] / df['SplyCur']
+
+
+        loop_data=[[0,1,2,3,4],[]]
         x_data = [
             df['date'],
             df['date'],
             df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date']
         ]
         y_data = [
             df['PriceUSD'],
+            df['lower'], #N/A Price for Fill
             df['730DMA'],
+            df['upper'], #N/A Price for Fill
             df['730DMAx5'],
+            df['miner_price'],
+            df['miner_price']*0.236,
         ]
         name_data = [
             'BTC Price (USD)',
-            'BUY Zone',
-            'SELL Zone',
+            'N/A',
+            'BUY Zone (2yr MA)',
+            'N/A',
+            'SELL Zone (2yr MA x5)',
+            'PoW Block Reward Price',
+            'PoW Block Reward Price * 23.6%',
         ]
-        width_data      = [2,2,2]
-        opacity_data    = [1,1,1]
-        fill_data = ['none','tonexty','tonexty']
-        dash_data = ['solid','solid','solid']
+        width_data      = [2,1,2,1,2,1,1]
+        opacity_data    = [1,0,1,0,1,1,1]
+        fill_data = ['none','none','tonexty','none','tonexty','none','none']
+        dash_data = ['solid','solid','solid','solid','solid','solid','solid']
         color_data = [
-            'rgb(255, 255, 255)',   #White
-            'rgb(153, 255, 102)', #Gradient Green
-            'rgb(255, 80, 80)',   #Gradient Red
+            'rgb(255, 255, 255)',           #White
+            'rgb(255, 255, 255)',           #White
+            'rgba(17, 255, 125,0.8)',             #Strong Green
+            'rgb(255, 255, 255)',           #White
+            'rgba(250, 38, 53,0.8)',             #PoW Red
+            'rgb(255, 255, 0)',             #Retro Pink
+            'rgb(0, 255, 255)',             #Retro Blue
         ]
-        legend_data = [True,True,True]
+        legend_data = [True,False,True,False,True,True,True]
         title_data = [
             'Bitcoin Investor Tool',
             '<b>Date</b>',
@@ -685,10 +794,11 @@ class btc_chart_suite():
         range_data = [[self.start,self.last],[-1,5],[-1,2]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = check_standard_charts().subplot_lines_doubleaxis_1st_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
             )
         
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
@@ -696,22 +806,8 @@ class btc_chart_suite():
         fig.update_yaxes(showgrid=True,secondary_y=True)
         self.add_slider(fig)
         
-        #fig.add_annotation(
-        #    x=0.5,
-        #    y=(1.05),
-        #    text='after:@PostiveCrypto',
-        #    showarrow=False,
-        #    xref="paper",
-        #    yref="paper",
-        #    opacity=0.75,
-        #    font=dict(
-        #        family='Raleway',
-        #        size=16,
-        #        color='rgb(50,50,50)'
-        #    )
-        #)
+        fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />after @PositiveCrypto") 
 
-        #check_standard_charts().add_annotation(fig,'after:@PostiveCrypto')
         fig.show()
 
     def golden_ratio(self):
@@ -1109,11 +1205,11 @@ class btc_chart_suite():
         opacity_data    = [1,0.5,0.5,1,1,1,1,1,1]
         dash_data = ['solid','dot','dot','solid','solid','dash','dash','dash','dash']
         color_data = [
+            'rgb(255, 255, 255)',    #White
+            'rgb(20, 169, 233)',    #Total Blue
             'rgb(239, 125, 50)',    #Price Orange
             'rgb(20, 169, 233)',    #Total Blue
-            'rgb(255, 255, 255)',   #White
-            'rgb(20, 169, 233)',    #Total Blue
-            'rgb(255, 255, 255)',   #White
+            'rgb(239, 125, 50)',    #Price Orange
             'rgb(153, 255, 102)',   #Gradient Green
             'rgb(255, 255, 102)',   #Gradient Lime
             'rgb(255, 102, 102)',   #Gradient L.Red
@@ -1142,6 +1238,8 @@ class btc_chart_suite():
     def halving_cycle(self):
         """"Price Growth over Days since halving for each cycle"""
         df = self.df_init
+        df = df.drop(['epoch'],axis=1)
+
         #Calculate halving epoch
         df['epoch'] = df['blk']/210000
         df['epoch'] = df['epoch'].apply(np.floor)
@@ -1207,6 +1305,8 @@ class btc_chart_suite():
     def bottom_cycle(self):
         """"Price Growth over Days since capitulation for each cycle"""
         df = self.df_init
+        df = df.drop(['epoch'],axis=1)
+        
         #Filter events to market capitulation event
         df2 = self.events[self.events['event']=='btm']
         #Merge events onto df, fill backwards
@@ -1277,6 +1377,8 @@ class btc_chart_suite():
     def top_cycle(self):
         """"Price Drawdown over since market top for each cycle"""
         df = self.df_init
+        df = df.drop(['epoch'],axis=1)
+
         #Filter events to market top event
         df2 = self.events[self.events['event']=='top']
         #Merge events onto df, fill forwards
@@ -1344,24 +1446,223 @@ class btc_chart_suite():
         self.add_slider(fig)
         fig.show()
 
+    def yearly_cycle(self):
+        """"Price Growth over Days since halving for each cycle"""
+        df = self.df_init
+
+        #Calculate Year
+        df['year'] = pd.DatetimeIndex(df['date']).year
+
+        #Calculate halving epoch
+        df['epoch'] = df['blk']/210000
+        df['epoch'] = df['epoch'].apply(np.floor)
+        #Filter events to halving events
+        df2 = self.halvings
+        #Merge events onto df
+        df = pd.merge(
+            df,df2[['epoch','event','date_event']],
+            how='left',
+            left_on='epoch',
+            right_on='epoch',
+            copy=False
+        )
+        #Calculate days until event
+        df['days_to_event'] = 1460 - (df['date_event'] - df['date']) / np.timedelta64(1, 'D')
+
+        loop_data=[[0,1,2,3],[]]
+        x_data = [
+            df[df['epoch']==0]['days_to_event'],
+            df[df['epoch']==1]['days_to_event'],
+            df[df['epoch']==2]['days_to_event'],
+            df[df['epoch']==3]['days_to_event'],
+        ]
+        y_data = [
+            df[df['epoch']==0]['PriceUSD']/0.084,
+            df[df['epoch']==1]['PriceUSD']/12.33,
+            df[df['epoch']==2]['PriceUSD']/651.94,
+            df[df['epoch']==3]['PriceUSD']/8250,
+        ]
+        name_data = [
+            'Epoch 1 (2009-12)',
+            'Epoch 2 (2012-16)',
+            'Epoch 3 (2016-20)',
+            'Epoch 4 (2020-24)',
+        ]
+        width_data      = [2,2,2,2]
+        opacity_data    = [1,1,1,1]
+        dash_data = ['solid','solid','solid','solid',]
+        color_data = [
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(78,205,233)',      #Total Blue
+            'rgb(255, 80, 80)',      #Gradient Red
+            'rgb(153, 255, 102)',      #Gradient Green
+        ]
+        legend_data = [True,True,True,True,]
+        title_data = [
+            'Bitcoin Days to Halving',
+            '<b>Days since Halving</b>',
+            '<b>Growth Multiple Since Halving</b>',
+            '<b></b>']
+        range_data = [[0,1460],[-0.301029996,3],[-1,2]]
+        autorange_data = [False,False,False]
+        type_data = ['linear','log','log']
+        fig = check_standard_charts().subplot_lines_singleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick=30,tickformat='1./0f')
+        self.add_slider(fig)
+        fig.show()
+
+    def nvt_rvt(self):
+        """"Bitcoin NVT and RVT Ratio"""
+        df = pd.DataFrame()
+        df = self.df_init
+
+        #Calculate NVT and RVT 28 and 90DMA
+        
+        for i in [28,90]:
+            name_nvt = 'NVT_' + str(i)
+            name_rvt = 'RVT_' + str(i)
+
+            df[name_nvt] = (
+                df['CapMrktCurUSD'].rolling(i).mean()
+                / df['TxTfrValUSD'].rolling(i).mean()
+            )
+
+            df[name_rvt] = (
+                df['CapRealUSD'].rolling(i).mean()
+                / df['TxTfrValUSD'].rolling(i).mean()
+            )
+            
+            #Calculate NVTS and RVTS (28DMA on Tx only)
+            if i == 28:
+                df['NVTS'] = (
+                    df['CapMrktCurUSD']
+                    / df['TxTfrValUSD'].rolling(i).mean()
+                )
+                
+                df['RVTS'] = (
+                    df['CapRealUSD']
+                    / df['TxTfrValUSD'].rolling(i).mean()
+                )
+        
+
+        loop_data=[[0,1],[2,3,4,5,6,7,   8,9,10,11,12]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            ['2008-01-01','2022-01-01'],    #N/A CEILING
+            ['2008-01-01','2022-01-01'],    #SELL
+            ['2008-01-01','2022-01-01'],    #NORMAL 1
+            ['2008-01-01','2022-01-01'],    #NORMAL 2
+            ['2008-01-01','2022-01-01'],    #BUY
+        ]
+        y_data = [
+            df['PriceUSD'],
+            df['PriceRealUSD'],
+            df['NVT_28'],
+            df['NVT_90'],
+            df['NVTS'],
+            df['RVT_28'],
+            df['RVT_90'],
+            df['RVTS'],
+            [40,40],
+            [27,27],
+            [18,18],
+            [10,10],
+            [10,10]
+        ]
+        name_data = [
+            'BTC Price (USD)',
+            'Realised Price (USD)',
+            'NVT 28DMA',
+            'NVT 90DMA',
+            'NVTS',
+            'RVT 28DMA',
+            'RVT 90DMA',
+            'RVTS',
+            'N/A','N/A','N/A','N/A','N/A',
+        ]
+        width_data      = [2,2,1,1,1,1,1,1,1,1,1,1,1]
+        opacity_data    = [1,1,1,1,1,1,1,1,0,0,0,0,0]
+        dash_data = [
+            'solid','solid','dot','dash','solid','dot','dash','solid',
+            'solid','solid','solid','solid','solid'
+            ]
+        color_data = [
+            'rgb(255, 255, 255)',    #White
+            'rgb(20, 169, 233)',     #Total Blue
+            'rgb(153, 255, 102)',
+            'rgb(255, 255, 102)',
+            'rgb(255, 204, 102)',
+            'rgb(255, 153, 102)',
+            'rgb(255, 102, 102)',
+            'rgb(255, 80, 80)',
+            'rgb(55,55,55)',              #N/A
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 153, 102, 0.2)',   #Gradient Orange
+            'rgba(255, 204, 102, 0.2)',   #Gradient Yellow
+            'rgba(36, 255, 136, 0.2)',    #Gradient Green
+        ]
+        legend_data = [
+            True,True,True,True,True,True,True,True,
+            False,False,False,False,False,
+            ]
+        fill_data = [
+            'none','none','none','none','none','none','none','none',
+            'none','tonexty','tonexty','tonexty','tozeroy',
+            ]
+        title_data = [
+            'Bitcoin NVT and RVT Ratio',
+            '<b>Date</b>',
+            '<b>Price (USD)</b>',
+            '<b>NVT or RVT Ratio</b>']
+        range_data = [[self.start,self.last],[-1,5],[0,150]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','linear']
+        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+            )
+        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True,dtick=10)
+        self.add_slider(fig)
+        fig.show()
+
+
 fig_btc = btc_chart_suite()
 
-#fig_btc.mvrv()
-#fig_btc.magic_lines_full()
-#fig_btc.magic_lines()
-#fig_btc.mayer_multiple()
+
+fig_btc.mvrv()
+fig_btc.magic_lines_full()
+fig_btc.magic_lines()
+fig_btc.mayer_multiple()
 fig_btc.mayer_multiple_bands()
-#fig_btc.puell_multiple()
-#fig_btc.difficulty_ribbon()
-#fig_btc.beam_indicator()
-#fig_btc.investor_tool()
-#fig_btc.golden_ratio()
-#fig_btc.golden_ratio_full()
-#fig_btc.catch_btm_top()
-#fig_btc.s2f_model()
-#fig_btc.halving_cycle()
-#fig_btc.bottom_cycle()
-#fig_btc.top_cycle()
+fig_btc.puell_multiple()
+fig_btc.block_subsidy()
+fig_btc.difficulty_ribbon()
+fig_btc.beam_indicator()
+fig_btc.investor_tool()
+fig_btc.golden_ratio()
+fig_btc.golden_ratio_full()
+fig_btc.catch_btm_top()
+fig_btc.s2f_model()
+fig_btc.s2f_model_full()
+fig_btc.halving_cycle()
+fig_btc.bottom_cycle()
+fig_btc.top_cycle()
 
+fig_btc.nvt_rvt()
 
-
+fig_btc.yearly_cycle()

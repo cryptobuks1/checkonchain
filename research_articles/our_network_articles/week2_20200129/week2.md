@@ -1,4 +1,5 @@
 # Our Network - Week 2
+https://ournetwork.substack.com/p/our-network-issue-6
 
 ## Insight 1 - Total Value Settled
 Decred is approaching it's fourth Birthday on 8-Feb-2020 and to celebrate, this week will be covering an array of achievements by the Decred chain to date.

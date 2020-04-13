@@ -1,4 +1,5 @@
 # Our Network - Week 3
+https://ournetwork.substack.com/p/our-network-issue-10
 
 ## Insight 1 - Tickets and PoW Issuance
 Decred has three issuance paths for new coins, 60% are mined via PoW, 30% are staked by PoS and 10% allocated to the Decred Treasury. The chart below shows these issuance curves alongside the total DCR bound in tickets (Y-axis is proportion of circulating supply).

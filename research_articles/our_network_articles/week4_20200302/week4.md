@@ -1,4 +1,5 @@
 # Our Network - Week 4
+https://ournetwork.substack.com/p/our-network-issue-15
 
 ## Insight 1 - Stock to Flow Model
 

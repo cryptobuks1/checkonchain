@@ -21,12 +21,20 @@ ZEC = Coinmetrics_api('zec',"2016-10-28",today).convert_to_pd().set_index('date'
 ETH = Coinmetrics_api('eth',"2015-07-30",today).convert_to_pd().set_index('date',drop=False)
 XRP = Coinmetrics_api('xrp',"2013-01-01",today).convert_to_pd().set_index('date',drop=False)
 
-print('Coinmetrics')
+#Calculation
+for i in [BTC,LTC,BCH,DAS,DCR,XMR,ZEC,ETH]:
+    i['IssuedCapUSD']
+
+
 metric="TxTfrValUSD"
-DCR.columns
+
+
+
 x_data = [
-    BTC['SplyCur']/21e6,LTC['SplyCur']/84e6,
-    BCH['SplyCur']/21e6,DASH['SplyCur']/17.66e6,
+    BTC['SplyCur']/21e6,
+    LTC['SplyCur']/84e6,
+    BCH['SplyCur']/21e6,
+    DASH['SplyCur']/17.66e6,
     DCR['SplyCur']/21e6
     ]
 y_data = [

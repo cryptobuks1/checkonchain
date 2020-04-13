@@ -39,7 +39,7 @@ class dcr_add_metrics():
     def __init__(self):
         self.topcapconst    = 12 #Top Cap = topcapconst * Avg Cap
         self.blkrew_ratio   = [0.6,0.3,0.1] #PoW,PoS,Fund Block Reward Fraction
-        self.sply_curtail   = 6144 / 32 #reduce dataset = 0.667days
+        self.sply_curtail   = 6144 / 4 #reduce dataset = 5.33days
         self.dust_limit     = 100 #set Decred dust limit in bytes
 
     def dcr_coin(self): 
@@ -103,7 +103,8 @@ class dcr_add_metrics():
         
         #Calculate Realised Cap and Price in BTC
         df['BTC_PriceUSD'] = df['PriceUSD'] / df['PriceBTC'] #BTC Price USD
-        df['CapRealBTC']   = df['CapRealUSD'].diff(periods=1)/df['BTC_PriceUSD']
+        df['CapMrktCurBTC'] = df['SplyCur'] * df['PriceBTC']
+        df['CapRealBTC']   = df['CapRealUSD'].diff(periods=1) / df['BTC_PriceUSD']
         df['CapRealBTC']   = df['CapRealBTC'].cumsum()
         df['PriceRealBTC'] = df['CapRealBTC'] / df['SplyCur']
 
@@ -113,7 +114,7 @@ class dcr_add_metrics():
             'BlkSizeByte', 'BlkSizeMeanByte',
             'DailyIssuedNtv', 'DailyIssuedUSD', 'inf_pct_ann', 'S2F',
             'AdrActCnt', 'BlkCnt', 'BlkSizeByte', 'BlkSizeMeanByte',
-            'CapMVRVCur', 'CapMrktCurUSD', 'CapRealUSD','CapRealBTC', 'DiffMean', 
+            'CapMVRVCur', 'CapMrktCurUSD', 'CapMrktCurBTC', 'CapRealUSD','CapRealBTC', 'DiffMean', 
             'FeeMeanNtv','FeeMeanUSD', 'FeeMedNtv', 'FeeMedUSD', 'FeeTotNtv', 'FeeTotUSD',
             'PriceBTC', 'PriceUSD', 'PriceRealUSD','PriceRealBTC', 'BTC_PriceUSD', 'SplyCur',
             'TxCnt', 'TxTfrCnt', 'TxTfrValAdjNtv', 'TxTfrValAdjUSD',
@@ -200,34 +201,8 @@ class dcr_add_metrics():
             'FundSply_ideal'    - Ideal Treasury Issued Supply incl. 4% Premine (DCR)
             'inflation_ideal'   - Idealised Inflation Rate
             'S2F_ideal'         - Idealised Stock-to-Flow Ratio
-            'CapS2Fmodel'       - Calculated S2F Market Cap (Linear Regression Constants)
-            'PriceS2Fmodel'     - Calculated S2F Price (Linear Regression Constants)
-            'CapPlanBmodel'     - Calculated S2F Market Cap (Plan B Model for Bitcoin)
-            'PricePlanBmodel'   - Calculated S2F Price (Plan B Model for Bitcoin)
-            'dust_limit_S2F'    - Dust Limit Price based off 'PriceS2Fmodel'
         """
         df = dcr_supply_schedule(to_blk).dcr_supply_function()
-        #Calculate projected S2F Models Valuations 
-        #(Uses defined constants in general.regression_analysis)
-        dcr_s2f_model           = regression_analysis().regression_constants()['dcr_s2f']
-        df['CapS2Fmodel']       = (
-            np.exp(float(dcr_s2f_model['coefficient']) 
-            * np.log(df['S2F_ideal'])
-            + float(dcr_s2f_model['intercept']))
-        )
-        df['PriceS2Fmodel']     = df['CapS2Fmodel'] / df['Sply_ideal']
-
-        #Calc S2F Model - Bitcoin Plan B Model
-        planb_s2f_model         = regression_analysis().regression_constants()['planb']
-        df['CapPlanBmodel']     = (
-            np.exp(float(planb_s2f_model['coefficient'])
-            * np.log(df['S2F_ideal'])
-            + float(planb_s2f_model['intercept']))
-        )
-        df['PricePlanBmodel']   = df['CapPlanBmodel']/df['Sply_ideal']    
-
-        #Calculate dust limit price according to S2F model
-        df['dust_limit_S2F']    = df['PriceS2Fmodel'] /1e8 * self.dust_limit
         return df
 
     def dcr_sply_curtailed(self,to_blk):
@@ -238,9 +213,9 @@ class dcr_add_metrics():
         OUTPUT COLUMNS:
             As per dcr_sply (not repeated for brevity)
         """
-        dcr_sply_interval = self.sply_curtail
         df = self.dcr_sply(to_blk)
-        return df.iloc[::dcr_sply_interval,:] #Select every 
+        df = df.iloc[::int(self.sply_curtail), :] #Select every 
+        return  df
 
     def dcr_real(self):
         """
@@ -298,16 +273,13 @@ class dcr_add_metrics():
         _coin = _coin[[
             'date','blk','age_days','age_sply',
             'BlkSizeByte', 'BlkSizeMeanByte',
-            'CapMrktCurUSD','CapRealUSD','CapRealBTC','CapMVRVCur',
+            'CapMrktCurUSD','CapMrktCurBTC','CapRealUSD','CapRealBTC','CapMVRVCur',
             'DiffMean','PriceBTC','PriceUSD','PriceRealUSD','PriceRealBTC','BTC_PriceUSD',
             'SplyCur','DailyIssuedNtv','DailyIssuedUSD','S2F',
             'inf_pct_ann','TxCnt','TxTfrCnt','TxTfrValMedNtv','TxTfrValMeanNtv',
             'TxTfrValNtv','TxTfrValUSD','TxTfrValAdjNtv','TxTfrValAdjUSD',
             'FeeTotNtv','FeeTotUSD','AdrActCnt']]
         _coin['CapS2FModel'] = regression_analysis()
-
-        #Calculate 'CapMrktCurBTC'
-        _coin['CapMrktCurBTC'] = _coin['PriceBTC'] * _coin['SplyCur']
         
         #Add new columns for transferring _natv data to_coin
         _coin['tic_day']                = 0.0
@@ -385,26 +357,20 @@ class dcr_add_metrics():
         print('...Calculating Decred block subsidy models...')
         df = self.dcr_real()
         #Calculate Block Subsidy Models
-        df['PoW_income_dcr']    = (
-            (df['DailyIssuedNtv'] + df['FeeTotNtv']) *self.blkrew_ratio[0]
-        )
-        df['PoS_income_dcr']    = df['DailyIssuedNtv']*self.blkrew_ratio[1]
-        df['Fund_income_dcr']   = df['DailyIssuedNtv']*self.blkrew_ratio[2]
-        df['Total_income_dcr']  = df['PoW_income_dcr']+df['PoS_income_dcr']+df['Fund_income_dcr']
+        df['PoW_income_dcr']    = df['DailyIssuedNtv'] * self.blkrew_ratio[0] + df['FeeTotNtv']
+        df['PoS_income_dcr']    = df['DailyIssuedNtv'] * self.blkrew_ratio[1]
+        df['Fund_income_dcr']   = df['DailyIssuedNtv'] * self.blkrew_ratio[2]
+        df['Total_income_dcr']  = df['DailyIssuedNtv'] + df['FeeTotNtv']
         
-        df['PoW_income_usd']    = (
-            (df['PoW_income_dcr'] + df['FeeTotNtv'])  *df['PriceUSD']
-        )
-        df['PoS_income_usd']    = df['PoS_income_dcr']  *df['PriceUSD']
-        df['Fund_income_usd']   = df['Fund_income_dcr'] *df['PriceUSD']
-        df['Total_income_usd']  = df['Total_income_dcr']*df['PriceUSD']
+        df['PoW_income_usd']    = df['PoW_income_dcr']   * df['PriceUSD']
+        df['PoS_income_usd']    = df['PoS_income_dcr']   * df['PriceUSD']
+        df['Fund_income_usd']   = df['Fund_income_dcr']  * df['PriceUSD']
+        df['Total_income_usd']  = df['Total_income_dcr'] * df['PriceUSD']
 
-        df['PoW_income_btc']    = (
-            (df['PoW_income_dcr'] + df['FeeTotNtv'])  *df['PriceBTC']
-        )
-        df['PoS_income_btc']    = df['PoS_income_dcr']  *df['PriceBTC']
-        df['Fund_income_btc']   = df['Fund_income_dcr'] *df['PriceBTC']
-        df['Total_income_btc']  = df['Total_income_dcr']*df['PriceBTC']
+        df['PoW_income_btc']    = df['PoW_income_dcr']   * df['PriceBTC']
+        df['PoS_income_btc']    = df['PoS_income_dcr']   * df['PriceBTC']
+        df['Fund_income_btc']   = df['Fund_income_dcr']  * df['PriceBTC']
+        df['Total_income_btc']  = df['Total_income_dcr'] * df['PriceBTC']
         return df
 
     def dcr_ticket_models(self):  #Calculate Ticket Based Valuation Metrics
