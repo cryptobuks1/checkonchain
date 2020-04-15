@@ -41,6 +41,13 @@ class btc_chart_suite():
         #Finalise into self and drop additional date column
         self.events = events.drop(columns='date')
 
+    def write_html(self,fig,filename):
+        "Writes chart to checkmatey.github.io"
+        html_path = "D:\\code_development\\checkonchain\\checkonchain\\hosted_charts\\btconchain"
+        html_path = html_path + str('\\') + filename + '.html'
+        pio.write_html(fig, file=html_path, auto_open=True)
+
+
     def add_slider(self,fig):
         fig.update_layout(
             xaxis=dict(
@@ -115,7 +122,10 @@ class btc_chart_suite():
         fig.update_yaxes(showgrid=False,secondary_y=False)
         fig.update_yaxes(showgrid=True,secondary_y=True)
         self.add_slider(fig)
-        fig.show()
+
+        #Write out html chart
+        chart_name = '\\valuation_models\\mvrv_pricing'
+        self.write_html(fig,chart_name)
 
     def magic_lines_full(self):
         """"Prints Bitcoin Full History Magic Lines 200D, 128D, 200W and 128W (log)"""
@@ -188,7 +198,10 @@ class btc_chart_suite():
             )
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
         self.add_slider(fig)
-        fig.show()
+
+        #Write out html chart
+        chart_name = '\\pricing_models\\magic_lines_full_pricing'
+        self.write_html(fig,chart_name)
 
     def magic_lines(self):
         """"Prints Bitcoin Full History Magic Lines 200D, 128D, 200W and 128W (log)"""
@@ -253,7 +266,10 @@ class btc_chart_suite():
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
         fig.update_yaxes(dtick=1000)
         self.add_slider(fig)
-        fig.show()
+
+        #Write out html chart
+        chart_name = '\\pricing_models\\magic_lines_pricing'
+        self.write_html(fig,chart_name)
 
     def mayer_multiple(self):
         """"Mayer Multiple"""
@@ -321,7 +337,10 @@ class btc_chart_suite():
             )
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
         self.add_slider(fig)
-        fig.show()
+
+        #Write out html chart
+        chart_name = '\\pricing_models\\mayer_multiple_pricing'
+        self.write_html(fig,chart_name)
 
     def mayer_multiple_bands(self):
         """"Mayer Multiple Bands"""
@@ -395,7 +414,10 @@ class btc_chart_suite():
             )
         fig.update_xaxes(dtick='M3',tickformat='%d-%b-%y')
         self.add_slider(fig)
-        fig.show()
+
+        #Write out html chart
+        chart_name = '\\pricing_models\\mayer_multiple_bands_pricing'
+        self.write_html(fig,chart_name)
 
     def puell_multiple(self):
         """"Puell Multiple"""
@@ -466,7 +488,10 @@ class btc_chart_suite():
             dash_data,width_data,opacity_data,legend_data
             )
         self.add_slider(fig)
-        fig.show()
+
+        #Write out html chart
+        chart_name = '\\oscillators\\puell_multiple_pricing'
+        self.write_html(fig,chart_name)
 
     def block_subsidy(self):
         """"Block Subsidy Models"""
@@ -546,7 +571,10 @@ class btc_chart_suite():
             dash_data,width_data,opacity_data,legend_data
             )
         self.add_slider(fig)
-        fig.show()
+
+        #Write out html chart
+        chart_name = '\\valuation_models\\block_subsidy_valuation'
+        self.write_html(fig,chart_name)
 
     def difficulty_ribbon(self):
         """"Difficulty Ribbon and Miner Income"""
@@ -644,7 +672,10 @@ class btc_chart_suite():
         
         
         self.add_slider(fig)
-        fig.show()
+
+        #Write out html chart
+        chart_name = '\\pricing_models\\difficulty_ribbon_pricing'
+        self.write_html(fig,chart_name)
 
     def beam_indicator(self):
         """"BEAM Indicator (Bitcoin Economics Adaptive Multiple) 
@@ -722,7 +753,10 @@ class btc_chart_suite():
         fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(showgrid=False,secondary_y=True,dtick=0.2)
         self.add_slider(fig)
-        fig.show()
+
+        #Write out html chart
+        chart_name = '\\pricing_models\\BEAM_indicator_pricing'
+        self.write_html(fig,chart_name)
 
     def investor_tool(self):
         """"Bitcoin Investor Tool 730DMA after @PositiveCrypto"""
@@ -808,7 +842,9 @@ class btc_chart_suite():
         
         fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />after @PositiveCrypto") 
 
-        fig.show()
+        #Write out html chart
+        chart_name = '\\pricing_models\\investor_tool_pricing'
+        self.write_html(fig,chart_name)
 
     def golden_ratio(self):
         """"Bitcoin Golden Ratio and Fib Levels after @PositiveCrypto"""
@@ -914,8 +950,10 @@ class btc_chart_suite():
             )
         fig.update_xaxes(dtick='M3',tickformat='%d-%b-%y')
         self.add_slider(fig)
-        fig.show()
-        return fig
+
+        #Write out html chart
+        chart_name = '\\pricing_models\\golden_ratio_pricing'
+        self.write_html(fig,chart_name)
 
     def golden_ratio_full(self):
         """"Bitcoin Golden Ratio and Fib Levels after @PositiveCrypto"""
@@ -1021,7 +1059,10 @@ class btc_chart_suite():
             )
         fig.update_xaxes(dtick='M3',tickformat='%d-%b-%y')
         self.add_slider(fig)
-        fig.show()
+
+        #Write out html chart
+        chart_name = '\\pricing_models\\golden_ratio_full_pricing'
+        self.write_html(fig,chart_name)
 
     def catch_btm_top(self):
         """"Catching the Bottom and the Top"""
@@ -1146,7 +1187,10 @@ class btc_chart_suite():
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
         #fig.update_yaxes(dtick=1000)
         self.add_slider(fig)
-        fig.show()
+
+        #Write out html chart
+        chart_name = '\\pricing_models\\catch_btm_top'
+        self.write_html(fig,chart_name)
 
     def s2f_model(self):
         """"Stock-to-flow Model(s) and multiple"""
@@ -1233,287 +1277,10 @@ class btc_chart_suite():
         fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(showgrid=False,secondary_y=True)
         self.add_slider(fig)
-        fig.show()
 
-    def halving_cycle(self):
-        """"Price Growth over Days since halving for each cycle"""
-        df = self.df_init
-        df = df.drop(['epoch'],axis=1)
-
-        #Calculate halving epoch
-        df['epoch'] = df['blk']/210000
-        df['epoch'] = df['epoch'].apply(np.floor)
-        #Filter events to halving events
-        df2 = self.halvings
-        #Merge events onto df
-        df = pd.merge(
-            df,df2[['epoch','event','date_event']],
-            how='left',
-            left_on='epoch',
-            right_on='epoch',
-            copy=False
-        )
-        #Calculate days until event
-        df['days_to_event'] = 1460 - (df['date_event'] - df['date']) / np.timedelta64(1, 'D')
-
-        loop_data=[[0,1,2,3],[]]
-        x_data = [
-            df[df['epoch']==0]['days_to_event'],
-            df[df['epoch']==1]['days_to_event'],
-            df[df['epoch']==2]['days_to_event'],
-            df[df['epoch']==3]['days_to_event'],
-        ]
-        y_data = [
-            df[df['epoch']==0]['PriceUSD']/0.084,
-            df[df['epoch']==1]['PriceUSD']/12.33,
-            df[df['epoch']==2]['PriceUSD']/651.94,
-            df[df['epoch']==3]['PriceUSD']/8250,
-        ]
-        name_data = [
-            'Epoch 1 (2009-12)',
-            'Epoch 2 (2012-16)',
-            'Epoch 3 (2016-20)',
-            'Epoch 4 (2020-24)',
-        ]
-        width_data      = [2,2,2,2]
-        opacity_data    = [1,1,1,1]
-        dash_data = ['solid','solid','solid','solid',]
-        color_data = [
-            'rgb(239, 125, 50)',    #Price Orange
-            'rgb(78,205,233)',      #Total Blue
-            'rgb(255, 80, 80)',      #Gradient Red
-            'rgb(153, 255, 102)',      #Gradient Green
-        ]
-        legend_data = [True,True,True,True,]
-        title_data = [
-            'Bitcoin Days to Halving',
-            '<b>Days since Halving</b>',
-            '<b>Growth Multiple Since Halving</b>',
-            '<b></b>']
-        range_data = [[0,1460],[-0.301029996,3],[-1,2]]
-        autorange_data = [False,False,False]
-        type_data = ['linear','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
-            )
-        fig.update_xaxes(dtick=30,tickformat='1./0f')
-        self.add_slider(fig)
-        fig.show()
-
-    def bottom_cycle(self):
-        """"Price Growth over Days since capitulation for each cycle"""
-        df = self.df_init
-        df = df.drop(['epoch'],axis=1)
-        
-        #Filter events to market capitulation event
-        df2 = self.events[self.events['event']=='btm']
-        #Merge events onto df, fill backwards
-        df = pd.merge(
-            df,df2,
-            how='left',
-            left_on='date',
-            right_on='date_event',
-            copy=False
-        )
-        #Fill forwards for all event data
-        df[['date_event','epoch','event','PriceUSD_event']] = (
-            df[['date_event','epoch','event','PriceUSD_event']].fillna(method='ffill')
-        )
-        
-        #Calculate days since event
-        df['days_since_event'] = (df['date'] - df['date_event']) / np.timedelta64(1, 'D')
-        #Calculate drawdown since event
-        df['event_delta'] = df['PriceUSD']/df['PriceUSD_event']
-
-        loop_data=[[0,1,2,3],[]]
-        x_data = [
-            df[df['epoch']==0]['days_since_event'],
-            df[df['epoch']==1]['days_since_event'],
-            df[df['epoch']==2]['days_since_event'],
-            df[df['epoch']==3]['days_since_event'],
-        ]
-        y_data = [
-            df[df['epoch']==0]['event_delta'],
-            df[df['epoch']==1]['event_delta'],
-            df[df['epoch']==2]['event_delta'],
-            df[df['epoch']==3]['event_delta'],
-        ]
-        name_data = [
-            'Epoch 1 (2009-12)',
-            'Epoch 2 (2012-16)',
-            'Epoch 3 (2016-20)',
-            'Epoch 4 (2020-24)',
-        ]
-        width_data      = [2,2,2,2]
-        opacity_data    = [1,1,1,1]
-        dash_data = ['solid','solid','solid','solid',]
-        color_data = [
-            'rgb(239, 125, 50)',    #Price Orange
-            'rgb(78,205,233)',      #Total Blue
-            'rgb(255, 80, 80)',      #Gradient Red
-            'rgb(153, 255, 102)',      #Gradient Green
-        ]
-        legend_data = [True,True,True,True,]
-        title_data = [
-            'Bitcoin Price Growth Since Cycle Low',
-            '<b>Days Since Capitulation</b>',
-            '<b>Growth Multiple Since Low</b>',
-            '<b></b>']
-        range_data = [[0,1500],[0,3],[-1,2]]
-        autorange_data = [False,False,False]
-        type_data = ['linear','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
-            )
-        fig.update_xaxes(dtick=30)
-        #fig.update_yaxes(tickformat='.0%')
-        self.add_slider(fig)
-        fig.show()
-    
-    def top_cycle(self):
-        """"Price Drawdown over since market top for each cycle"""
-        df = self.df_init
-        df = df.drop(['epoch'],axis=1)
-
-        #Filter events to market top event
-        df2 = self.events[self.events['event']=='top']
-        #Merge events onto df, fill forwards
-        df = pd.merge(
-            df,df2,
-            how='left',
-            left_on='date',
-            right_on='date_event',
-            copy=False
-        )
-        #Fill forwards for all event data
-        df[['date_event','epoch','event','PriceUSD_event']] = (
-            df[['date_event','epoch','event','PriceUSD_event']].fillna(method='ffill')
-        )
-        #print(df.columns)
-        #Calculate days since event
-        df['days_since_event'] = (df['date'] - df['date_event']) / np.timedelta64(1, 'D')
-        #Calculate drawdown since event
-        df['event_delta'] = df['PriceUSD']/df['PriceUSD_event']
-
-        loop_data=[[0,1,2,3],[]]
-        x_data = [
-            df[df['epoch']==0]['days_since_event'],
-            df[df['epoch']==1]['days_since_event'],
-            df[df['epoch']==2]['days_since_event'],
-            df[df['epoch']==3]['days_since_event'],
-        ]
-        y_data = [
-            df[df['epoch']==0]['event_delta'],
-            df[df['epoch']==1]['event_delta'],
-            df[df['epoch']==2]['event_delta'],
-            df[df['epoch']==3]['event_delta'],
-        ]
-        name_data = [
-            'Epoch 1 (2009-12)',
-            'Epoch 2 (2012-16)',
-            'Epoch 3 (2016-20)',
-            'Epoch 4 (2020-24)',
-        ]
-        width_data      = [2,2,2,2]
-        opacity_data    = [1,1,1,1]
-        dash_data = ['solid','solid','solid','solid',]
-        color_data = [
-            'rgb(239, 125, 50)',    #Price Orange
-            'rgb(78,205,233)',      #Total Blue
-            'rgb(255, 80, 80)',      #Gradient Red
-            'rgb(153, 255, 102)',      #Gradient Green
-        ]
-        legend_data = [True,True,True,True,]
-        title_data = [
-            'Bitcoin Drawdown Since Market Top',
-            '<b>Days Since Market Top</b>',
-            '<b>Drawdown Since Top</b>',
-            '<b></b>']
-        range_data = [[0,1500],[0,3],[-1,2]]
-        autorange_data = [False,False,False]
-        type_data = ['linear','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
-            )
-        fig.update_xaxes(dtick=30)
-        #fig.update_yaxes(tickformat='.0%')
-        self.add_slider(fig)
-        fig.show()
-
-    def yearly_cycle(self):
-        """"Price Growth over Days since halving for each cycle"""
-        df = self.df_init
-
-        #Calculate Year
-        df['year'] = pd.DatetimeIndex(df['date']).year
-
-        #Calculate halving epoch
-        df['epoch'] = df['blk']/210000
-        df['epoch'] = df['epoch'].apply(np.floor)
-        #Filter events to halving events
-        df2 = self.halvings
-        #Merge events onto df
-        df = pd.merge(
-            df,df2[['epoch','event','date_event']],
-            how='left',
-            left_on='epoch',
-            right_on='epoch',
-            copy=False
-        )
-        #Calculate days until event
-        df['days_to_event'] = 1460 - (df['date_event'] - df['date']) / np.timedelta64(1, 'D')
-
-        loop_data=[[0,1,2,3],[]]
-        x_data = [
-            df[df['epoch']==0]['days_to_event'],
-            df[df['epoch']==1]['days_to_event'],
-            df[df['epoch']==2]['days_to_event'],
-            df[df['epoch']==3]['days_to_event'],
-        ]
-        y_data = [
-            df[df['epoch']==0]['PriceUSD']/0.084,
-            df[df['epoch']==1]['PriceUSD']/12.33,
-            df[df['epoch']==2]['PriceUSD']/651.94,
-            df[df['epoch']==3]['PriceUSD']/8250,
-        ]
-        name_data = [
-            'Epoch 1 (2009-12)',
-            'Epoch 2 (2012-16)',
-            'Epoch 3 (2016-20)',
-            'Epoch 4 (2020-24)',
-        ]
-        width_data      = [2,2,2,2]
-        opacity_data    = [1,1,1,1]
-        dash_data = ['solid','solid','solid','solid',]
-        color_data = [
-            'rgb(239, 125, 50)',    #Price Orange
-            'rgb(78,205,233)',      #Total Blue
-            'rgb(255, 80, 80)',      #Gradient Red
-            'rgb(153, 255, 102)',      #Gradient Green
-        ]
-        legend_data = [True,True,True,True,]
-        title_data = [
-            'Bitcoin Days to Halving',
-            '<b>Days since Halving</b>',
-            '<b>Growth Multiple Since Halving</b>',
-            '<b></b>']
-        range_data = [[0,1460],[-0.301029996,3],[-1,2]]
-        autorange_data = [False,False,False]
-        type_data = ['linear','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
-            )
-        fig.update_xaxes(dtick=30,tickformat='1./0f')
-        self.add_slider(fig)
-        fig.show()
+        #Write out html chart
+        chart_name = '\\pricing_models\\s2f_model_pricing'
+        self.write_html(fig,chart_name)
 
     def nvt_rvt(self):
         """"Bitcoin NVT and RVT Ratio"""
@@ -1638,12 +1405,333 @@ class btc_chart_suite():
         fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(showgrid=False,secondary_y=True,dtick=10)
         self.add_slider(fig)
-        fig.show()
+
+        #Write out html chart
+        chart_name = '\\oscillators\\nvt_rvt_ratio'
+        self.write_html(fig,chart_name)
+
+    def halving_cycle(self):
+        """"Price Growth over Days since halving for each cycle"""
+        df = self.df_init
+        df['epoch'] = 0
+        df = df.drop(['epoch'],axis=1)
+
+        #Calculate halving epoch
+        df['epoch'] = df['blk']/210000
+        df['epoch'] = df['epoch'].apply(np.floor)
+        #Filter events to halving events
+        df2 = self.halvings
+        #Merge events onto df
+        df = pd.merge(
+            df,df2[['epoch','event','date_event']],
+            how='left',
+            left_on='epoch',
+            right_on='epoch',
+            copy=False
+        )
+        #Calculate days until event
+        df['days_to_event'] = 1460 - (df['date_event'] - df['date']) / np.timedelta64(1, 'D')
+
+        loop_data=[[0,1,2,3],[]]
+        x_data = [
+            df[df['epoch']==0]['days_to_event'],
+            df[df['epoch']==1]['days_to_event'],
+            df[df['epoch']==2]['days_to_event'],
+            df[df['epoch']==3]['days_to_event'],
+        ]
+        y_data = [
+            df[df['epoch']==0]['PriceUSD']/0.084,
+            df[df['epoch']==1]['PriceUSD']/12.33,
+            df[df['epoch']==2]['PriceUSD']/651.94,
+            df[df['epoch']==3]['PriceUSD']/8250,
+        ]
+        name_data = [
+            'Epoch 1 (2009-12)',
+            'Epoch 2 (2012-16)',
+            'Epoch 3 (2016-20)',
+            'Epoch 4 (2020-24)',
+        ]
+        width_data      = [2,2,2,2]
+        opacity_data    = [1,1,1,1]
+        dash_data = ['solid','solid','solid','solid',]
+        color_data = [
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(78,205,233)',      #Total Blue
+            'rgb(255, 80, 80)',      #Gradient Red
+            'rgb(153, 255, 102)',      #Gradient Green
+        ]
+        legend_data = [True,True,True,True,]
+        title_data = [
+            'Bitcoin Days to Halving',
+            '<b>Days since Halving</b>',
+            '<b>Growth Multiple Since Halving</b>',
+            '<b></b>']
+        range_data = [[0,1460],[-0.301029996,3],[-1,2]]
+        autorange_data = [False,True,False]
+        type_data = ['linear','log','log']
+        fig = check_standard_charts().subplot_lines_singleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick=30,tickformat='1./0f')
+        self.add_slider(fig)
+
+        #Write out html chart
+        chart_name = '\\cycle_charts\\halving_cycle'
+        self.write_html(fig,chart_name)
+
+    def bottom_cycle(self):
+        """"Price Growth over Days since capitulation for each cycle"""
+        df = self.df_init
+        df['epoch'] = 0
+        df = df.drop(['epoch'],axis=1)
+        
+        #Filter events to market capitulation event
+        df2 = self.events[self.events['event']=='btm']
+        #Merge events onto df, fill backwards
+        df = pd.merge(
+            df,df2,
+            how='left',
+            left_on='date',
+            right_on='date_event',
+            copy=False
+        )
+        #Fill forwards for all event data
+        df[['date_event','epoch','event','PriceUSD_event']] = (
+            df[['date_event','epoch','event','PriceUSD_event']].fillna(method='ffill')
+        )
+        
+        #Calculate days since event
+        df['days_since_event'] = (df['date'] - df['date_event']) / np.timedelta64(1, 'D')
+        #Calculate drawdown since event
+        df['event_delta'] = df['PriceUSD']/df['PriceUSD_event']
+
+        loop_data=[[0,1,2,3],[]]
+        x_data = [
+            df[df['epoch']==0]['days_since_event'],
+            df[df['epoch']==1]['days_since_event'],
+            df[df['epoch']==2]['days_since_event'],
+            df[df['epoch']==3]['days_since_event'],
+        ]
+        y_data = [
+            df[df['epoch']==0]['event_delta'],
+            df[df['epoch']==1]['event_delta'],
+            df[df['epoch']==2]['event_delta'],
+            df[df['epoch']==3]['event_delta'],
+        ]
+        name_data = [
+            'Epoch 1 (2009-12)',
+            'Epoch 2 (2012-16)',
+            'Epoch 3 (2016-20)',
+            'Epoch 4 (2020-24)',
+        ]
+        width_data      = [2,2,2,2]
+        opacity_data    = [1,1,1,1]
+        dash_data = ['solid','solid','solid','solid',]
+        color_data = [
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(78,205,233)',      #Total Blue
+            'rgb(255, 80, 80)',      #Gradient Red
+            'rgb(153, 255, 102)',      #Gradient Green
+        ]
+        legend_data = [True,True,True,True,]
+        title_data = [
+            'Bitcoin Price Growth Since Cycle Low',
+            '<b>Days Since Capitulation</b>',
+            '<b>Growth Multiple Since Low</b>',
+            '<b></b>']
+        range_data = [[0,1500],[0,3],[-1,2]]
+        autorange_data = [False,True,False]
+        type_data = ['linear','log','log']
+        fig = check_standard_charts().subplot_lines_singleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick=30)
+        #fig.update_yaxes(tickformat='.0%')
+        self.add_slider(fig)
+
+        #Write out html chart
+        chart_name = '\\cycle_charts\\bottom_cycle'
+        self.write_html(fig,chart_name)
+    
+    def top_cycle(self):
+        """"Price Drawdown over since market top for each cycle"""
+        df = self.df_init
+        df['epoch'] = 0
+        df = df.drop(['epoch'],axis=1)
+
+        #Filter events to market top event
+        df2 = self.events[self.events['event']=='top']
+        #Merge events onto df, fill forwards
+        df = pd.merge(
+            df,df2,
+            how='left',
+            left_on='date',
+            right_on='date_event',
+            copy=False
+        )
+        #Fill forwards for all event data
+        df[['date_event','epoch','event','PriceUSD_event']] = (
+            df[['date_event','epoch','event','PriceUSD_event']].fillna(method='ffill')
+        )
+        #print(df.columns)
+        #Calculate days since event
+        df['days_since_event'] = (df['date'] - df['date_event']) / np.timedelta64(1, 'D')
+        #Calculate drawdown since event
+        df['event_delta'] = df['PriceUSD']/df['PriceUSD_event']
+
+        loop_data=[[0,1,2,3],[]]
+        x_data = [
+            df[df['epoch']==0]['days_since_event'],
+            df[df['epoch']==1]['days_since_event'],
+            df[df['epoch']==2]['days_since_event'],
+            df[df['epoch']==3]['days_since_event'],
+        ]
+        y_data = [
+            df[df['epoch']==0]['event_delta'],
+            df[df['epoch']==1]['event_delta'],
+            df[df['epoch']==2]['event_delta'],
+            df[df['epoch']==3]['event_delta'],
+        ]
+        name_data = [
+            'Epoch 1 (2009-12)',
+            'Epoch 2 (2012-16)',
+            'Epoch 3 (2016-20)',
+            'Epoch 4 (2020-24)',
+        ]
+        width_data      = [2,2,2,2]
+        opacity_data    = [1,1,1,1]
+        dash_data = ['solid','solid','solid','solid',]
+        color_data = [
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(78,205,233)',      #Total Blue
+            'rgb(255, 80, 80)',      #Gradient Red
+            'rgb(153, 255, 102)',      #Gradient Green
+        ]
+        legend_data = [True,True,True,True,]
+        title_data = [
+            'Bitcoin Drawdown Since Market Top',
+            '<b>Days Since Market Top</b>',
+            '<b>Drawdown Since Top</b>',
+            '<b></b>']
+        range_data = [[0,1500],[0,3],[-1,2]]
+        autorange_data = [False,True,False]
+        type_data = ['linear','log','log']
+        fig = check_standard_charts().subplot_lines_singleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick=30)
+        #fig.update_yaxes(tickformat='.0%')
+        self.add_slider(fig)
+
+        #Write out html chart
+        chart_name = '\\cycle_charts\\top_cycle'
+        self.write_html(fig,chart_name)
+
+    def yearly_cycle(self):
+        """"Price Growth over Days since halving for each cycle"""
+        df = self.df_init
+        #drop dates prior to first pricing for clean charts
+        df = df[df.date > '18-06-2010']
+
+        #Calculate Year
+        df['year'] = pd.DatetimeIndex(df['date']).year
+        #Calculate days into year
+        df['days_to_event'] = df.date.dt.dayofyear
+
+        loop_data=[[0,1,2,3,4,5,6,7,8,9,10],[]]
+
+        df['refPriceUSD'] = 1
+        df['yearly_roi'] = 0
+        for i in range(2010,2021,1):
+            #calculate price at start of period
+            df.loc[df.year == i,'refPriceUSD'] = (
+                float(df[df['year'] == i].reset_index().loc[0,['PriceUSD']])
+            )
+
+        #calculate roi from start of year
+        df['yearly_roi'] = df['PriceUSD'] / df['refPriceUSD']
+
+        x_data = [
+            df[df['year']==2010]['days_to_event'],
+            df[df['year']==2011]['days_to_event'],
+            df[df['year']==2012]['days_to_event'],
+            df[df['year']==2013]['days_to_event'],
+            df[df['year']==2014]['days_to_event'],
+            df[df['year']==2015]['days_to_event'],
+            df[df['year']==2016]['days_to_event'],
+            df[df['year']==2017]['days_to_event'],
+            df[df['year']==2018]['days_to_event'],
+            df[df['year']==2019]['days_to_event'],
+            df[df['year']==2020]['days_to_event'],
+        ]
+        y_data = [
+            df[df['year']==2010]['yearly_roi'],
+            df[df['year']==2011]['yearly_roi'],
+            df[df['year']==2012]['yearly_roi'],
+            df[df['year']==2013]['yearly_roi'],
+            df[df['year']==2014]['yearly_roi'],
+            df[df['year']==2015]['yearly_roi'],
+            df[df['year']==2016]['yearly_roi'],
+            df[df['year']==2017]['yearly_roi'],
+            df[df['year']==2018]['yearly_roi'],
+            df[df['year']==2019]['yearly_roi'],
+            df[df['year']==2020]['yearly_roi'],
+        ]
+        name_data = [
+            '2010','2011','2012',
+            '2013','2014','2015',
+            '2016','2017','2018',
+            '2019','2020',
+        ]
+        width_data      = [
+            2,2,2,  2,2,2,  2,2,2,  2,2,
+            ]
+        opacity_data    = [
+            1,1,1,  1,1,1,  1,1,1,  1,1,
+            ]
+        dash_data = [
+            'solid','solid','solid',
+            'solid','solid','solid',
+            'solid','solid','solid',
+            'solid','solid',]
+        color_data = [
+            '#ff0000','#ff8000','#ffff00',
+            '#80ff00','#00ff00','#00ff80',
+            '#00ffff','#0080ff','#0000ff',
+            '#8000ff','#ff00ff',
+        ]
+        legend_data = [True,True,True,True,True,True,True,True,True,True,True,True,]
+        title_data = [
+            'Bitcoin Yearly Returns',
+            '<b>Days into Year</b>',
+            '<b>Growth Multiple Since Halving</b>',
+            '<b></b>']
+        range_data = [[0,370],[0,0],[0,0]]
+        autorange_data = [False,True,False]
+        type_data = ['linear','log','log']
+        fig = check_standard_charts().subplot_lines_singleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick=30,tickformat='1./0f')
+        self.add_slider(fig)
+
+        #Write out html chart
+        chart_name = '\\cycle_charts\\yearly_cycle'
+        self.write_html(fig,chart_name)
 
 
 fig_btc = btc_chart_suite()
 
 
+"""VALUATION MODELS"""
 fig_btc.mvrv()
 fig_btc.magic_lines_full()
 fig_btc.magic_lines()
@@ -1658,11 +1746,14 @@ fig_btc.golden_ratio()
 fig_btc.golden_ratio_full()
 fig_btc.catch_btm_top()
 fig_btc.s2f_model()
-fig_btc.s2f_model_full()
+fig_btc.nvt_rvt()
+
+
+"""CYCLE MODELS"""
 fig_btc.halving_cycle()
 fig_btc.bottom_cycle()
 fig_btc.top_cycle()
-
-fig_btc.nvt_rvt()
-
 fig_btc.yearly_cycle()
+
+
+

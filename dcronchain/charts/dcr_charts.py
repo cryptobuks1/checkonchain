@@ -65,7 +65,7 @@ class dcr_chart_suite():
 
     def write_html(self,fig,filename):
         "Writes chart to checkmatey.github.io"
-        html_path = "D:\code_development\checkonchain\checkonchain\hosted_charts"
+        html_path = "D:\code_development\checkonchain\checkonchain\hosted_charts\dcronchain"
         html_path = html_path + str('\\') + filename + '.html'
         pio.write_html(fig, file=html_path, auto_open=True)
 
@@ -229,7 +229,7 @@ class dcr_chart_suite():
             'solid','dash','solid','solid','solid','solid','solid',
             ]
         width_data = [2,2,2,2,2,2,2]
-        opacity_data = [1,1,1,1,1,1,1]
+        opacity_data = [1,0.5,0.5,0.5,0.5,0.5,1]
         legend_data = [True,True,True,True,True,True,True]#
         autorange_data = [True,False,True]
         type_data = ['date','log','log']#
@@ -1582,7 +1582,7 @@ class dcr_chart_suite():
         df['142day_TVWAP_Cap']   = df['142day_TVWAP'] * df['dcr_sply']
 
 
-        loop_data=[[0,1,2,3,4],[5,6,7,   8,9,10,11]]
+        loop_data=[[0,1,2,3,4],[5,6,7,   8,9,10,11,12]]
         x_data = [
             df['date'],
             df['date'],
@@ -1594,26 +1594,28 @@ class dcr_chart_suite():
             df['date'],
             df['date'],
 
-            ['2015-01-01','2021-01-01'],    #Strong BUY
-            ['2015-01-01','2021-01-01'],    #BUY
-            ['2015-01-01','2021-01-01'],    #SELL
-            ['2015-01-01','2021-01-01'],    #Strong SELL
+            [self.start,self.last],    #N/A CEILING
+            [self.start,self.last],    #SELL
+            [self.start,self.last],    #NORMAL 1
+            [self.start,self.last],    #NORMAL 2
+            [self.start,self.last],    #BUY
         ]
         y_data = [
-            df['CapMrktCurUSD'],
-            df['CapRealUSD'],
-            df['14day_TVWAP_Cap'],
-            df['28day_TVWAP_Cap'],
-            df['142day_TVWAP_Cap'],
+            df['PriceUSD'],
+            df['PriceRealUSD'],
+            df['14day_TVWAP'],
+            df['28day_TVWAP'],
+            df['142day_TVWAP'],
             #Ratios
             df['14day_TVWAP_Ratio'],
             df['28day_TVWAP_Ratio'],
             df['142day_TVWAP_Ratio'],
 
-            [0.65,0.65],    #Strong BUY
-            [0.90,0.90],    #BUY
-            [1.20,1.20],    #SELL
-            [1.45,1.45],    #Strong SELL
+            [2.00,2.00],    #NA Ceiling
+            [1.20,1.20],    #SELL (above)
+            [0.90,0.90],    #Normal 2 (above)
+            [0.65,0.65],    #Normal 1 (above)
+            [0.65,0.65],    #BUY (below)
         ]
         name_data = [
             'DCR/USD Price',
@@ -1625,10 +1627,7 @@ class dcr_chart_suite():
             '14 Day Ratio',
             '28 Day Ratio',
             '142 Day Ratio',
-            'STRONG BUY (0.65)',
-            'BUY (0.90)',
-            'SELL (1.20)',
-            'STRONG SELL (1.45)'
+            'N/A','N/A','N/A','N/A','N/A',
             ]
         color_data = [
             'rgb(255, 255, 255)',   #White
@@ -1641,28 +1640,31 @@ class dcr_chart_suite():
             'rgb(250, 38, 53)',     #POW Red
             'rgb(20, 169, 233)',    #Total Blue
             
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 255, 102)',   #Gradient Lime
-            'rgb(255, 102, 102)',   #Gradient L.Red
-            'rgb(255, 80, 80)',     #Gradient Red
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 204, 102, 0.2)',   #Gradient Yellow
+            'rgba(255, 204, 102, 0.2)',   #Gradient Yellow
+            'rgba(36, 255, 136, 0.2)',    #Gradient Green
 
         ]
-        dash_data = ['solid','solid','solid','solid','solid',   'solid','solid','solid' ,'dash','dash','dash','dash']
-        width_data = [2,2,1,1,2,  1,1,1,   2,2,2,2]
-        opacity_data = [1,1,1,1,1,   1,1,1,   0.75,0.75,0.75,0.75,]
-        legend_data = [True,True,True,True,True,     True,True,True,     True,True,True,True,]#
+        dash_data = ['solid','solid','solid','solid','solid',   'solid','solid','solid'     ,'dash','dash','dash','dash','dash','dash']
+        fill_data = ['none','none','none','none','none',         'none','none','none'       ,'none','tonexty','tonexty','tonexty','tozeroy']
+        width_data = [2,2,1,1,2,  1,1,1,   2,2,2,2,2]
+        opacity_data = [1,1,1,1,1,   1,1,1,   0,0.75,0.75,0.75,0.75]
+        legend_data = [True,True,True,True,True,     True,True,True,     False,False,False,False,False,]#
         title_data = [
-            '<b>Decred TVWAP Capitalisation</b>',
+            '<b>Decred Ticket Volume Weighted Average Price (TVWAP)</b>',
             '<b>Date</b>',
-            '<b>Decred Valuation</b>',
+            '<b>DCR/USD Price</b>',
             '<b>TVWAP Ratios</b>']
-        range_data = [['2016-01-01','2020-06-01'],[6,9],[0,5]]
+        range_data = [[self.start,self.last],[-2,3],[0,5]]
         autorange_data = [False,False,False]
         type_data = ['date','log','linear']#
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
             )
         fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
         fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")
