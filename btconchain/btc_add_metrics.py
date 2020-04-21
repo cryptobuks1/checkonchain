@@ -70,7 +70,6 @@ class btc_add_metrics():
             ]]
         return df
 
-
     def btc_sply(self,to_blk):
         df = btc_supply_schedule(to_blk).btc_supply_function()
         #Calculate projected S2F Models Valuations
@@ -91,7 +90,6 @@ class btc_add_metrics():
         df['CapPlanBmodel'] = df['PricePlanBmodel']*df['Sply_ideal']
         return df
     
-
     def btc_sply_curtailed(self,to_blk):
         """Curtail theoretical supply curve for charting"""
         btc_sply_interval = self.sply_curtail
@@ -103,7 +101,6 @@ class btc_add_metrics():
         df = btc_supply_schedule(0).btc_halvings_stepped()
         df['age_sply'] = df['end_sply']/21e6
         return df #Select every 144 blocks
-
 
     def btc_real(self):
         """Coinmetrics + Hashrate from QUANDL"""
@@ -142,83 +139,3 @@ class btc_add_metrics():
         df['PoW_income_btc']    = df['DailyIssuedNtv']
         df['PoW_income_usd']    = df['PoW_income_btc'] * df['PriceUSD']
         return df
-
-    def btc_pricing_models(self):
-        print('...Calculating Bitcoin pricing models...')
-        _real = self.btc_subsidy_models()
-        df = _real
-
-        # Average Cap and Average Price
-        df['CapAvg'] = df['CapMrktCurUSD'].fillna(0.0001) #Fill not quite to zero for Log charts/calcs
-        df['CapAvg'] = df['CapAvg'].expanding().mean()
-        df['PriceAvg'] = df['CapAvg']/df['SplyCur']
-        # Delta Cap and Delta Price
-        df['CapDelta'] = df['CapRealUSD'] - df['CapAvg']
-        df['PriceDelta'] =df['CapDelta']/df['SplyCur']
-        # Top Cap and Top Price
-        df['CapTop'] = df['CapAvg']*self.topcapconst
-        df['PriceTop'] =df['CapTop']/df['SplyCur']
-
-        #Calc S2F Model - Specific to Bitcoin
-        btc_s2f_model = regression_analysis().ln_regression(df,'S2F','PriceUSD','date')['model_params']
-        df['PriceS2Fmodel'] = (
-            np.exp(float(btc_s2f_model['intercept']))
-            * df['S2F']**float(btc_s2f_model['coefficient'])
-            )
-        df['CapS2Fmodel'] = df['PriceS2Fmodel']*df['SplyCur']
-        #Calc S2F Model - Bitcoins Plan B Model
-        planb_s2f_model = regression_analysis().regression_constants()['planb']
-        df['PricePlanBmodel'] = np.exp(-1.84)*df['S2F']**3.36
-        df['CapPlanBmodel'] = df['PricePlanBmodel']/df['SplyCur']
-
-        #Calc Diff Model - Specific to Bitcoin
-        btc_diff_model = regression_analysis().ln_regression(df,'DiffMean','CapMrktCurUSD','date')['model_params']
-        df['CapDiffmodel'] = np.exp(float(btc_diff_model['coefficient'])*np.log(df['DiffMean'])+float(btc_diff_model['intercept']))
-        df['PriceDiffmodel'] = df['CapDiffmodel']/df['SplyCur']
-
-        # Inflow Cap and Inflow Price
-        df['CapInflow'] = df['DailyIssuedUSD'].expanding().sum()
-        df['PriceInflow'] =df['CapInflow']/df['SplyCur']
-        
-        # Fee Cap and Fee Price
-        df['CapFee'] = df['FeeTotUSD'].expanding().sum()
-        df['PriceFee'] =df['CapFee']/df['SplyCur']
-
-        #Calculate Miner Income
-        df['MinerIncome'] = df['CapInflow'] + df['CapFee']
-        df['FeesPct'] =  df['CapFee']/df['MinerIncome']
-        df['MinerCap'] = df['MinerIncome'].expanding().sum()
-
-        #Moving Averages (Magic Lines)
-        df['PriceUSD_128DMA'] = df['PriceUSD'].rolling(128).mean()
-        df['PriceUSD_200DMA'] = df['PriceUSD'].rolling(200).mean()
-        df['PriceUSD_128WMA'] = df['PriceUSD'].rolling(896).mean()
-        df['PriceUSD_200WMA'] = df['PriceUSD'].rolling(1400).mean()
-        return df
-
-    def btc_oscillators(self):
-        print('...Calculating Bitcoin Oscillators...')
-        _pricing = self.btc_pricing_models()
-        df = _pricing        
-        #Calc - NVT_28, NVT_90, NVTS, RVT_28, RVT_90, RVTS
-        df['NVT_28'] = df['CapMrktCurUSD'].rolling(28).mean()/ df['TxTfrValUSD'].rolling(28).mean()
-        df['NVT_90'] = df['CapMrktCurUSD'].rolling(90).mean()/df['TxTfrValUSD'].rolling(90).mean()
-        df['NVTS']   = df['CapMrktCurUSD']/ df['TxTfrValUSD'].rolling(28).mean()
-        df['RVT_28'] = df['CapRealUSD'].rolling(28).mean()/ df['TxTfrValUSD'].rolling(28).mean()
-        df['RVT_90'] = df['CapRealUSD'].rolling(90).mean()/df['TxTfrValUSD'].rolling(90).mean()
-        df['RVTS']   = df['CapRealUSD']/ df['TxTfrValUSD'].rolling(28).mean()
-
-        #Mayer Multiple
-        df['MayerMultiple'] = df['PriceUSD']/df['PriceUSD_200DMA']
-        df['S2FMultiple'] = df['PriceUSD']/df['PricePlanBmodel']
-        df['DiffMultiple'] = df['PriceUSD']/df['PriceDiffmodel']
-
-        df['Puell_Multiple'] = (
-            df['DailyIssuedUSD']
-            / df['DailyIssuedUSD'].rolling(365).mean()
-        )
-        return df
-
-#BTC_subs = btc_add_metrics().btc_oscillators()
-#BTC_real = btc_add_metrics().btc_real()
-

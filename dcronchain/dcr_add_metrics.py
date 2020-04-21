@@ -33,7 +33,12 @@ class dcr_add_metrics():
     dcr_perf            = dcrdata blockchain performance 
                             ['blk','time','dcr_sply','dcr_tic_sply','tic_part','tic_pool','tic_blk',
                             'pow_hashrate_THs','pow_work_EH']
-    
+    dcr_natv            = dcrdata blockchain combination of dcr_perf and dcr_diff (by block) 
+                            ['blk', 'window','tic_cnt_window', 'tic_price', 'tic_blk', 'tic_pool',
+                            'dcr_tic_sply', 'dcr_sply','pow_diff','pow_hashrate_THs', 'pow_work_TH']
+    dcr_real            = Compiles Coinmetrics (dcr_coin) and dcrdata (dcr_natv) for general data analytics
+    dcr_subsidy_models  = Follows dcr_real, adds income for PoW, PoS, Fund and Total priced in dcr, btc and usd
+    dcr_ticket_models   = Follows dcr_subsidy_models, ticket based transaction models
     """
     
     def __init__(self):
@@ -72,7 +77,7 @@ class dcr_add_metrics():
         #Import Early price data --> 
         #   founders $0.49 for 8/9 Feb 2016  
         #   Bitrex up to 16-May-2016 (saved in relative link csv)
-        df_early = pd.read_csv(r"dcronchain\resources\data\dcr_pricedata_2016-02-08_2016-05-16.csv")
+        df_early = pd.read_csv(r"dcronchain\\resources\\data\\dcr_pricedata_2016-02-08_2016-05-16.csv")
         df_early['date'] = pd.to_datetime(df_early['date'],utc=True) #Convert to correct datetime format
         df['notes'] = str('') # add notes for storing data
         for i in df_early['date']: #swap in early price data
@@ -411,61 +416,6 @@ class dcr_add_metrics():
 
         #Write to csv for others
         general_helpers.df_to_csv(df,'DCR_tics')
-        return df
-
-    def dcr_pricing_models(self):
-        print('...Calculating Decred pricing models...')
-        _real = self.dcr_real()
-        df = _real
-        #BTC Realised CAP
-        df['CapRealBTC'] = df['TxTfrValNtv']*df['PriceBTC']
-        df['CapRealBTC'] = df['CapRealBTC'].cumsum()/df['SplyCur']
-        # Average Cap and Average Price
-        df['CapAvg'] = df['CapMrktCurUSD'].fillna(0.0001) #Fill not quite to zero for Log charts/calcs
-        df['CapAvg'] = df['CapAvg'].expanding().mean()
-        df['PriceAvg'] = df['CapAvg']/df['SplyCur']
-        # Delta Cap and Delta Price
-        df['CapDelta'] = df['CapRealUSD'] - df['CapAvg']
-        df['PriceDelta'] =df['CapDelta']/df['SplyCur']
-        # Top Cap and Top Price
-        df['CapTop'] = df['CapAvg']*self.topcapconst
-        df['PriceTop'] =df['CapTop']/df['SplyCur']
-
-        #Calc S2F Model - Specific to Decred
-        dcr_s2f_model = regression_analysis().ln_regression(df,'S2F','CapMrktCurUSD','date')['model_params']
-        df['CapS2Fmodel'] = np.exp(float(dcr_s2f_model['coefficient'])*np.log(df['S2F'])+float(dcr_s2f_model['intercept']))
-        df['PriceS2Fmodel'] = df['CapS2Fmodel']/df['SplyCur']
-        #Calc S2F Model - Bitcoins Plan B Model
-        planb_s2f_model = regression_analysis().regression_constants()['planb']
-        df['CapPlanBmodel'] = np.exp(float(planb_s2f_model['coefficient'])*np.log(df['S2F'])+float(planb_s2f_model['intercept']))
-        df['PricePlanBmodel'] = df['CapPlanBmodel']/df['SplyCur']
-
-        # Inflow Cap and Inflow Price
-        df['CapInflow'] = df['DailyIssuedUSD'].expanding().sum()
-        df['PriceInflow'] =df['CapInflow']/df['SplyCur']
-        
-        # Fee Cap and Fee Price
-        df['CapFee'] = df['FeeTotUSD'].expanding().sum()
-        df['PriceFee'] =df['CapFee']/df['SplyCur']
-
-        #Calculate Miner Income
-        df['MinerIncome'] = df['CapInflow'] + df['CapFee']
-        df['FeesPct'] =  df['CapFee']/df['MinerIncome']
-        df['MinerCap'] = df['MinerIncome'].expanding().sum()
-        return df
-
-    def dcr_oscillators(self):
-        print('...Calculating Decred Oscillators...')
-        _coin = self.dcr_coin()
-
-        df = _coin        
-        #Calc - NVT_28, NVT_90, NVTS, RVT_28, RVT_90, RVTS
-        df['NVT_28'] = df['CapMrktCurUSD'].rolling(28).mean()/ df['TxTfrValUSD'].rolling(28).mean()
-        df['NVT_90'] = df['CapMrktCurUSD'].rolling(90).mean()/df['TxTfrValUSD'].rolling(90).mean()
-        df['NVTS']   = df['CapMrktCurUSD']/ df['TxTfrValUSD'].rolling(28).mean()
-        df['RVT_28'] = df['CapRealUSD'].rolling(28).mean()/ df['TxTfrValUSD'].rolling(28).mean()
-        df['RVT_90'] = df['CapRealUSD'].rolling(90).mean()/df['TxTfrValUSD'].rolling(90).mean()
-        df['RVTS']   = df['CapRealUSD']/ df['TxTfrValUSD'].rolling(28).mean()
         return df
 
 

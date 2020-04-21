@@ -2250,11 +2250,71 @@ class dcr_chart_suite():
         chart_name = '\\oscillators\\nvt_rvt'
         self.write_html(fig,chart_name)
 
+    def dcr_vs_btc(self):
+        """"Compare DCR and BTC by Coin Age"""
+
+        dcr = self.df
+
+        btc = btc_add_metrics().btc_real()
+
+        loop_data=[[0,1],[2,3]]
+        x_data = [
+            btc['age_sply'],
+            dcr['age_sply'],
+            btc['age_sply'],
+            dcr['age_sply'],
+        ]
+        y_data = [
+            dcr['PriceUSD'],
+            btc['PriceUSD'],
+            btc['CapMrktCurUSD'],
+            dcr['CapMrktCurUSD'],
+        ]
+        name_data = [
+            'BTC Price',
+            'DCR Price',
+            'BTC Market Cap',
+            'DCR Market Cap',
+        ]
+        width_data      = [2,2,2,2]
+        opacity_data    = [1,1,1,1]
+        dash_data = ['solid','solid','dash','dash']
+        color_data = [
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(46, 214, 161)',    #Turquoise
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(46, 214, 161)',    #Turquoise
+        ]
+        legend_data = [True,True,True,True,]
+        title_data = [
+            'BTC vs DCR',
+            '<b>Coin Age (Supply / 21M)</b>',
+            '<b>Price (USD)</b>',
+            '<b>Market Cap (USD)</b>']
+        range_data = [[0,1],[-1,4],[5,12]]
+        autorange_data = [False,False,False]
+        type_data = ['linear','log','log']
+        fig = check_standard_charts().subplot_lines_doubleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick='0.1')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
+        self.add_slider(fig)
+
+        #Write out html chart
+        chart_name = '\\valuation_models\\btc_vs_dcr'
+        self.write_html(fig,chart_name)
+
+
 
 """MODEL"""
 fig_dcr = dcr_chart_suite()
 
-fig_dcr.difficulty_ribbon()
+fig_dcr.dcr_vs_btc()
+
 
 """NETWORK VALUATION"""
 fig_dcr.mvrv(0)
@@ -2280,6 +2340,9 @@ fig_dcr.commitment_usd(1)
 fig_dcr.commitment_btc(1)
 
 fig_dcr.s2f_model(1)
+
+
+"""Oscillators"""
 
 fig_dcr.mayer_multiple()
 fig_dcr.mayer_multiple_bands()

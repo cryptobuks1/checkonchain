@@ -24,7 +24,7 @@ Tools in this repo are structured as follows
 
 
 ## Repo Structure
-This repo is my first and thus structure will develop over time. All code will be Python unless otherwise noted
+This repo is my coding project and thus structure will develop over time. All code will be Python unless otherwise noted
 
 ```
 checkonchain
