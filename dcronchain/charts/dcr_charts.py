@@ -84,9 +84,9 @@ class dcr_chart_suite():
         opacity_data    = [1,1,1,1,1,1,1]
         dash_data = ['solid','solid','solid','dash','dash','dash','dash']
         color_data = [
-            'rgb(46, 214, 161)',    #Turquoise
-            'rgb(239, 125, 50)',    #Price Orange
             'rgb(255, 255, 255)',   #White
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(46, 214, 161)',    #Turquoise
             'rgb(153, 255, 102)',   #Gradient Green
             'rgb(255, 255, 102)',   #Gradient Lime
             'rgb(255, 102, 102)',   #Gradient L.Red
@@ -292,7 +292,6 @@ class dcr_chart_suite():
         df['AdjSubsidyPriceUSD'] = df['AdjSubsidyCapUSD'] / df['SplyCur']
 
         #STANDARD SETTINGS
-        loop_data=[[0,1,2,3,5,4],[]]
         x_data = [
             df['date'],
             df['date'],
@@ -318,6 +317,7 @@ class dcr_chart_suite():
         
         #MARKET CAP SETTINGS
         if model ==0:
+            loop_data = [[0,1,2,3,4],[]]
             y_data = [
                 df['CapMrktCurUSD'],
                 df['SubsidyPoWCapUSD'],
@@ -343,6 +343,7 @@ class dcr_chart_suite():
             range_data = [[self.start,self.last],[self.cap_lb,self.cap_ub],[5,11]]
         #MARKET CAP SETTINGS
         elif model == 1:
+            loop_data = [[0,1,2,3,6,4],[5]]
             y_data = [
                 df['PriceUSD'],
                 df['PoW_income_usd'].cumsum()/df['SplyCur'],
@@ -428,7 +429,6 @@ class dcr_chart_suite():
         df['AdjSubsidyPriceBTC'] = df['AdjSubsidyCapBTC'] / df['SplyCur']
 
         #STANDARD SETTINGS
-        loop_data = [[0,1,2,3,6,4],[5]]
         x_data = [
             df['date'],
             df['date'],
@@ -456,6 +456,7 @@ class dcr_chart_suite():
 
         #NETWORK VALUATION SETTINGS
         if model == 0:
+            loop_data = [[0,1,2,3,4],[]]
             y_data = [
                 df['SubsidyPoWCapBTC'],
                 df['SubsidyPoSCapBTC'],
@@ -484,6 +485,7 @@ class dcr_chart_suite():
 
         #PRICING SETTINGS
         elif model == 1:
+            loop_data = [[0,1,2,3,6,4],[5]]
             y_data = [
                 df['SubsidyPoWCapBTC']/df['SplyCur'],
                 df['SubsidyPoSCapBTC']/df['SplyCur'],
@@ -1048,7 +1050,7 @@ class dcr_chart_suite():
         chart_name = '\\oscillators\\s2f_residuals'
         self.write_html(fig,chart_name)
 
-    def mayer_multiple(self):
+    def mayer_multiple_NA(self):
         """"Decred Mayer Multiple"""
         df = self.df
         
@@ -1057,59 +1059,72 @@ class dcr_chart_suite():
             / df['PriceUSD'].rolling(200).mean()
         )
 
-        loop_data=[[0,1],[2,3,4,5,6]]
+        loop_data=[[0,1],[2,3,4,5,6,7,8]]
         x_data = [
             df['date'],
             df['date'],
             df['date'],
-            ['2016-01-01','2022-01-01'],    #Strong BUY
-            ['2016-01-01','2022-01-01'],    #BUY
-            ['2016-01-01','2022-01-01'],    #SELL
-            ['2016-01-01','2022-01-01'],    #Strong SELL
+            [self.start,self.last],    #N/A CEILING
+            [self.start,self.last],    #STRONG SELL
+            [self.start,self.last],    #SELL
+            [self.start,self.last],    #NORMAL
+            [self.start,self.last],    #BUY
+            [self.start,self.last],    #BUY
         ]
         y_data = [
             df['PriceUSD'],
             df['PriceUSD'].rolling(200).mean(),
             df['Mayer_Multiple'],
-            [0.4,0.4],
-            [0.5,0.5],
-            [1.6,1.6],
+            [6,6],
             [2.8,2.8],
+            [2.0,2.0],
+            [0.6,0.6],
+            [0.4,0.4],
+            [0.4,0.4],        
         ]
         name_data = [
             'DCR Market Cap (USD)',
             '200DMA',
             'Mayer Multiple',
+            'N/A',
+            'STRONG SELL (2.8)',
+            'SELL (2.0)',
+            'N/A',
+            'BUY (0.6)',
             'STRONG BUY (0.4)',
-            'BUY (0.5)',
-            'SELL (1.6)',
-            'STRONG SELL (2.8)'
         ]
-        width_data      = [2,2,1,2,2,2,2]
-        opacity_data    = [1,1,1,1,1,1,1]
-        dash_data = ['solid','solid','solid','dash','dash','dash','dash']
+        width_data      = [2,2,2,1,1,1,1,1,1]
+        opacity_data    = [1,1,1,1,1,1,1,1,1]
+        dash_data = ['solid','dash','solid','dash','dash','dash','dash','dash','dash']
         color_data = [
             'rgb(255, 255, 255)',   #White
-            'rgb(20, 169, 233)',    #Total Blue
-            'rgb(46, 214, 161)',    #Turquoise
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 255, 102)',   #Gradient Lime
-            'rgb(255, 102, 102)',   #Gradient L.Red
-            'rgb(255, 80, 80)',     #Gradient Red
+            'rgb(102, 255, 153)',   #Turquoise Green
+            'rgb(102, 255, 153)',   #Turquoise Green
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.1)',     #Gradient Red
+            'rgba(55 ,55, 55, 0)',        #NA
+            'rgba(36, 255, 136, 0.1)',    #Gradient Green
+            'rgba(36, 255, 136, 0.2)',    #Gradient Green
         ]
-        legend_data = [True,True,True,True,True,True,True]
+        fill_data = [
+            'none','none','none',
+            'none','tonexty','tonexty','none','tonexty','tozeroy',
+        ]
+        legend_data = [True,True,True,False,True,True,False,True,True]
         title_data = [
             '<b>Decred Mayer Multiple</b>',
             '<b>Date</b>',
             '<b>Price (USD)</b>',
             '<b>Mayer Multiple</b>']
-        range_data = [[self.start,self.last],[-1,3],[-1,2]]
+        range_data = [[self.start,self.last],[-2,np.log10(1000)],[np.log10(0.2),5]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
             )
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
         self.add_slider(fig)
@@ -1118,18 +1133,22 @@ class dcr_chart_suite():
         chart_name = '\\oscillators\\mayer_multiple'
         self.write_html(fig,chart_name)
 
-    def mayer_multiple_bands(self):
+    def mayer_multiple(self):
         """"Mayer Multiple Bands"""
         df = self.df
 
+        df['Mayer_Multiple'] = (
+            df['PriceUSD']
+            / df['PriceUSD'].rolling(200).mean()
+        )
         df['200DMA']        = df['PriceUSD'].rolling(200).mean()
         df['128DMA']     = df['PriceUSD'].rolling(128).mean()
         df['Mayer_SBUY']    = df['200DMA'] * 0.4
-        df['Mayer_BUY']     = df['200DMA'] * 0.5
-        df['Mayer_SELL']    = df['200DMA'] * 1.6
+        df['Mayer_BUY']     = df['200DMA'] * 0.6
+        df['Mayer_SELL']    = df['200DMA'] * 2.0
         df['Mayer_SSELL']   = df['200DMA'] * 2.8
 
-        loop_data=[[0,1,3,4,5,6],[]]
+        loop_data=[[0,1,3,4,5,6],[7,8,9,10,11,12,13]]
         x_data = [
             df['date'],
             df['date'],
@@ -1137,6 +1156,14 @@ class dcr_chart_suite():
             df['date'],
             df['date'],
             df['date'],
+            df['date'],
+            #Secondary
+            [self.start,self.last],    #N/A CEILING
+            [self.start,self.last],    #STRONG SELL
+            [self.start,self.last],    #SELL
+            [self.start,self.last],    #NORMAL
+            [self.start,self.last],    #BUY
+            [self.start,self.last],    #BUY
             df['date'],
         ]
         y_data = [
@@ -1147,45 +1174,84 @@ class dcr_chart_suite():
             df['Mayer_BUY'] ,
             df['Mayer_SELL'], 
             df['Mayer_SSELL'],
+            # SECONDARY
+            [6,6],
+            [2.8,2.8],
+            [2.0,2.0],
+            [0.6,0.6],
+            [0.4,0.4],
+            [0.4,0.4],
+            df['Mayer_Multiple'],
         ]
         name_data = [
             'DCR Price (USD)',
             '200DMA',
             '128DMA',
             'STRONG BUY (0.4)',
-            'BUY (0.5)',
-            'SELL (1.6)',
-            'STRONG SELL (2.8)'
+            'BUY (0.6)',
+            'SELL (2.0)',
+            'STRONG SELL (2.8)',
+            #SECONDARY
+            'N/A',
+            'STRONG SELL (2.8)',
+            'SELL (2.0)',
+            'N/A',
+            'BUY (0.6)',
+            'STRONG BUY (0.4)',
+            'Mayer Multiple',
         ]
-        width_data      = [2,1,1,   1,1,1,1]
-        opacity_data    = [1,1,1,   1,1,1,1]
+        width_data      = [
+            2,2,2,   1,1,1,1,
+            1,1,1,1,1,1,2
+            ]
+        opacity_data    = [
+            1,1,1,   1,1,1,1,
+            1,1,1,1,1,1,1
+            ]
         dash_data = [
             'solid','solid','solid',
             'dash','dash','dash','dash',
+            'dash','dash','dash','dash','dash','dash','solid',
             ]
         color_data = [
             'rgb(255, 255, 255)',   #White
-            'rgb(20, 169, 233)',    #Total Blue
-            #'rgb(102, 255, 153)',   #Turquoise Green
+            'rgb(102, 255, 153)',   #Turquoise Green
+            #'rgb(20, 169, 233)',    #Total Blue
             'rgb(237, 109, 71)',    #Decred Orange
             'rgb(153, 255, 102)',   #Gradient Green
             'rgb(255, 204, 102)',   #Gradient Yellow
             'rgb(255, 153, 102)',   #Gradient Orange
-            'rgb(255, 80, 80)',     #Gradient Red  
+            'rgb(255, 80, 80)',     #Gradient Red
+            # SECONDARY
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.1)',     #Gradient Red
+            'rgba(55 ,55, 55, 0)',        #NA
+            'rgba(36, 255, 136, 0.1)',    #Gradient Green
+            'rgba(36, 255, 136, 0.2)',    #Gradient Green
+            'rgb(102, 255, 153)',         #Turquoise Green
         ]
-        legend_data = [True,True,True,True,True,True,True,]
+        fill_data = [
+            'none','none','none','none','none','none','none',
+            'none','tonexty','tonexty','none','tonexty','tozeroy','none',
+        ]
+        legend_data = [
+            True,True,True,True,True,True,True,
+            False,False,False,False,False,False,True,
+            ]
         title_data = [
             '<b>Decred Mayer Multiple Bands</b>',
             '<b>Date</b>',
             '<b>Price (USD)</b>',
-            '<b></b>']
-        range_data = [[self.start,self.last],[-1,3],[]]
+            '<b>Mayer Multiple</b>']
+        range_data = [[self.start,self.last],[-2,3],[np.log10(0.2),5]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
             )
         fig.update_xaxes(dtick='M3',tickformat='%d-%b-%y')
         self.add_slider(fig)
@@ -2173,8 +2239,8 @@ class dcr_chart_suite():
             [self.start,self.last],    #BUY
         ]
         y_data = [
-            df['PriceUSD'],
-            df['PriceRealUSD'],
+            df['CapMrktCurUSD'],
+            df['CapRealUSD'],
             df['NVT_28'],
             df['NVT_90'],
             df['NVTS'],
@@ -2188,8 +2254,8 @@ class dcr_chart_suite():
             [50,50]
         ]
         name_data = [
-            'DCR Price (USD)',
-            'Realised Price (USD)',
+            'Market Cap (USD)',
+            'Realised Cap (USD)',
             'NVT 28DMA',
             'NVT 90DMA',
             'NVTS',
@@ -2206,7 +2272,7 @@ class dcr_chart_suite():
             ]
         color_data = [
             'rgb(255, 255, 255)',    #White
-            'rgb(20, 169, 233)',     #Total Blue
+            'rgb(239, 125, 50)',    #Price Orange
             'rgb(153, 255, 102)',
             'rgb(255, 255, 102)',
             'rgb(255, 204, 102)',
@@ -2232,7 +2298,7 @@ class dcr_chart_suite():
             '<b>Date</b>',
             '<b>Price (USD)</b>',
             '<b>NVT or RVT Ratio</b>']
-        range_data = [[self.start,self.last],[-2,3],[0,500]]
+        range_data = [[self.start,self.last],[5,10],[0,750]]
         autorange_data = [False,False,False]
         type_data = ['date','log','linear']
         fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
@@ -2265,8 +2331,8 @@ class dcr_chart_suite():
             dcr['age_sply'],
         ]
         y_data = [
-            dcr['PriceUSD'],
             btc['PriceUSD'],
+            dcr['PriceUSD'],
             btc['CapMrktCurUSD'],
             dcr['CapMrktCurUSD'],
         ]
@@ -2313,7 +2379,6 @@ class dcr_chart_suite():
 """MODEL"""
 fig_dcr = dcr_chart_suite()
 
-fig_dcr.dcr_vs_btc()
 
 
 """NETWORK VALUATION"""
@@ -2345,7 +2410,6 @@ fig_dcr.s2f_model(1)
 """Oscillators"""
 
 fig_dcr.mayer_multiple()
-fig_dcr.mayer_multiple_bands()
 
 fig_dcr.beam_indicator()
 
@@ -2354,7 +2418,7 @@ fig_dcr.contractor_multiple()
 
 """Market Cycle Metrics"""
 
-
+fig_dcr.dcr_vs_btc()
 fig_dcr.bottom_cycle()
 fig_dcr.top_cycle()
 
