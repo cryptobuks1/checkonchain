@@ -1,12 +1,8 @@
-# dcrdata Additional Charts Proposal
+# Checkonchain - Decred Charts
 
-## Overview
-The following document specifies the input calculations and provides sample charts for a number of Decred specific metrics for implementation into the dcrdata charting suite.
+The following document specifies the input calculations and provides sample charts for a number of Decred specific metrics for implementation into a Decred charting suite.
 
-
-# Charts
-
-## **Realised Cap and MVRV Ratio**
+# **Realised Cap and MVRV Ratio**
 
 Checkonchain Code
 
@@ -55,10 +51,8 @@ Chart Description:
 Sample Chart
 ![MVRV Ratio](charts/dcr_mvrv_ratio.png)
 
-___
 
-
-## **Stakeholder Commitments (USD)**
+# **Stakeholder Commitments (USD)**
 
 Checkonchain Code
 
@@ -120,10 +114,8 @@ Sample Chart
 ![Block Subsidy Model (USD)](charts/dcr_blksub_usd.png)
 ![Block Subsidy Model (BTC)](charts/dcr_blksub_btc.png)
 
-___
 
-
-## **NVT and RVT Ratio**
+# **NVT and RVT Ratio**
 
 Checkonchain Code
 
@@ -178,10 +170,8 @@ Chart Description:
 Sample Chart
 ![NVT and RVT Ratios](charts/dcr_nvtrvt.png)
 
-___
 
-
-## **Mayer Multiple**
+# **Mayer Multiple**
 
 Checkonchain Code
 
@@ -230,8 +220,6 @@ Chart Description:
 
 Sample Chart
 ![Mayer Multiple](charts/dcr_mayer_multiple.png)
-
-___
 
 
 
