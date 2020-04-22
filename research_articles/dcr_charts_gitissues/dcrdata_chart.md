@@ -87,15 +87,18 @@ Links:
 Inputs:
 
     Primary Y-Axis (USD Chart)
-        Market Cap      = Coin supply * Coin PriceUSD (Daily close)
-        Realised Cap    = Sum of Each unspent UTXO priced at the time it last moved
-        Total-USD       = Cumulative total block reward paid in USD (DailyIssuedNtV * PriceUSD + FeeTotUSD)_cumsum
-        POW-USD         = Cumulative PoW Miner block reward paid in USD 
-                            (DailyIssuedNtV * PriceUSD)_cumsum * 0.6 + FeeTotUSD_cumsum
-        POS-USD         =   Cumulative PoS Stakeholder block reward paid in USD 
-                        (DailyIssuedNtV * PriceUSD)_cumsum * 0.3
-        Treasury-USD    =   Cumulative Treasury block reward paid in USD 
-                            (DailyIssuedNtV * PriceUSD)_cumsum * 0.1
+        Market Cap          = Coin supply * Coin PriceUSD (Daily close)
+        Realised Cap        = Sum of Each unspent UTXO priced at the time it last moved
+        Total-USD           = Cumulative total block reward paid in USD (DailyIssuedNtV * PriceUSD + FeeTotUSD)_cumsum
+        POW-USD             = Cumulative PoW Miner block reward paid in USD 
+                                (DailyIssuedNtV * PriceUSD)_cumsum * 0.6 + FeeTotUSD_cumsum
+        POS-USD             =   Cumulative PoS Stakeholder block reward paid in USD 
+                            (DailyIssuedNtV * PriceUSD)_cumsum * 0.3
+        Treasury-USD        =   Cumulative Treasury block reward paid in USD 
+                                (DailyIssuedNtV * PriceUSD)_cumsum * 0.1
+        Tickets Bound Cap   = Cumulative sum of USD value bound in Tickets
+        Supply Issued Cap   = Metric that calculates the 10x total USD issuance corrected for block reward reduction
+                                (DailyIssuedNtv * PriceUSD)_cumsum * 10 * (101/100)**(np.floor(block_height/6144))
 
     For BTC chart - change all PriceUSD to Price BTC
 
@@ -110,13 +113,12 @@ Chart Description:
         Type    = log
 
     Y-axis-Left = Price (BTC)
-        Range   = 1e2 to 1e6
+        Range   = 1e2 to 2e6
         Type    = log
 
 Sample Chart
 ![Block Subsidy Model (USD)](charts/dcr_blksub_usd.png)
 ![Block Subsidy Model (BTC)](charts/dcr_blksub_btc.png)
-
 
 ___
 
@@ -139,7 +141,7 @@ Links:
 
 [paper on NVT Signal](https://woobull.com/nvt-signal-a-new-trading-indicator-to-pick-tops-and-bottoms/)
 
-[paper on RVT](https://medium.com/@_Checkmatey_/the-bitcoin-rvt-ratio-a-high-conviction-macro-indicator-615b68715b77)
+[paper on RVT Ratio](https://medium.com/@_Checkmatey_/the-bitcoin-rvt-ratio-a-high-conviction-macro-indicator-615b68715b77)
 
 Inputs:
 
@@ -233,23 +235,3 @@ ___
 
 
 
-
-
-
-
-
-
-
-
-
-
-## **Primitives Calculations**
-
-The following metrics are referenced in many subsequent calculations and charts and thus represent valuable metrics to develop as primitives within the dataset.
-
-### **The Realised Cap and Price**
-Description: 
-
-The Realised Cap is the total sum of all UNSPENT UTXOs priced at the time they were last transacted. The Realised Price is then the Realised Cap divided by DCR circulating Supply.
-
-![/equations/realised_cap_price.png](equations/realised_cap_price.png)
