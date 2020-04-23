@@ -180,6 +180,125 @@ class dcr_chart_suite():
             chart_name = '\\pricing_models\\mvrv_pricing'
         self.write_html(fig,chart_name)
 
+    def unrealised_PnL(self):
+        """"Decred Realised Price and MVRV"""
+        df = pd.DataFrame()
+        df = self.df
+
+        #Calculate Unrealised Profit max((Mrkt - Real),0)
+        df['UnrealisedProfit'] = (
+            df['CapMrktCurUSD'] - df['CapRealUSD']
+        ) / df['CapMrktCurUSD']
+
+        #Calculate Unrealised Loss max((Real - Mrkt),0)
+        df['UnrealisedLoss'] = (
+            df['CapRealUSD'] - df['CapMrktCurUSD']
+        ) / df['CapMrktCurUSD']
+
+        #Max of value and 0
+        #df.loc[df['UnrealisedProfit']<0,'UnrealisedProfit'] = 0
+        #df.loc[df['UnrealisedLoss']>0,'UnrealisedLoss'] = 0
+
+        df['UnrealisedPnL_Net'] = (df['CapMrktCurUSD'] - df['CapRealUSD']) / df['CapMrktCurUSD']
+        
+        j = 0
+        name = str()
+        for i in [-0.50,-0.25,0.00,0.50,0.50]:
+            a = -0.00
+            if i == -0.50:
+                name = 'UPnL_capitulation'
+                df[name] = df['UnrealisedPnL_Net'] #set equal to net PnL
+                df.loc[df[name]>=i - a*5,name] = 0 #set >= 0 to nan
+            elif j == 0.50:
+                name = 'UPnL_euphoria'
+                df[name] = df['UnrealisedPnL_Net'] #set equal to net PnL
+                df.loc[df[name]<=i + a,name] = 0 #set < 1.0 to nan
+            else:
+                if i == - 0.25:
+                    name = 'UPnL_fear'
+                elif i == 0.00:
+                    name = 'UPnL_optimism'
+                elif i == 0.50:
+                    name = 'UPnL_belief'
+                df[name] = df['UnrealisedPnL_Net'] #set equal to net PnL
+                df.loc[df[name]<=j + a, name] = 0 #set Outside range to nan
+                df.loc[df[name]>=i - a, name] = 0 #set Outside range to nan
+            j = i
+            
+        loop_data=[[0,1],[2,3,4,5,6]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+        ]
+        y_data = [
+            df['CapMrktCurUSD'],
+            df['CapRealUSD'],
+            df['UPnL_capitulation'],
+            df['UPnL_fear'],
+            df['UPnL_optimism'],
+            df['UPnL_belief'],
+            df['UPnL_euphoria'],
+        ]
+        name_data = [
+            'Market Cap (USD)',
+            'Realised Cap (USD)',
+            'Capitulation',
+            'Hope-Fear',
+            'Optimism-Anxiety',
+            'Belief-Denial',
+            'Euphoria-Greed'
+        ]
+        width_data      = [2,2,1,1,1,1,1]
+        opacity_data    = [1,1,1,1,1,1,1]
+        dash_data = [
+            'solid','solid','solid','solid','solid','solid','solid']
+        color_data = [
+            'rgb(255, 255, 255)',    #White
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgba(233, 68,  68, 0.3)',     #Capitulation Red
+            'rgba(247, 132, 16, 0.3)',    #Fear Orange
+            'rgba(255, 192, 0 , 0.3)',     #Optimism Yellow
+            'rgba(38, 200,  17, 0.3)',     #Belief Green
+            'rgba(68, 103, 235, 0.3)',    #Greed Blue
+        ]
+        fill_data = [
+            'none','none','tozeroy','tozeroy','tozeroy','tozeroy','tozeroy'
+        ]
+        legend_data = [
+            True,True,True,True,True,True,True,
+            ]
+        title_data = [
+            'Decred Unrealised Profit and Loss',
+            '<b>Date</b>',
+            '<b>Price (USD)</b>',
+            '<b>Unrealised PnL</b>'
+        ]
+
+        range_data = [[self.start,self.last],[self.cap_lb,self.cap_ub],[-1.5,3.5]]
+        
+        autorange_data = [False,False,False]
+        type_data = ['date','log','linear']
+        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+            )
+        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True,dtick=0.5)
+        self.add_slider(fig)
+
+        #Write out html chart
+        chart_name = '\\oscillators\\unrealised_pnl'
+        self.write_html(fig,chart_name)
+
+
     def difficulty_ribbon(self):
         """Decred Difficulty Ribbon and Block Subsidy Model
 
@@ -2298,6 +2417,7 @@ class dcr_chart_suite():
 """MODEL"""
 fig_dcr = dcr_chart_suite()
 
+fig_dcr.unrealised_PnL()
 
 
 """NETWORK VALUATION"""

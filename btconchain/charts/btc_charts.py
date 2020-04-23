@@ -429,89 +429,20 @@ class btc_chart_suite():
         self.write_html(fig,chart_name)
 
     def mayer_multiple(self):
-        """"Mayer Multiple"""
-        df = pd.DataFrame()
-        df = self.df_init
-        
-        df['Mayer_Multiple'] = (
-            df['PriceUSD']
-            / df['PriceUSD'].rolling(200).mean()
-        )
-
-        loop_data=[[0,1],[2,3,4,5,6]]
-        x_data = [
-            df['date'],
-            df['date'],
-            df['date'],
-            ['2008-01-01','2022-01-01'],    #Strong BUY
-            ['2008-01-01','2022-01-01'],    #BUY
-            ['2008-01-01','2022-01-01'],    #SELL
-            ['2008-01-01','2022-01-01'],    #Strong SELL
-        ]
-        y_data = [
-            df['PriceUSD'],
-            df['PriceUSD'].rolling(200).mean(),
-            df['Mayer_Multiple'],
-            [0.6,0.6],
-            [0.8,0.8],
-            [2.4,2.4],
-            [3.4,3.4],
-        ]
-        name_data = [
-            'BTC Market Cap (USD)',
-            '200DMA',
-            'Mayer Multiple',
-            'STRONG BUY (0.6)',
-            'BUY (0.8)',
-            'SELL (2.4)',
-            'STRONG SELL (3.4)'
-        ]
-        width_data      = [1,1,1,2,2,2,2]
-        opacity_data    = [1,1,1,1,1,1,1]
-        dash_data = ['solid','solid','solid','dash','dash','dash','dash']
-        color_data = [
-            'rgb(255, 255, 255)',    #White
-            'rgb(20, 169, 233)',    #Total Blue
-            'rgb(239, 125, 50)',    #Price Orange
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 255, 102)',   #Gradient Lime
-            'rgb(255, 102, 102)',   #Gradient L.Red
-            'rgb(255, 80, 80)',     #Gradient Red
-        ]
-        legend_data = [True,True,True,True,True,True,True]
-        title_data = [
-            'Bitcoin Mayer Multiple',
-            '<b>Date</b>',
-            '<b>Price (USD)</b>',
-            '<b>Mayer Multiple</b>']
-        range_data = [[self.start,self.last],[-1,5],[-1,2]]
-        autorange_data = [False,False,False]
-        type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
-            )
-        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
-        self.add_slider(fig)
-
-        #Write out html chart
-        chart_name = '\\pricing_models\\mayer_multiple_pricing'
-        self.write_html(fig,chart_name)
-
-    def mayer_multiple_bands(self):
         """"Mayer Multiple Bands"""
         df = pd.DataFrame()
         df = self.df_init
 
+        df['Mayer_Multiple'] = df['PriceUSD']/df['PriceUSD'].rolling(200).mean()
         df['200DMA']        = df['PriceUSD'].rolling(200).mean()
         df['128DMA']     = df['PriceUSD'].rolling(128).mean()
         df['Mayer_SBUY']    = df['200DMA'] * 0.6
         df['Mayer_BUY']     = df['200DMA'] * 0.8
+        df['Mayer_CAUTION']   = df['200DMA'] * 1.6
         df['Mayer_SELL']    = df['200DMA'] * 2.4
         df['Mayer_SSELL']   = df['200DMA'] * 3.4
 
-        loop_data=[[0,1,3,4,5,6],[]]
+        loop_data=[[0,1,2,3,4,5,6],[7,8,9,10,11,12,13,14]]
         x_data = [
             df['date'],
             df['date'],
@@ -519,57 +450,100 @@ class btc_chart_suite():
             df['date'],
             df['date'],
             df['date'],
+            df['date'],
+            #Secondary
+            [self.start,self.last],    #N/A CEILING
+            [self.start,self.last],    #STRONG SELL
+            [self.start,self.last],    #SELL
+            [self.start,self.last],    #CAUTION
+            [self.start,self.last],    #N/A CEILING
+            [self.start,self.last],    #BUY
+            [self.start,self.last],    #BUY
             df['date'],
         ]
         y_data = [
             df['PriceUSD'],
             df['200DMA'],
-            df['128DMA'],
-            df['Mayer_SBUY'],
-            df['Mayer_BUY'] ,
-            df['Mayer_SELL'], 
             df['Mayer_SSELL'],
+            df['Mayer_SELL'],
+            df['Mayer_CAUTION'],
+            df['Mayer_BUY'],
+            df['Mayer_SBUY'],
+            #Secondary
+            [6,6],
+            [3.4,3.4],
+            [2.4,2.4],
+            [1.6,1.6],
+            [0.8,0.8],
+            [0.6,0.6],
+            [0.6,0.6],
+            df['Mayer_Multiple'],
+        ]
+        fill_data = [
+            'none','none','none','none','none','none','none',
+            'none','tonexty','tonexty','tonexty','none','tonexty','tozeroy','none'
         ]
         name_data = [
             'BTC Price (USD)',
             '200DMA',
-            '128DMA',
-            'STRONG BUY (0.6)',
-            'BUY (0.8)',
+            'STRONG SELL (3.4)',
             'SELL (2.4)',
-            'STRONG SELL (3.4)'
+            'CAUTION (1.6)',
+            'BUY (0.8)',
+            'STRONG BUY (0.6)',
+            #Secondary
+            'N/A',
+            'STRONG SELL (3.4)',
+            'SELL (2.4)',
+            'CAUTION (1.6)',
+            'N/A',
+            'BUY (0.8)',
+            'STRONG BUY (0.6)',
+            'Mayer Multiple',
         ]
-        width_data      = [2,1,1,   1,1,1,1]
-        opacity_data    = [1,1,1,   1,1,1,1]
+        width_data      = [2,1,1,1,1,1,1,             1,1,1,1,1,1,1,1]
+        opacity_data    = [1,1,0.7,0.7,0.7,0.7,0.7,   1,1,1,1,1,1,1,1]
         dash_data = [
-            'solid','solid','solid',
-            'dash','dash','dash','dash',
+            'solid','solid','dash','dash','dash','dash','dash',
+            'dash','dash','dash','dash','dash','dash','dash','solid',
             ]
         color_data = [
             'rgb(255, 255, 255)',   #White
-            'rgb(20, 169, 233)',    #Total Blue
-            #'rgb(102, 255, 153)',   #Turquoise Green
-            'rgb(239, 125, 50)',    #Price Orange
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 204, 102)',   #Gradient Yellow
-            'rgb(255, 153, 102)',   #Gradient Orange
+            'rgb(46, 214, 161)',    #Turquoise
             'rgb(255, 80, 80)',     #Gradient Red  
+            'rgb(255, 153, 102)',   #Gradient Orange
+            'rgb(255, 153, 102)',   #Gradient Orange
+            'rgb(255, 204, 102)',   #Gradient Yellow
+            'rgb(153, 255, 102)',   #Gradient Green
+            #Secondary
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.1)',     #Gradient Red
+            'rgba(255, 153, 102, 0.1)',   #Gradient Orange
+            'rgba(55 ,55, 55, 0)',        #NA
+            'rgba(36, 255, 136, 0.1)',    #Gradient Green
+            'rgba(36, 255, 136, 0.2)',    #Gradient Green
+            'rgb(46, 214, 161)',    #Turquoise
         ]
-        legend_data = [True,True,True,True,True,True,True,]
+        legend_data = [
+            True,True,True,True,True,True,True,
+            False,False,False,False,False,False,False,True,
+            ]
         title_data = [
             'Bitcoin Mayer Multiple Bands',
             '<b>Date</b>',
             '<b>Price (USD)</b>',
-            '<b></b>']
-        range_data = [['2011-01-01',self.last],[-1,5.397940009],[]]
+            '<b>Mayer Multiple</b>']
+        range_data = [['2011-01-01',self.last],[-1,5],[np.log10(0.3),4]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
             )
-        fig.update_xaxes(dtick='M3',tickformat='%d-%b-%y')
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
         self.add_slider(fig)
 
         #Write out html chart
@@ -1987,7 +1961,6 @@ fig_btc.mvrv()
 fig_btc.magic_lines_full()
 fig_btc.magic_lines()
 fig_btc.mayer_multiple()
-fig_btc.mayer_multiple_bands()
 fig_btc.puell_multiple()
 fig_btc.block_subsidy()
 fig_btc.difficulty_ribbon()
