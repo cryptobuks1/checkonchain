@@ -75,63 +75,64 @@ class dcr_chart_suite():
             model = 1   = Pricing Model (Coin price, realised price etc)
         """
         df = self.df
-        mvrv_lb = -0.522878745
-        mvrv_ub = 1.301029996
 
         #STANDARD SETTINGS
         loop_data=[[0,1],[2,3,4,5,6]]
-        width_data      = [2,2,1,2,2,2,2]
+        width_data      = [2,2,1,1,1,1,1]
         opacity_data    = [1,1,1,1,1,1,1]
         dash_data = ['solid','solid','solid','dash','dash','dash','dash']
         color_data = [
             'rgb(255, 255, 255)',   #White
             'rgb(239, 125, 50)',    #Price Orange
             'rgb(46, 214, 161)',    #Turquoise
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 255, 102)',   #Gradient Lime
-            'rgb(255, 102, 102)',   #Gradient L.Red
-            'rgb(255, 80, 80)',     #Gradient Red
+            'rgba(255, 80, 80, 0.0)',     #Gradient Red
+            'rgba(255, 80, 80, 0.1)',     #Gradient Red
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgba(36, 255, 136, 0.1)',    #Gradient Green
         ]
-        legend_data = [True,True,True,True,True,True,True,]
+        legend_data = [True,True,True,False,True,False,True,]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
         x_data = [
             df['date'],
             df['date'],
             df['date'],
-            ['2016-01-01','2022-01-01'],    #Strong BUY
-            ['2016-01-01','2022-01-01'],    #BUY
-            ['2016-01-01','2022-01-01'],    #SELL
-            ['2016-01-01','2022-01-01'],    #Strong SELL
+            [self.start,self.last],    #N/A CEILING
+            [self.start,self.last],    #SELL
+            [self.start,self.last],    #UNITY
+            [self.start,self.last],    #BUY
+        ]
+        fill_data = [
+            'none','none','none',
+            'none','tonexty','none','tozeroy'
         ]
 
         #MARKET CAP SETTINGS
         if model ==0:
-            loop_data=[[0,1],[2]]
             y_data = [
                 df['CapMrktCurUSD'],
                 df['CapRealUSD'],
                 df['CapMVRVCur'],
-                [0.5,0.5],
-                [0.7,0.7],
-                [1.8,1.8],
-                [2.4,2.4],
+                [5,5],      #NA Ceiling  
+                [1.8,1.8],  #SELL
+                [1.0,1.0],  #UNITY
+                [0.7,0.7],  #BUY
             ]
             name_data = [
                 'Market Cap',
                 'Realised Cap',
                 'MVRV Ratio',
-                'STRONG BUY (0.5)',
-                'BUY (0.7)',
-                'SELL (1.8)',
-                'STRONG SELL (2.4)'
+                'N/A',
+                'SELL ZONE (1.8)',
+                'UNITY (1.0)',
+                'BUY ZONE (0.7)',
             ]
             title_data = [
                 '<b>Decred MVRV Ratio Valuation</b>',
                 '<b>Date</b>',
                 '<b>Network Valuation (USD)</b>',
                 '<b>MVRV Ratio</b>']
-            range_data = [[self.start,self.last],[self.cap_lb,self.cap_ub],[mvrv_lb,mvrv_ub]]
+            range_data = [[self.start,self.last],[self.cap_lb,self.cap_ub],[np.log10(0.3),4]]
         
         #MARKET CAP SETTINGS
         elif model ==1:
@@ -139,32 +140,33 @@ class dcr_chart_suite():
                 df['PriceUSD'],
                 df['PriceRealUSD'],
                 df['CapMVRVCur'],
-                [0.5,0.5],
-                [0.7,0.7],
-                [1.8,1.8],
-                [2.4,2.4],
+                [5,5],      #NA Ceiling  
+                [1.8,1.8],  #SELL
+                [1.0,1.0],  #UNITY
+                [0.7,0.7],  #BUY
             ]
             name_data = [
                 'DCR Price',
                 'Realised Price',
                 'MVRV Ratio',
-                'STRONG BUY (0.5)',
-                'BUY (0.7)',
-                'SELL (1.8)',
-                'STRONG SELL (2.4)'
+                'N/A',
+                'SELL ZONE (1.8)',
+                'UNITY (1.0)',
+                'BUY ZONE (0.7)',
             ]
             title_data = [
                 '<b>Decred MVRV Ratio Pricing</b>',
                 '<b>Date</b>',
                 '<b>Price (USD)</b>',
                 '<b>MVRV Ratio</b>']
-            range_data = [[self.start,self.last],[-1,3],[mvrv_lb,mvrv_ub]]
+            range_data = [[self.start,self.last],[-1,3],[np.log10(0.3),4]]
         
         #BUILD CHART
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
             )
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
         fig.update_yaxes(showgrid=True,secondary_y=False)
@@ -1048,89 +1050,6 @@ class dcr_chart_suite():
 
         #Write out html chart
         chart_name = '\\oscillators\\s2f_residuals'
-        self.write_html(fig,chart_name)
-
-    def mayer_multiple_NA(self):
-        """"Decred Mayer Multiple"""
-        df = self.df
-        
-        df['Mayer_Multiple'] = (
-            df['PriceUSD']
-            / df['PriceUSD'].rolling(200).mean()
-        )
-
-        loop_data=[[0,1],[2,3,4,5,6,7,8]]
-        x_data = [
-            df['date'],
-            df['date'],
-            df['date'],
-            [self.start,self.last],    #N/A CEILING
-            [self.start,self.last],    #STRONG SELL
-            [self.start,self.last],    #SELL
-            [self.start,self.last],    #NORMAL
-            [self.start,self.last],    #BUY
-            [self.start,self.last],    #BUY
-        ]
-        y_data = [
-            df['PriceUSD'],
-            df['PriceUSD'].rolling(200).mean(),
-            df['Mayer_Multiple'],
-            [6,6],
-            [2.8,2.8],
-            [2.0,2.0],
-            [0.6,0.6],
-            [0.4,0.4],
-            [0.4,0.4],        
-        ]
-        name_data = [
-            'DCR Market Cap (USD)',
-            '200DMA',
-            'Mayer Multiple',
-            'N/A',
-            'STRONG SELL (2.8)',
-            'SELL (2.0)',
-            'N/A',
-            'BUY (0.6)',
-            'STRONG BUY (0.4)',
-        ]
-        width_data      = [2,2,2,1,1,1,1,1,1]
-        opacity_data    = [1,1,1,1,1,1,1,1,1]
-        dash_data = ['solid','dash','solid','dash','dash','dash','dash','dash','dash']
-        color_data = [
-            'rgb(255, 255, 255)',   #White
-            'rgb(102, 255, 153)',   #Turquoise Green
-            'rgb(102, 255, 153)',   #Turquoise Green
-            'rgba(255, 80, 80, 0.2)',     #Gradient Red
-            'rgba(255, 80, 80, 0.2)',     #Gradient Red
-            'rgba(255, 80, 80, 0.1)',     #Gradient Red
-            'rgba(55 ,55, 55, 0)',        #NA
-            'rgba(36, 255, 136, 0.1)',    #Gradient Green
-            'rgba(36, 255, 136, 0.2)',    #Gradient Green
-        ]
-        fill_data = [
-            'none','none','none',
-            'none','tonexty','tonexty','none','tonexty','tozeroy',
-        ]
-        legend_data = [True,True,True,False,True,True,False,True,True]
-        title_data = [
-            '<b>Decred Mayer Multiple</b>',
-            '<b>Date</b>',
-            '<b>Price (USD)</b>',
-            '<b>Mayer Multiple</b>']
-        range_data = [[self.start,self.last],[-2,np.log10(1000)],[np.log10(0.2),5]]
-        autorange_data = [False,False,False]
-        type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data,
-            fill_data
-            )
-        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
-        self.add_slider(fig)
-
-        #Write out html chart
-        chart_name = '\\oscillators\\mayer_multiple'
         self.write_html(fig,chart_name)
 
     def mayer_multiple(self):

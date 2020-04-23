@@ -10,10 +10,9 @@ Checkonchain Code
 
 Description: 
 
-    The Realised Cap is the total sum of all UNSPENT UTXOs priced at the time they were last transacted. Due to the constant flow of DCR on-chain in Proof-of-Stake tickets, this metric has a different interpretation its equivalent for Bitcoin. The Decred Realised Cap tends to follow price more closely and is 'attracted' to the price during periods of high demand for block-space. This tends to create a level of support in bull markets and resistance in bear markets.
+    The Realised Cap is the total sum of all UNSPENT UTXOs priced at the time they were last transacted. Due to the constant flow of DCR on-chain in Proof-of-Stake tickets, this metric has a different interpretation to its equivalent for Bitcoin. The Decred Realised Cap tends to follow price more closely and is 'attracted' to the spot price during periods of high demand for block-space. This tends to create a level of support in bull markets and resistance in bear markets.
 
-    The MVRV Ratio provides a measure of the relative distance between the market cap and the realised cap.
-    For Decred, this behaves as an oscillator for seeking periods of under and overvaluation through bull and bear cycles.
+    The MVRV Ratio provides a measure of the relative distance between the market cap and the realised cap. For Decred, this behaves as an oscillator for seeking periods of under and overvaluation through bull and bear cycles. An MVRV ratio of 1.0 can therefore be used as a support/resistance signal in bull/bear markets and extreme values 
 
     For more information, refer to the Realised Cap [paper first released by CoinMetrics](https://coinmetrics.io/realized-capitalization/) for more details on the calculation.
 
@@ -33,6 +32,9 @@ Inputs:
 
     Secondary Y-Axis
         MVRV Ratio      = Market Cap / Realised Cap
+        ZONES           = [1.8,5.0] Red
+                        = [1.0,1.0] Orange Line (Unity)
+                        = [0.0,0.7] Green 
 
 Chart Description:
 
@@ -45,7 +47,7 @@ Chart Description:
         Type    = log
 
     Y-axis-Right = MVRV Ratio
-        Range   = 3 to 20
+        Range   = 0.3 to 1e4
         Type    = log 
 
 Sample Chart
@@ -223,3 +225,53 @@ Sample Chart
 
 
 
+
+# **142-day Ticket Sum**
+
+Checkonchain Code
+
+    checkonchain.dcrcharts.charts.dcr_chart_suite().tic_vol_sum_142day()
+
+Description: 
+
+    The 142-day sum of USD bound in tickets
+
+    Data Source: Coinmetrics.io
+
+Links:
+    
+    None
+
+Inputs:
+
+    Primary Y-Axis
+        DCR Price (USD)     = Coin PriceUSD (Daily close)
+        200-Day MA          = 200-day moving average of Price
+        Strong Sell (2.8)   = 2.8 * PriceUSD_200sma
+        Sell (2.0)          = 2.0 * PriceUSD_200sma
+        Buy (0.6)           = 0.6 * PriceUSD_200sma
+        Strong Buy (0.4)    = 0.4 * PriceUSD_200sma
+
+    Secondary Y-Axis
+        Mayer Multiple      = PriceUSD / PriceUSD_200sma
+        ZONES               = [2.8,15]  = Red
+                              [2.0,2.8] = Orange
+                              [0.4,0.6] = Yellow
+                              [0,0.4]   = Green
+
+Chart Description:
+
+    X-axis      
+        Range   = Genesis to present
+        Type    = date
+
+    Y-axis-Left = Network Valuation (USD)
+        Range   = 1e-2 to 1e3
+        Type    = log
+
+    Y-axis-Right = Mayer Multiple
+        Range   = 0.2 to 1e5
+        Type    = log 
+
+Sample Chart
+![Mayer Multiple](charts/dcr_mayer_multiple.png)
