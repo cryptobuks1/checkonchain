@@ -8,7 +8,7 @@
 
 **Podcast Link** - [Episode 5]() TO BE POPULATED w/ LINK
 
-**Conversation Description** - Mister Black, Checkmate and Permabull Nino discuss:
+**Conversation Description** - Mister Black, Checkmate and Permabull Nino discuss the upcoming Bitcoin halving, the relief rally in traditional markets, the realities of deflation and inflation on the economy, and how Decred stands out as an undervalued SoV contender.
 
 ## **MACRO MARKET**
 - Current macro market movements
