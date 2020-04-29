@@ -1510,53 +1510,64 @@ class dcr_chart_suite():
             df.loc[i,'BEAM_lower'] = _b
             df.loc[i,'BEAM_upper'] = _b * 15.2281175
 
-        loop_data=[[0,1,2],[3,4,5,6,7]]
+        loop_data=[[0,1,2],[3,4,5,6,7,8,9]]
         x_data = [
             df['date'],
             df['date'],
             df['date'],
             df['date'],
-            [self.start,self.last],    #Strong BUY
-            [self.start,self.last],    #BUY
+            [self.start,self.last],    #N/A CEILING
+            [self.start,self.last],    #STRONG SELL
             [self.start,self.last],    #SELL
-            [self.start,self.last],    #Strong SELL
+            [self.start,self.last],    #NORMAL
+            [self.start,self.last],    #BUY
+            [self.start,self.last],    #BUY
         ]
         y_data = [
             df['PriceUSD'],
             df['BEAM_lower'],
             df['BEAM_upper'],
             df['BEAM'],
-            [-0.2,-0.2],
-            [0.05,0.05],
+            [3.0,3.0],
+            [2.6,2.6],
             [1.0,1.0],
-            [1.2,1.2],
+            [0.5,0.5],
+            [0.05,0.05],
+            [0.05,0.05],
         ]
         name_data = [
             'BTC Price (USD)',
             'BEAM Lower Band',
             'BEAM Upper Band',
             'BEAM Indicator',
-            'STRONG BUY (-0.2)',
-            'BUY (0.05)',
+            'N/A',
+            'STRONG SELL (2.6)',
             'SELL (1.0)',
-            'STRONG SELL (1.2)'
+            'N/A',
+            'BUY (0.5)',
+            'STRONG BUY (0.05)',
         ]
-        width_data      = [2,2,2,1,2,2,2,2]
-        opacity_data    = [1,1,1,1,1,1,1,1]
-        dash_data = ['solid','solid','solid','solid','dash','dash','dash','dash']
+        width_data      = [2,2,2,1,1,1,1,1,1,1]
+        opacity_data    = [1,1,1,1,1,1,1,1,1,1]
+        dash_data = ['solid','solid','solid','solid','dash','dash','dash','dash','dash','dash']
         color_data = [
             'rgb(255, 255, 255)',   #White
             'rgb(153, 255, 102)',   #Gradient Green
             'rgb(255, 80, 80)',     #Gradient Red
             'rgb(46, 214, 161)',    #Turquoise
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 255, 102)',   #Gradient Lime
-            'rgb(255, 102, 102)',   #Gradient L.Red
-            'rgb(255, 80, 80)',     #Gradient Red
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.1)',     #Gradient Red
+            'rgba(55 ,55, 55, 0)',        #NA
+            'rgba(36, 255, 136, 0.1)',    #Gradient Green
+            'rgba(36, 255, 136, 0.2)',    #Gradient Green
         ]
         #Invert Colors for Light Theme
         color_data = self.color_invert(color_data)
-        legend_data = [True,True,True,True,True,True,True,True,]
+        fill_data = [
+            'none','none','none','none','none','tonexty','tonexty','none','tonexty','tozeroy'
+        ]
+        legend_data = [True,True,True,True,False,True,True,False,True,True]
         title_data = [
             '<b>Decred BEAM Indicator<b>',
             '<b>Date</b>',
@@ -1565,10 +1576,11 @@ class dcr_chart_suite():
         range_data = [[self.start,self.last],[-1,3],[-1,10]]
         autorange_data = [False,False,False]
         type_data = ['date','log','linear']
-        fig = self.chart.subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
             )
         fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
         fig.update_yaxes(showgrid=True,secondary_y=False)

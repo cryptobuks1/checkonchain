@@ -141,7 +141,7 @@ title_data = [
 range_data = [[0,1],[4,12],[-1,5]]
 autorange_data = [False,True,False]
 type_data = ['linear','log','log']#
-fig = check_standard_charts().subplot_lines_singleaxis(
+fig = check_standard_charts('dark').subplot_lines_singleaxis(
     title_data, range_data ,autorange_data ,type_data,
     loop_data,x_data,y_data,name_data,color_data,
     dash_data,width_data,opacity_data,legend_data
@@ -232,7 +232,7 @@ title_data = [
 range_data = [[0,1],[2,12],[-1,5]]
 autorange_data = [False,False,False]
 type_data = ['linear','log','log']#
-fig = check_standard_charts().subplot_lines_singleaxis(
+fig = check_standard_charts('dark').subplot_lines_singleaxis(
     title_data, range_data ,autorange_data ,type_data,
     loop_data,x_data,y_data,name_data,color_data,
     dash_data,width_data,opacity_data,legend_data
@@ -350,7 +350,7 @@ title_data = [
 range_data = [[0,1],[4,12],[-1,5]]
 autorange_data = [False,False,False]
 type_data = ['linear','log','log']
-fig = check_standard_charts().subplot_lines_singleaxis(
+fig = check_standard_charts('dark').subplot_lines_singleaxis(
     title_data, range_data ,autorange_data ,type_data,
     loop_data,x_data,y_data,name_data,color_data,
     dash_data,width_data,opacity_data,legend_data
@@ -394,7 +394,7 @@ type_data = ['linear','log','linear']
 range_data = [[0,0.75],[-1,5],[0,6]]
 autorange_data = [False,False,False]
 legend_data = [True,True,True]
-fig = check_standard_charts().subplot_lines_singleaxis(
+fig = check_standard_charts('dark').subplot_lines_doubleaxis(
     title_data, range_data ,autorange_data ,type_data,
     loop_data,x_data,y_data,name_data,color_data,
     dash_data,width_data,opacity_data,legend_data
@@ -464,7 +464,7 @@ title_data = [
 range_data = [[0,12*365],[0,14],[-6,9]]
 autorange_data = [True,False,True]
 type_data = ['linear','log','log']#
-fig = check_standard_charts().subplot_lines_doubleaxis(
+fig = check_standard_charts('dark').subplot_lines_doubleaxis(
     title_data, range_data ,autorange_data ,type_data,
     loop_data,x_data,y_data,name_data,color_data,
     dash_data,width_data,opacity_data,legend_data
@@ -561,7 +561,7 @@ title_data = [
 range_data = [[0,1],[4,12],[-1,5]]
 autorange_data = [True,True,False]
 type_data = ['date','log','log']#
-fig = check_standard_charts().subplot_lines_singleaxis(
+fig = check_standard_charts('dark').subplot_lines_singleaxis(
     title_data, range_data ,autorange_data ,type_data,
     loop_data,x_data,y_data,name_data,color_data,
     dash_data,width_data,opacity_data,legend_data

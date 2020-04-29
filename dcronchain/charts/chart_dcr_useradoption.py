@@ -12,6 +12,8 @@ class dcr_user_adoption():
     Three parties involved
     """
     def __init__(self):
+        #Chart Theme
+        self.chart = check_standard_charts('dark')
         #Compile Input Dataframes
         self.btc = btc_add_metrics().btc_subsidy_models()
         self.dcr = dcr_add_metrics().dcr_ticket_models()
@@ -95,7 +97,7 @@ class dcr_user_adoption():
         range_data = [[0,4500],[2,6.3],[-2,4.3]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -137,7 +139,7 @@ class dcr_user_adoption():
         range_data = [[0,4500],[-1,3],[]]
         type_data = ['linear','log']
         autorange_data = [False,False,False]
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -206,7 +208,7 @@ class dcr_user_adoption():
         range_data = [[0,4500],[0,6.2],[2,9.2]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -275,7 +277,7 @@ class dcr_user_adoption():
         range_data = [[0,4500],[2,8],[2,12]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -351,7 +353,7 @@ class dcr_user_adoption():
         range_data = [[0,4500],[3,13],[-2,6]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -427,7 +429,7 @@ class dcr_user_adoption():
         range_data = [[0,4500],[3,13],[-2,6]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -519,7 +521,7 @@ class dcr_user_adoption():
         range_data = [[0,4500],[-5,5],[-2,6]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -582,7 +584,7 @@ class dcr_user_adoption():
         range_data = [[0,4380],[0,14],[-2,5]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -704,7 +706,7 @@ class dcr_user_adoption():
         range_data = [[0,1],[2,12],[2,8]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -721,7 +723,7 @@ class dcr_user_adoption():
             'Coin Age (Supply / 21M)',
             'Fee Ratio','']
         range_data = [[0,1],[-5,0],[0,0]]
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -783,7 +785,7 @@ class dcr_user_adoption():
         range_data = [['2016-01-01','2021-01-01'],[6,10],[2,8]]
         autorange_data = [False,False,True]
         type_data = ['date','log','log']#
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -852,7 +854,7 @@ class dcr_user_adoption():
         range_data = [['2016-01-01','2021-01-01'],[3,6],[2,8]]
         autorange_data = [False,False,True]
         type_data = ['date','log','log']#
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -916,7 +918,7 @@ class dcr_user_adoption():
         range_data = [['2016-01-01','2021-01-01'],[3,6],[2,8]]
         autorange_data = [False,False,True]
         type_data = ['date','log','log']#
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -1048,7 +1050,7 @@ class dcr_user_adoption():
         range_data = [['2016-01-01','2021-01-01'],[0,1e6],[-1,3]]
         autorange_data = [False,False,False]
         type_data = ['date','linear','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -1072,7 +1074,7 @@ class dcr_user_adoption():
             'Date',
             'Treasury Flows (DCR)',
             'Treasury Flows (USD)']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -1093,7 +1095,7 @@ class dcr_user_adoption():
             'date',
             'Spend Ratio',
             '']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -1172,7 +1174,7 @@ class dcr_user_adoption():
         range_data = [['2016-01-01','2021-01-01'],[-1,2],[-2,0]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data

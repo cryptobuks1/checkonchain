@@ -6,13 +6,15 @@ from datetime import date, datetime, time, timedelta
 
 class btc_chart_suite():
 
-    def __init__(self):
+    def __init__(self,theme):
+        self.theme = theme
+        self.chart = check_standard_charts('light')
         self.today = datetime.combine(date.today(), time())
         self.last = pd.to_datetime(self.today + pd.to_timedelta(90,unit='D'))
         self.start = '2010-01-01'
-        self.df_init = btc_add_metrics().btc_coin()
-        self.df_clean = self.df_init
-        #Create dataframe with key events like market tops, btms and halvings
+        self.df = btc_add_metrics().btc_coin()
+        self.df_clean = self.df
+        #Create dataframe with key events like market tops, btms and halving
         events = pd.DataFrame(
             data = [
                 [np.datetime64('2011-06-08'),'top',0],
@@ -23,17 +25,26 @@ class btc_chart_suite():
                 [np.datetime64('2016-07-09'),'halving',1],
                 [np.datetime64('2017-12-16'),'top',2],
                 [np.datetime64('2018-12-15'),'btm',2],
-                [np.datetime64('2020-05-09'),'halving',2],
+                [np.datetime64('2020-05-12'),'halving',2],
             ],
             columns = ['date_event','event','epoch']
         )
         #Convert to UTC Timezone
         events['date_event'] = events['date_event'].dt.tz_localize('UTC')
-        self.halvings = events[events['event']=='halving']
+        self.halving = events[events['event']=='halving']
+        self.halving = self.halving.reset_index(drop=True)
+        self.halving_schedule = pd.DataFrame(data=[
+            [np.datetime64('2012-11-28'),1e-5],
+            [np.datetime64('2012-11-28'),1e5],
+            [np.datetime64('2016-07-09'),1e5],
+            [np.datetime64('2016-07-09'),1e-5],
+            [np.datetime64('2020-05-12'),1e-5],
+            [np.datetime64('2020-05-12'),1e5],
+            ],columns=['date','y_arb'])
         #Merge to add Price feed (keep date_event to calc deltas)
         events = pd.merge(
             events,
-            self.df_init[['date','PriceUSD']],
+            self.df[['date','PriceUSD']],
             left_on='date_event',right_on='date'
         )
         #Rename price column
@@ -59,10 +70,36 @@ class btc_chart_suite():
         )
         fig.update_yaxes(fixedrange=False)
 
+
+    def color_invert(self,color_data):
+        """Inverts colors in a list
+        INPUT
+            color_data = list of 'rgb(rrr,ggg,bbb)' or 'rgba(rrr,ggg,bbb,a.aa)'
+        """
+        j = 0
+        for i in color_data: #cycle through all colors
+            if self.theme == 'light': #if light theme
+                #split rbg and invert colors
+                text = i.split('(')[1]
+                text = text.split(')')[0]
+                text = text.split(',')
+                r = 255-int(text[0])
+                g = 255-int(text[1])
+                b = 255-int(text[2])
+                if len(text) ==3:
+                    text = 'rgb(' + str(r) + ',' + str(g) + ',' + str(b) + ')'
+                if len(text) ==4:
+                    a = float(text[3])
+                    text = 'rgba(' + str(r) + ',' + str(g) + ',' + str(b) + ',' + str(a) + ')'
+                color_data[j] = text
+            j = j + 1
+        return color_data
+
+
     def mvrv(self):
         """"Bitcoin Realised Price and MVRV"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
 
         #Calculate Unrealised Profit max((Mrkt - Real),0)
         df['UnrealisedProfit'] = (
@@ -135,8 +172,9 @@ class btc_chart_suite():
             'rgba(55 ,55, 55, 0)',        #NA
             'rgba(36, 255, 136, 0.1)',    #Gradient Green
             'rgba(36, 255, 136, 0.2)',    #Gradient Green
-
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [
             True,True,True,
             False,True,True,False,True,True,
@@ -154,15 +192,15 @@ class btc_chart_suite():
         
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data,
             fill_data
             )
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
-        fig.update_yaxes(showgrid=False,secondary_y=False)
-        fig.update_yaxes(showgrid=True,secondary_y=True)
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
         self.add_slider(fig)
 
         #Write out html chart
@@ -172,7 +210,7 @@ class btc_chart_suite():
     def unrealised_PnL(self):
         """"Bitcoin Realised Price and MVRV"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
 
         #Calculate Unrealised Profit max((Mrkt - Real),0)
         df['UnrealisedProfit'] = (
@@ -256,6 +294,8 @@ class btc_chart_suite():
             'rgb(38, 200, 17)',     #Belief Green
             'rgb(68, 103, 235)',    #Greed Blue
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [
             True,True,True,True,True,True,True,
             ]
@@ -270,14 +310,14 @@ class btc_chart_suite():
         
         autorange_data = [False,False,False]
         type_data = ['date','log','linear']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
-        fig.update_yaxes(showgrid=False,secondary_y=False)
-        fig.update_yaxes(showgrid=True,secondary_y=True)
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
         self.add_slider(fig)
 
         #Write out html chart
@@ -287,7 +327,7 @@ class btc_chart_suite():
     def magic_lines_full(self):
         """"Prints Bitcoin Full History Magic Lines 200D, 128D, 200W and 128W (log)"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
         
         df['Mayer_Multiple'] = (
             df['PriceUSD']
@@ -339,6 +379,8 @@ class btc_chart_suite():
             'rgb(153, 255, 102)', #Gradient Green
             'rgb(239, 125, 50)',    #Price Orange
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,True,True,True,True,True,True,True]
         title_data = [
             'Bitcoin Magic Lines',
@@ -348,12 +390,14 @@ class btc_chart_suite():
         range_data = [[self.start,self.last],[-1,5],[-1,2]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
         self.add_slider(fig)
 
         #Write out html chart
@@ -363,7 +407,7 @@ class btc_chart_suite():
     def magic_lines(self):
         """"Prints Bitcoin Full History Magic Lines 200D, 128D, 200W and 128W (log)"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
         
         df['200DMA'] = df['PriceUSD'].rolling(200).mean()
         df['128DMA'] = df['PriceUSD'].rolling(128).mean()
@@ -406,6 +450,8 @@ class btc_chart_suite():
             'rgb(255, 80, 80)',   #Gradient Red
             'rgb(153, 255, 102)', #Gradient Green
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,True,True,True,True,True,True]
         title_data = [
             'Bitcoin Magic Lines',
@@ -415,12 +461,13 @@ class btc_chart_suite():
         range_data = [['2017-01-01',self.last],[00,20000],[-1,2]]
         autorange_data = [False,False,False]
         type_data = ['date','linear','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(dtick=1000)
         self.add_slider(fig)
 
@@ -431,7 +478,7 @@ class btc_chart_suite():
     def mayer_multiple(self):
         """"Mayer Multiple Bands"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
 
         df['Mayer_Multiple'] = df['PriceUSD']/df['PriceUSD'].rolling(200).mean()
         df['200DMA']        = df['PriceUSD'].rolling(200).mean()
@@ -525,6 +572,8 @@ class btc_chart_suite():
             'rgba(36, 255, 136, 0.2)',    #Gradient Green
             'rgb(46, 214, 161)',    #Turquoise
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [
             True,True,True,True,True,True,True,
             False,False,False,False,False,False,False,True,
@@ -537,13 +586,15 @@ class btc_chart_suite():
         range_data = [['2011-01-01',self.last],[-1,5],[np.log10(0.3),4]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data,
             fill_data
             )
         fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
         self.add_slider(fig)
 
         #Write out html chart
@@ -553,58 +604,68 @@ class btc_chart_suite():
     def puell_multiple(self):
         """"Puell Multiple"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
         
         df['Puell_Multiple'] = (
             df['DailyIssuedUSD']
             / df['DailyIssuedUSD'].rolling(365).mean()
         )
 
-        loop_data=[[0,1,2],[3,4,5,6,7]]
+        loop_data=[[0,1,2],[3,4,5,6,7,8,9]]
         x_data = [
             df['date'],
             df['date'],
             df['date'],
             df['date'],
-            ['2008-01-01','2022-01-01'],    #Strong BUY
-            ['2008-01-01','2022-01-01'],    #BUY
-            ['2008-01-01','2022-01-01'],    #SELL
-            ['2008-01-01','2022-01-01'],    #Strong SELL
+            [self.start,self.last],    #N/A CEILING
+            [self.start,self.last],    #STRONG SELL
+            [self.start,self.last],    #SELL
+            [self.start,self.last],    #NORMAL
+            [self.start,self.last],    #BUY
+            [self.start,self.last],    #BUY
         ]
         y_data = [
             df['PriceUSD'],
             df['DailyIssuedUSD']/df['SplyCur']*1000*2**(np.floor(df['blk']/210000)),
             df['DailyIssuedUSD'].rolling(365).mean()/df['SplyCur']*1000*2**(np.floor(df['blk']/210000)),
             df['Puell_Multiple'],
-            [0.4,0.4],
-            [0.6,0.6],
-            [2.5,2.5],
+            [10,10],
             [5,5],
+            [2.5,2.5],
+            [0.6,0.6],            
+            [0.4,0.4],
+            [0.4,0.4],
         ]
         name_data = [
             'BTC Price (USD)',
             'Issued/Supply *1000*2^halving_epoch',
             'Issued/Supply *factor (365DMA)',
             'Puell Multiple',
-            'STRONG BUY (0.4)',
+            'N/A',
+            'STRONG SELL (2.8)',
+            'SELL (2.0)',
+            'N/A',
             'BUY (0.6)',
-            'SELL (2.5)',
-            'STRONG SELL (5.0)'
+            'STRONG BUY (0.4)',
         ]
-        width_data      = [1,0.5,0.5,1,2,2,2,2]
-        opacity_data    = [1,0.75,0.75,1,1,1,1,1]
-        dash_data = ['solid','solid','dash','solid','dash','dash','dash','dash']
+        width_data      = [1,0.5,0.5,1,1,1,1,1,1,1]
+        opacity_data    = [1,0.75,0.75,1,1,1,1,1,1,1]
+        dash_data = ['solid','solid','dash','solid','dash','dash','dash','dash','dash','dash']
         color_data = [
             'rgb(255, 255, 255)',    #White
             'rgb(20, 169, 233)',    #Total Blue
             'rgb(20, 169, 233)',    #Total Blue
             'rgb(239, 125, 50)',    #Price Orange
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 255, 102)',   #Gradient Lime
-            'rgb(255, 102, 102)',   #Gradient L.Red
-            'rgb(255, 80, 80)',     #Gradient Red
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.1)',     #Gradient Red
+            'rgba(55 ,55, 55, 0)',        #NA
+            'rgba(36, 255, 136, 0.1)',    #Gradient Green
+            'rgba(36, 255, 136, 0.2)',    #Gradient Green
         ]
-        legend_data = [True,True,True,True,True,True,True,True]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        legend_data = [True,True,True,True,True,True,True,True,True,True]
         title_data = [
             'Bitcoin Puell Multiple',
             '<b>Date</b>',
@@ -613,11 +674,13 @@ class btc_chart_suite():
         range_data = [[self.start,self.last],[-1,5],[-1,2]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
-            )
+        )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
         self.add_slider(fig)
 
         #Write out html chart
@@ -627,7 +690,7 @@ class btc_chart_suite():
     def block_subsidy(self):
         """"Block Subsidy Models"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
         
         df['Puell_Multiple'] = (
             df['DailyIssuedUSD']
@@ -687,6 +750,8 @@ class btc_chart_suite():
             'rgb(255, 102, 102)',   #Gradient L.Red
             'rgb(255, 80, 80)',     #Gradient Red
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,True,True,True,True,True,True,True]
         title_data = [
             'Bitcoin Block Subsidy Models',
@@ -696,11 +761,13 @@ class btc_chart_suite():
         range_data = [[self.start,self.last],[5,12],[-1,2]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
-            )
+        )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
         self.add_slider(fig)
 
         #Write out html chart
@@ -710,7 +777,7 @@ class btc_chart_suite():
     def difficulty_ribbon(self):
         """"Difficulty Ribbon and Miner Income"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
 
         df['PoW_Income_btc'] = df['DailyIssuedNtv'] + df['FeeTotNtv']
         df['PoW_Income_usd'] = df['DailyIssuedUSD'] + df['FeeTotUSD']
@@ -757,9 +824,9 @@ class btc_chart_suite():
             [5,5], #STRONG SELL (95%)
             [2,2], #SELL (85%)
             [1,1], #Unity
-            [0.5,0.5], #NORMAL
-            [0.3,0.3], #BUY (20%)
-            [0.3,0.3], #STRONG BUY (10%)
+            [0.8,0.8], #NORMAL
+            [0.5,0.5], #BUY (20%)
+            [0.5,0.5], #STRONG BUY (10%)
         ]
         name_data = [
             'Market Cap (USD)',
@@ -800,6 +867,8 @@ class btc_chart_suite():
             'rgba(36, 255, 136, 0.1)',    #Gradient Green
             'rgba(36, 255, 136, 0.2)',    #Gradient Green
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [
             True,True,True,True,True,True,
             False,True,True,False,False,True,True,]
@@ -812,16 +881,21 @@ class btc_chart_suite():
         range_data = [[self.start,self.last],[4,14],[-1,6]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data,
             fill_data
-            )
-
+        )
+        self.add_slider(fig)
+        fig.update_xaxes(dtick='M12')
+        #Remove Gridlines
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
         """ =================================
             ADD DIFFICULTY RIBBON
         ================================="""
+        color_ribbon = color_data[4]
         for i in [9,14,25,40,60,90,128,200]:
             fig.add_trace(go.Scatter(
                 mode='lines',
@@ -832,16 +906,10 @@ class btc_chart_suite():
                 showlegend=False,
                 line=dict(
                     width=i/200*2,
-                    color='rgb(254, 215, 140)',#Matte Yellow
+                    color=color_ribbon,
                     dash='solid'
                     )),
                 secondary_y=False)
-  
-        self.add_slider(fig)
-        fig.update_xaxes(dtick='M12')
-        #Remove Gridlines
-        fig.update_yaxes(showgrid=False,secondary_y=False)
-        fig.update_yaxes(showgrid=False,secondary_y=True)
 
         #Write out html chart
         chart_name = '\\pricing_models\\difficulty_ribbon_pricing'
@@ -851,7 +919,7 @@ class btc_chart_suite():
         """"BEAM Indicator (Bitcoin Economics Adaptive Multiple) 
         after https://bitcoineconomics.io/beam.html"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
 
         for i in df.index:
             _a = min(i,1400)
@@ -861,51 +929,69 @@ class btc_chart_suite():
             df.loc[i,'BEAM_lower'] = _b
             df.loc[i,'BEAM_upper'] = _b * 12.182494
 
-        loop_data=[[0,1,2],[3,4,5,6,7]]
+        loop_data=[[0,1,2],[3,4,5,6,7,8,9]]
         x_data = [
             df['date'],
             df['date'],
             df['date'],
             df['date'],
-            ['2008-01-01','2022-01-01'],    #Strong BUY
-            ['2008-01-01','2022-01-01'],    #BUY
-            ['2008-01-01','2022-01-01'],    #SELL
-            ['2008-01-01','2022-01-01'],    #Strong SELL
+            [self.start,self.last],    #N/A CEILING
+            [self.start,self.last],    #STRONG SELL
+            [self.start,self.last],    #SELL
+            [self.start,self.last],    #NORMAL
+            [self.start,self.last],    #BUY
+            [self.start,self.last],    #BUY
         ]
         y_data = [
             df['PriceUSD'],
             df['BEAM_lower'],
             df['BEAM_upper'],
             df['BEAM'],
-            [0.0,0.0],
-            [0.07,0.07],
-            [0.96,0.96],
+            [2.0,2.0],
             [1.0,1.0],
+            [0.96,0.96],
+            [0.07,0.07],
+            [0.00,0.00],
+            [0.00,0.00],
         ]
         name_data = [
             'BTC Price (USD)',
             'BEAM Lower Band',
             'BEAM Upper Band',
             'BEAM Indicator',
-            'STRONG BUY (0.0)',
-            'BUY (0.07)',
+            'NA',
+            'STRONG SELL (1.0)',
             'SELL (0.96)',
-            'STRONG SELL (1.0)'
+            'NA',
+            'BUY (0.07)',
+            'STRONG BUY (0.0)',
         ]
-        width_data      = [2,2,2,1,2,2,2,2]
-        opacity_data    = [1,1,1,1,1,1,1,1]
-        dash_data = ['solid','solid','solid','solid','dash','dash','dash','dash']
+        fill_data = [
+            'none','none','none','none',
+            'none','tonexty','tonexty','none','tonexty','tozeroy'
+        ]
+        width_data      = [2,2,2,1,1,1,1,1,1,1]
+        opacity_data    = [1,1,1,1,1,1,1,1,1,1]
+        dash_data = ['solid','solid','solid','solid','dash','dash','dash','dash','dash','dash']
         color_data = [
-            'rgb(255, 255, 255)',    #White
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 80, 80)',     #Gradient Red
-            'rgb(255, 255, 255)',   #White
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 255, 102)',   #Gradient Lime
-            'rgb(255, 102, 102)',   #Gradient L.Red
-            'rgb(255, 80, 80)',     #Gradient Red
+            'rgb(255, 255, 255)',       #White
+            'rgb(153, 255, 102)',       #Gradient Green
+            'rgb(255, 80, 80)',         #Gradient Red
+            'rgb(255, 255, 255)',       #White
+            'rgba(255, 80, 80, 0.2)',   #Gradient Red
+            'rgba(255, 80, 80, 0.2)',   #Gradient Red
+            'rgba(255, 80, 80, 0.1)',   #Gradient Red
+            'rgba(55 ,55, 55, 0)',      #NA
+            'rgba(36, 255, 136, 0.1)',  #Gradient Green
+            'rgba(36, 255, 136, 0.2)',  #Gradient Green
         ]
-        legend_data = [True,True,True,True,True,True,True,True,]
+        fill_data = [
+            'none','none','none','none',
+            'none','tonexty','tonexty','none','tonexty','tozeroy'
+        ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        legend_data = [True,True,True,True,True,True,True,True,True,True]
         title_data = [
             '<b>Bitcoin BEAM Indicator<b>',
             '<b>Date</b>',
@@ -914,11 +1000,12 @@ class btc_chart_suite():
         range_data = [[self.start,self.last],[-1,5],[-0.2,2.4]]
         autorange_data = [False,False,False]
         type_data = ['date','log','linear']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
-            )
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+        )
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
         fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(showgrid=False,secondary_y=True,dtick=0.2)
@@ -931,7 +1018,7 @@ class btc_chart_suite():
     def investor_tool(self):
         """"Bitcoin Investor Tool 730DMA after @PositiveCrypto"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
 
         df['730DMA'] = df['PriceUSD'].rolling(730).mean()
         df['730DMAx5'] = df['730DMA']*5
@@ -989,6 +1076,8 @@ class btc_chart_suite():
             'rgb(255, 255, 0)',             #Retro Pink
             'rgb(0, 255, 255)',             #Retro Blue
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,False,True,False,True,True,True]
         title_data = [
             'Bitcoin Investor Tool',
@@ -998,7 +1087,7 @@ class btc_chart_suite():
         range_data = [[self.start,self.last],[-1,5],[-1,2]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis_1st_area(
+        fig = self.chart.subplot_lines_doubleaxis_1st_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data,
@@ -1006,11 +1095,10 @@ class btc_chart_suite():
             )
         
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
-        fig.update_yaxes(showgrid=False,secondary_y=False)
-        fig.update_yaxes(showgrid=True,secondary_y=True)
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         self.add_slider(fig)
         
-        fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />after @PositiveCrypto") 
+        fig = self.chart.add_annotation(fig,"@checkmatey<br />after @PositiveCrypto") 
 
         #Write out html chart
         chart_name = '\\pricing_models\\investor_tool_pricing'
@@ -1019,7 +1107,7 @@ class btc_chart_suite():
     def golden_ratio(self):
         """"Bitcoin Golden Ratio and Fib Levels after @PositiveCrypto"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
 
         df['365DMA'] = df['PriceUSD'].rolling(365).mean()
         df['365DMA_golden'] = df['365DMA'] * 1.61803398875
@@ -1104,6 +1192,8 @@ class btc_chart_suite():
 
             'rgb(20, 169, 233)',    #Total Blue
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,True,True,    True,True,True,True,True,True,   True,True,True,True,True,True,  True]
         title_data = [
             'Bitcoin Golden Ratio',
@@ -1113,12 +1203,13 @@ class btc_chart_suite():
         range_data = [['2017-01-01',self.last],[2.698970004,5.397940009],[-1,2]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick='M3',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=False,secondary_y=False)
         self.add_slider(fig)
 
         #Write out html chart
@@ -1128,7 +1219,7 @@ class btc_chart_suite():
     def golden_ratio_full(self):
         """"Bitcoin Golden Ratio and Fib Levels after @PositiveCrypto"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
 
         df['365DMA'] = df['PriceUSD'].rolling(365).mean()
         df['365DMA_golden'] = df['365DMA'] * 1.61803398875
@@ -1213,6 +1304,8 @@ class btc_chart_suite():
 
             'rgb(20, 169, 233)',    #Total Blue
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,True,True,    True,True,True,True,True,True,   True,True,True,True,True,True,  True]
         title_data = [
             'Bitcoin Golden Ratio',
@@ -1222,12 +1315,13 @@ class btc_chart_suite():
         range_data = [[self.start,self.last],[-2,6],[-1,2]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick='M3',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         self.add_slider(fig)
 
         #Write out html chart
@@ -1237,7 +1331,7 @@ class btc_chart_suite():
     def catch_btm_top(self):
         """"Catching the Bottom and the Top"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
         
         #128W and 200W MA
         df['200WMA'] = df['PriceUSD'].rolling(1400).mean()
@@ -1340,6 +1434,8 @@ class btc_chart_suite():
             'rgb(255, 80, 80)',   #Gradient Red
             #Mayer Bands
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,True,True,True,True,True,True,True,True,True,True]
         title_data = [
             'Bitcoin Topping and Bottoming',
@@ -1349,12 +1445,13 @@ class btc_chart_suite():
         range_data = [['2017-01-01',self.last],[2.698970004,5.397940009],[-1,2]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=False,secondary_y=False)
         #fig.update_yaxes(dtick=1000)
         self.add_slider(fig)
 
@@ -1365,7 +1462,7 @@ class btc_chart_suite():
     def s2f_model(self):
         """"Stock-to-flow Model(s) and multiple"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
 
         #Calc S2F Model - Specific to Bitcoin (CHECKMATE)
         btc_s2f_model = regression_analysis().ln_regression(df,'S2F','PriceUSD','date')['model_params']
@@ -1448,6 +1545,8 @@ class btc_chart_suite():
             'rgba(36, 255, 136, 0.1)',    #Gradient Green
             'rgba(36, 255, 136, 0.2)',    #Gradient Green
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [
             True,True,True,True,True,
             False,True,True,False,False,True,True
@@ -1457,10 +1556,10 @@ class btc_chart_suite():
             '<b>Date</b>',
             '<b>Price (USD)</b>',
             '<b>S2F Multiple</b>']
-        range_data = [[self.start,self.last],[-2.995732273553991,5],[-2.995732273553991,5]]
+        range_data = [[self.start,self.last],[np.log10(0.02),5],[np.log10(0.2),6]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data,
@@ -1478,7 +1577,7 @@ class btc_chart_suite():
     def nvt_rvt(self):
         """"Bitcoin NVT and RVT Ratio"""
         df = pd.DataFrame()
-        df = self.df_init
+        df = self.df
 
         #Calculate NVT and RVT 28 and 90DMA
         
@@ -1568,10 +1667,12 @@ class btc_chart_suite():
             'rgb(255, 80, 80)',
             'rgb(55,55,55)',              #N/A
             'rgba(255, 80, 80, 0.2)',     #Gradient Red
-            'rgba(255, 153, 102, 0.2)',   #Gradient Orange
-            'rgba(255, 204, 102, 0.2)',   #Gradient Yellow
+            'rgba(255, 153, 102, 0.1)',   #Gradient Orange
+            'rgba(255, 204, 102, 0.1)',   #Gradient Yellow
             'rgba(36, 255, 136, 0.2)',    #Gradient Green
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [
             True,True,True,True,True,True,True,True,
             False,False,False,False,False,
@@ -1588,7 +1689,7 @@ class btc_chart_suite():
         range_data = [[self.start,self.last],[-1,5],[0,150]]
         autorange_data = [False,False,False]
         type_data = ['date','log','linear']
-        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data,
@@ -1605,7 +1706,7 @@ class btc_chart_suite():
 
     def halving_cycle(self):
         """"Price Growth over Days since halving for each cycle"""
-        df = self.df_init
+        df = self.df
         df['epoch'] = 0
         df = df.drop(['epoch'],axis=1)
 
@@ -1613,7 +1714,7 @@ class btc_chart_suite():
         df['epoch'] = df['blk']/210000
         df['epoch'] = df['epoch'].apply(np.floor)
         #Filter events to halving events
-        df2 = self.halvings
+        df2 = self.halving
         #Merge events onto df
         df = pd.merge(
             df,df2[['epoch','event','date_event']],
@@ -1625,49 +1726,56 @@ class btc_chart_suite():
         #Calculate days until event
         df['days_to_event'] = 1460 - (df['date_event'] - df['date']) / np.timedelta64(1, 'D')
 
-        loop_data=[[0,1,2,3],[]]
+        loop_data=[[0,1,2,3,4],[]]
         x_data = [
             df[df['epoch']==0]['days_to_event'],
             df[df['epoch']==1]['days_to_event'],
             df[df['epoch']==2]['days_to_event'],
             df[df['epoch']==3]['days_to_event'],
+            [0,1500]
         ]
         y_data = [
             df[df['epoch']==0]['PriceUSD']/0.084,
             df[df['epoch']==1]['PriceUSD']/12.33,
             df[df['epoch']==2]['PriceUSD']/651.94,
             df[df['epoch']==3]['PriceUSD']/8250,
+            [1,1]
         ]
         name_data = [
             'Epoch 1 (2009-12)',
             'Epoch 2 (2012-16)',
             'Epoch 3 (2016-20)',
             'Epoch 4 (2020-24)',
+            'Unity'
         ]
-        width_data      = [2,2,2,2]
-        opacity_data    = [1,1,1,1]
-        dash_data = ['solid','solid','solid','solid',]
+        width_data      = [2,2,2,2,2]
+        opacity_data    = [1,1,1,1,1]
+        dash_data = ['solid','solid','solid','solid','dash']
         color_data = [
             'rgb(239, 125, 50)',    #Price Orange
             'rgb(78,205,233)',      #Total Blue
             'rgb(255, 80, 80)',      #Gradient Red
             'rgb(153, 255, 102)',      #Gradient Green
+            'rgb(46, 214, 161)',          #Turquoise
         ]
-        legend_data = [True,True,True,True,]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        legend_data = [True,True,True,True,False]
         title_data = [
-            'Bitcoin Days to Halving',
+            '<b>Bitcoin Days to Halving</b>',
             '<b>Days since Halving</b>',
             '<b>Growth Multiple Since Halving</b>',
             '<b></b>']
-        range_data = [[0,1460],[-0.301029996,3],[-1,2]]
-        autorange_data = [False,True,False]
+        range_data = [[0,1500],[np.log10(0.5),np.log10(500)],[-1,2]]
+        autorange_data = [False,False,False]
         type_data = ['linear','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick=30,tickformat='1./0f')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         self.add_slider(fig)
 
         #Write out html chart
@@ -1676,7 +1784,7 @@ class btc_chart_suite():
 
     def bottom_cycle(self):
         """"Price Growth over Days since capitulation for each cycle"""
-        df = self.df_init
+        df = self.df
         df['epoch'] = 0
         df = df.drop(['epoch'],axis=1)
         
@@ -1706,43 +1814,50 @@ class btc_chart_suite():
             df[df['epoch']==1]['days_since_event'],
             df[df['epoch']==2]['days_since_event'],
             df[df['epoch']==3]['days_since_event'],
+            [0,1500],
         ]
         y_data = [
             df[df['epoch']==0]['event_delta'],
             df[df['epoch']==1]['event_delta'],
             df[df['epoch']==2]['event_delta'],
             df[df['epoch']==3]['event_delta'],
+            [1,1]
         ]
         name_data = [
             'Epoch 1 (2009-12)',
             'Epoch 2 (2012-16)',
             'Epoch 3 (2016-20)',
             'Epoch 4 (2020-24)',
+            'Break Even'
         ]
-        width_data      = [2,2,2,2]
-        opacity_data    = [1,1,1,1]
-        dash_data = ['solid','solid','solid','solid',]
+        width_data      = [2,2,2,2,3]
+        opacity_data    = [1,1,1,1,0.5]
+        dash_data = ['solid','solid','solid','solid','dash']
         color_data = [
             'rgb(239, 125, 50)',    #Price Orange
             'rgb(78,205,233)',      #Total Blue
             'rgb(255, 80, 80)',      #Gradient Red
             'rgb(153, 255, 102)',      #Gradient Green
+            'rgb(46, 214, 161)',          #Turquoise
         ]
-        legend_data = [True,True,True,True,]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        legend_data = [True,True,True,True,False]
         title_data = [
-            'Bitcoin Price Growth Since Cycle Low',
+            '<b>Bitcoin Price Growth Since Cycle Low</b>',
             '<b>Days Since Capitulation</b>',
             '<b>Growth Multiple Since Low</b>',
             '<b></b>']
         range_data = [[0,1500],[0,3],[-1,2]]
-        autorange_data = [False,True,False]
+        autorange_data = [False,False,False]
         type_data = ['linear','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick=30)
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         #fig.update_yaxes(tickformat='.0%')
         self.add_slider(fig)
 
@@ -1752,7 +1867,7 @@ class btc_chart_suite():
     
     def top_cycle(self):
         """"Price Drawdown over since market top for each cycle"""
-        df = self.df_init
+        df = self.df
         df['epoch'] = 0
         df = df.drop(['epoch'],axis=1)
 
@@ -1776,50 +1891,56 @@ class btc_chart_suite():
         #Calculate drawdown since event
         df['event_delta'] = df['PriceUSD']/df['PriceUSD_event']
 
-        loop_data=[[0,1,2,3],[]]
+        loop_data=[[0,1,2,3,4],[]]
         x_data = [
             df[df['epoch']==0]['days_since_event'],
             df[df['epoch']==1]['days_since_event'],
             df[df['epoch']==2]['days_since_event'],
             df[df['epoch']==3]['days_since_event'],
+            [0,1500]
         ]
         y_data = [
             df[df['epoch']==0]['event_delta'],
             df[df['epoch']==1]['event_delta'],
             df[df['epoch']==2]['event_delta'],
             df[df['epoch']==3]['event_delta'],
+            [1,1]
         ]
         name_data = [
             'Epoch 1 (2009-12)',
             'Epoch 2 (2012-16)',
             'Epoch 3 (2016-20)',
             'Epoch 4 (2020-24)',
+            'Break Even'
         ]
-        width_data      = [2,2,2,2]
-        opacity_data    = [1,1,1,1]
-        dash_data = ['solid','solid','solid','solid',]
+        width_data      = [2,2,2,2,3]
+        opacity_data    = [1,1,1,1,0.5]
+        dash_data = ['solid','solid','solid','solid','dash']
         color_data = [
             'rgb(239, 125, 50)',    #Price Orange
             'rgb(78,205,233)',      #Total Blue
             'rgb(255, 80, 80)',      #Gradient Red
             'rgb(153, 255, 102)',      #Gradient Green
+            'rgb(46, 214, 161)',          #Turquoise
         ]
-        legend_data = [True,True,True,True,]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        legend_data = [True,True,True,True,False]
         title_data = [
-            'Bitcoin Drawdown Since Market Top',
+            '<b>Bitcoin Performance Since Market Top</b>',
             '<b>Days Since Market Top</b>',
-            '<b>Drawdown Since Top</b>',
+            '<b>Performance Mutliple Since Top</b>',
             '<b></b>']
-        range_data = [[0,1500],[0,3],[-1,2]]
-        autorange_data = [False,True,False]
+        range_data = [[0,1500],[np.log10(0.2),2],[0,0]]
+        autorange_data = [False,False,False]
         type_data = ['linear','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick=30)
-        #fig.update_yaxes(tickformat='.0%')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         self.add_slider(fig)
 
         #Write out html chart
@@ -1828,7 +1949,7 @@ class btc_chart_suite():
 
     def yearly_cycle(self):
         """"Price Growth over Days since halving for each cycle"""
-        df = self.df_init
+        df = self.df
         #drop dates prior to first pricing for clean charts
         df = df[df.date > '18-06-2010']
 
@@ -1908,12 +2029,13 @@ class btc_chart_suite():
         range_data = [[0,370],[0,0],[0,0]]
         autorange_data = [False,True,False]
         type_data = ['linear','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick=30,tickformat='1./0f')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         self.add_slider(fig)
 
         #Write out html chart
@@ -1943,33 +2065,27 @@ class btc_chart_suite():
 #fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
 
 
-fig_btc = btc_chart_suite()
-
-fig_btc.unrealised_PnL()
-
-
-"""FAIR VALUE MODELS"""
-fig_btc.difficulty_ribbon()
-
-
-
-
+fig_btc = btc_chart_suite('light')
 
 
 """VALUATION MODELS"""
-fig_btc.mvrv()
+fig_btc.difficulty_ribbon()
 fig_btc.magic_lines_full()
 fig_btc.magic_lines()
-fig_btc.mayer_multiple()
-fig_btc.puell_multiple()
 fig_btc.block_subsidy()
-fig_btc.difficulty_ribbon()
-fig_btc.beam_indicator()
 fig_btc.investor_tool()
 fig_btc.golden_ratio()
 fig_btc.golden_ratio_full()
-fig_btc.catch_btm_top()
 fig_btc.s2f_model()
+fig_btc.catch_btm_top()
+
+
+"""OSCILLATORS"""
+fig_btc.mvrv()
+fig_btc.mayer_multiple()
+fig_btc.puell_multiple()
+fig_btc.unrealised_PnL()
+fig_btc.beam_indicator()
 fig_btc.nvt_rvt()
 
 
