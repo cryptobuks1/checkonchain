@@ -1858,7 +1858,7 @@ class dcr_chart_suite():
         title_data = [
             '<b>Decred NVT and RVT Ratio</b>',
             '<b>Date</b>',
-            '<b>Price (USD)</b>',
+            '<b>Network Valuation (USD)</b>',
             '<b>NVT or RVT Ratio</b>']
         range_data = [[self.start,self.last],[5,10],[0,750]]
         autorange_data = [False,False,False]

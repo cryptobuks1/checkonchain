@@ -663,6 +663,10 @@ class btc_chart_suite():
             'rgba(36, 255, 136, 0.1)',    #Gradient Green
             'rgba(36, 255, 136, 0.2)',    #Gradient Green
         ]
+        fill_data = [
+            'none','none','none','none',
+            'none','tonexty','tonexty','none','tonexty','tozeroy'
+        ]
         #Invert Colors for Light Theme
         color_data = self.color_invert(color_data)
         legend_data = [True,True,True,True,True,True,True,True,True,True]
@@ -671,13 +675,14 @@ class btc_chart_suite():
             '<b>Date</b>',
             '<b>Price (USD)</b>',
             '<b>Puell Multiple</b>']
-        range_data = [[self.start,self.last],[-1,5],[-1,2]]
+        range_data = [[self.start,self.last],[-1,5],[-1,5]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = self.chart.subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
         )
         fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(showgrid=False,secondary_y=True)
@@ -856,8 +861,10 @@ class btc_chart_suite():
             'rgb(255, 102, 0)',     #Burnt Orange
             'rgb(250, 38, 53)',     #POW Red
             'rgb(20, 169, 233)',    #Total Blue
-            'rgb(254, 215, 140)',   #Matte Yellow
-            'rgb(255, 102, 0)',     #Burnt Orange
+            'rgb(46, 214, 161)',    #Turquoise
+            #'rgb(254, 215, 140)',   #Matte Yellow
+            'rgb(46, 214, 161)',    #Turquoise
+            #'rgb(255, 102, 0)',     #Burnt Orange
 
             'rgba(255, 80, 80, 0.2)',     #Gradient Red
             'rgba(255, 80, 80, 0.2)',     #Gradient Red
@@ -2065,35 +2072,35 @@ class btc_chart_suite():
 #fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
 
 
-fig_btc = btc_chart_suite('light')
-
-
-"""VALUATION MODELS"""
-fig_btc.difficulty_ribbon()
-fig_btc.magic_lines_full()
-fig_btc.magic_lines()
-fig_btc.block_subsidy()
-fig_btc.investor_tool()
-fig_btc.golden_ratio()
-fig_btc.golden_ratio_full()
-fig_btc.s2f_model()
-fig_btc.catch_btm_top()
-
-
-"""OSCILLATORS"""
-fig_btc.mvrv()
-fig_btc.mayer_multiple()
-fig_btc.puell_multiple()
-fig_btc.unrealised_PnL()
-fig_btc.beam_indicator()
-fig_btc.nvt_rvt()
-
-
-"""CYCLE MODELS"""
-fig_btc.halving_cycle()
-fig_btc.bottom_cycle()
-fig_btc.top_cycle()
-fig_btc.yearly_cycle()
+#fig_btc = btc_chart_suite('light')
+#
+#
+#"""VALUATION MODELS"""
+#fig_btc.difficulty_ribbon()
+#fig_btc.magic_lines_full()
+#fig_btc.magic_lines()
+#fig_btc.block_subsidy()
+#fig_btc.investor_tool()
+#fig_btc.golden_ratio()
+#fig_btc.golden_ratio_full()
+#fig_btc.s2f_model()
+#fig_btc.catch_btm_top()
+#
+#
+#"""OSCILLATORS"""
+#fig_btc.mvrv()
+#fig_btc.mayer_multiple()
+#fig_btc.puell_multiple()
+#fig_btc.unrealised_PnL()
+#fig_btc.beam_indicator()
+#fig_btc.nvt_rvt()
+#
+#
+#"""CYCLE MODELS"""
+#fig_btc.halving_cycle()
+#fig_btc.bottom_cycle()
+#fig_btc.top_cycle()
+#fig_btc.yearly_cycle()
 
 
 
