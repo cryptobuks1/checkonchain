@@ -527,28 +527,6 @@ class dcr_user_adoption():
         fig.show()
 
 
-        #Address Density
-        self.btc['AdrDens'] = self.btc['TxTfrValAdjNtv']/self.btc['AdrActCnt']
-        self.dcr['AdrDens'] = (
-            self.dcr['TxTfrValNtv'] 
-            - self.dcr['tic_day'].rolling(7).mean()*3
-            )/self.dcr['AdrActCnt']
-
-
-        loop_data = [[5,6],[]]
-        title_data = [
-            'Address Density',
-            'Protocol Age (days)',
-            'Active Coins per Active Address',
-            'Active Coins per Active Address']
-        range_data = [[0,4500],[-1,3],[-1,9]]
-        fig = check_standard_charts().subplot_lines_singleaxis(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
-            )
-        fig.show()
-
     def dcr_miner_pow_growth(self):
         """
         #############################################################################

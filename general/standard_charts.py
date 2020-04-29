@@ -34,18 +34,33 @@ pio.renderers.default = "browser"
 
 class check_standard_charts():
 
-    def __init__(self):
-        self._background = 'rgb(20,20,20)'
-        self._font = 'Raleway'
+    def __init__(self,theme):
+        """theme
+            'light' = white background
+            'dark'  = dark background (Default)
+            """
+        self.theme = theme
+        self._font = "Courier New, monospace"#'Raleway'
         self._titlesize = 32
         self._legendsize = 18
         self._axesfontsize = 20
         self._tickfontsize = 16
-        self._gridcolor = 'rgb(50,50,50)'
         self._gridwidth = 0.1
-        self._zerolinecolor = 'rgb(50,50,50)'
         self._annotation = '@_checkmatey_'
         self._annotation_y = 1.0 #Y Position
+
+        if theme == 'light':
+            self._theme_light   = 'simple_white'
+            self._background    = 'rgb(245,245,245)'
+            self._gridcolor     = 'rgba(50,50,50,0.25)'
+            self._zerolinecolor = 'rgb(50,50,50)'
+            self._annocolor     = 'rgb(50,50,50)'
+        else:
+            self.theme_dark     = 'plotly_dark'
+            self._background    = 'rgb(20,20,20)'
+            self._gridcolor     = 'rgb(50,50,50)'
+            self._zerolinecolor = 'rgb(50,50,50)'
+            self._annocolor     = 'rgb(50,50,50)'
 
     def add_annotation(self,fig,new_annotation):
         """Add additional annotation under @checkmatey"""
@@ -62,7 +77,7 @@ class check_standard_charts():
                     font=dict(
                         family=self._font,
                         size=16,
-                        color=self._gridcolor
+                        color=self._annocolor
                     )
                 )
             ]
@@ -71,6 +86,13 @@ class check_standard_charts():
 
     def basic_chart(self,x_data,y_data,name_data,loop_data,title_data,type_data):
         fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+        #Set theme colour
+        if self.theme == 'light':
+            fig.update_layout(template=self._theme_light)
+        else:
+            fig.update_layout(template=self.theme_dark)
+
         for i in loop_data[0]:
             fig.add_trace(go.Scatter(
                 x=x_data[i], 
@@ -93,7 +115,7 @@ class check_standard_charts():
         fig.update_xaxes(title_text=title_data[1],type=type_data[0])
         fig.update_yaxes(title_text=title_data[2],type=type_data[1],secondary_y=False)
         fig.update_yaxes(title_text=title_data[3],type=type_data[2],secondary_y=True)
-        fig.update_layout(template="plotly_dark")
+        
         return fig
 
     def subplot_lines_singleaxis(
@@ -104,6 +126,12 @@ class check_standard_charts():
         ):
 
         fig = make_subplots(specs=[[{"secondary_y": False}]])
+        #Set Theme colour
+        if self.theme == 'light':
+            fig.update_layout(template=self._theme_light)
+        else:
+            fig.update_layout(template=self.theme_dark)
+        
         """#######  Add Traces   #######"""
         for i in loop_data[0]:
             fig.add_trace(go.Scatter(
@@ -156,7 +184,7 @@ class check_standard_charts():
                     font=dict(
                         family=self._font,
                         size=16,
-                        color=self._gridcolor
+                        color=self._annocolor
                     )
                 )
             ]
@@ -202,7 +230,6 @@ class check_standard_charts():
             )
         fig.update_yaxes(autorange=autorange_data[1],secondary_y=False) #override range
         
-        fig.update_layout(template="plotly_dark")
         return fig
 
     def subplot_lines_doubleaxis(self,
@@ -211,7 +238,11 @@ class check_standard_charts():
         dash_data,width_data,opacity_data,legend_data):
 
         fig = make_subplots(specs=[[{"secondary_y": True}]])
-        fig.update_layout(template="plotly_dark")
+        #Set theme colour
+        if self.theme == 'light':
+            fig.update_layout(template=self._theme_light)
+        else:
+            fig.update_layout(template=self.theme_dark)
         
         """#######  Add PRIMARY Traces   #######"""
         for i in loop_data[0]:
@@ -278,7 +309,7 @@ class check_standard_charts():
                     font=dict(
                         family=self._font,
                         size=16,
-                        color=self._gridcolor
+                        color=self._annocolor
                     )
                 )
             ]
@@ -343,7 +374,7 @@ class check_standard_charts():
             secondary_y=True
             )
         fig.update_yaxes(autorange=autorange_data[2],secondary_y=True) #override range
-        
+            
         return fig
 
     def subplot_lines_doubleaxis_1st_area(self,
@@ -353,7 +384,10 @@ class check_standard_charts():
         fill_data):
 
         fig = make_subplots(specs=[[{"secondary_y": True}]])
-        fig.update_layout(template="plotly_dark")
+        if self.theme == 'light':
+            fig.update_layout(template=self._theme_light)
+        else:
+            fig.update_layout(template=self.theme_dark)
         
         """#######  Add PRIMARY Traces   #######"""
         for i in loop_data[0]:
@@ -422,7 +456,7 @@ class check_standard_charts():
                     font=dict(
                         family=self._font,
                         size=16,
-                        color=self._gridcolor
+                        color=self._annocolor
                     )
                 )
             ]
@@ -497,7 +531,11 @@ class check_standard_charts():
         fill_data):
 
         fig = make_subplots(specs=[[{"secondary_y": True}]])
-        fig.update_layout(template="plotly_dark")
+        #Set theme colour
+        if self.theme == 'light':
+            fig.update_layout(template=self._theme_light)
+        else:
+            fig.update_layout(template=self.theme_dark)
         
         """#######  Add PRIMARY Traces   #######"""
         for i in loop_data[0]:
@@ -566,7 +604,7 @@ class check_standard_charts():
                     font=dict(
                         family=self._font,
                         size=16,
-                        color=self._gridcolor
+                        color=self._annocolor
                     )
                 )
             ]
@@ -648,6 +686,12 @@ class check_standard_charts():
         fig = make_subplots(
             rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.02
         )
+        #Set theme colour
+        if self.theme == 'light':
+            fig.update_layout(template=self._theme_light)
+        else:
+            fig.update_layout(template=self.theme_dark)
+
         """#######  Add Traces (ROW=1, Yaxis=1)   #######"""
         for i in loop_data[0]:
             fig.add_trace(go.Scatter(
@@ -717,7 +761,7 @@ class check_standard_charts():
                     font=dict(
                         family=self._font,
                         size=16,
-                        color=self._gridcolor
+                        color=self._annocolor
                     )
                 )
             ]
@@ -763,7 +807,6 @@ class check_standard_charts():
             )
         fig.update_yaxes(autorange=autorange_data[1],secondary_y=False) #override range
         
-        fig.update_layout(template="plotly_dark")
         return fig
 
     def add_vol_bars_x(self, fig, x_data, y_data, color_data, loop_data , name_data):

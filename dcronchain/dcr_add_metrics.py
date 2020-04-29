@@ -138,7 +138,7 @@ class dcr_add_metrics():
         OUTPUT COLUMNS:
             'blk'           - block height
             'window'        - windoc count (count if 144 windows)
-            'time'          - time (format unknown)
+            'time'          - time (timestamp)
             'tic_cnt_window'- Tickets bought in window (max 2880)
             'tic_price'     - Ticket Price | Stake Difficulty (DCR)
             'tic_miss'      - Tickets missed in window
@@ -153,7 +153,7 @@ class dcr_add_metrics():
         Data is arranged by block
         OUTPUT COLUMNS:
             'blk'               - block height
-            'time'              - time (format unknown)
+            'time'              - time (timestamp)
             'dcr_sply'          - circulating supply (DCR)
             'dcr_tic_sply'      - ticket pool value (DCR)
             'tic_blk'           - Tickets bought per block (max 20)
@@ -162,6 +162,21 @@ class dcr_add_metrics():
             'pow_work_TH'       - Cummulative work (TH/s)
         """
         df = dcrdata_api().dcr_performance()
+        return df
+
+    def dcr_priv(self):
+        """
+        Pulls dcrdata Privacy data
+        Data is arranged by day
+        OUTPUT COLUMNS:
+            'blk'               - block height
+            'time'              - time (timestamp)
+            'dcr_sply'          - circulating supply (DCR)
+            'dcr_anon_sply'     - anonymity pool value (DCR)
+            'dcr_anon_part'     - Anonymity participation (anon pool / circ. supply)
+            'dcr_anon_mix_vol'  - Daily DCR mixed
+        """
+        df = dcrdata_api().dcr_privacy()
         return df
     
     def dcr_natv(self):
@@ -269,10 +284,14 @@ class dcr_add_metrics():
                 'pow_diff_avg'          - Average PoW Difficulty on day (dcrdata)
                 'pow_hashrate_THs_avg'  - Average PoW Hashrate on day (TH/s)
                 'pow_work_TH'           - Cumulative PoW in TH
+                'dcr_anon_sply'         - Total DCR in anonymity set
+                'dcr_anon_part'         - Privacy Participation (dcr_anon_sply/dcr_sply)
+                'dcr_anon_mix_vol'      - Daily mixing volume (DCR)
         """
         print('...Combining Decred specific metrics - (coinmetrics + dcrdata)...')
         _coin = self.dcr_coin() #Coinmetrics by date
         _natv = self.dcr_natv() #dcrdata API by block
+        _priv = self.dcr_priv() #Pull dcrdata privacy
         #_blk_max = int(_coin['blk'][_coin.index[-1]])
         #Cull _coin to Key Columns
         _coin = _coin[[
@@ -284,7 +303,6 @@ class dcr_add_metrics():
             'inf_pct_ann','TxCnt','TxTfrCnt','TxTfrValMedNtv','TxTfrValMeanNtv',
             'TxTfrValNtv','TxTfrValUSD','TxTfrValAdjNtv','TxTfrValAdjUSD',
             'FeeTotNtv','FeeTotUSD','AdrActCnt']]
-        _coin['CapS2FModel'] = regression_analysis()
         
         #Add new columns for transferring _natv data to_coin
         _coin['tic_day']                = 0.0
@@ -329,6 +347,11 @@ class dcr_add_metrics():
                 ['tic_cnt_window','pow_diff','pow_hashrate_THs','tic_pool','dcr_tic_sply'],axis=1
                 ),on='blk',how='left'
             )
+        #Merge df with _priv (on date)
+        df = pd.merge(
+            df,
+            _priv.drop(['time','dcr_sply'],axis=1),
+            on='date',how='left')
         #Compile into final ordered dataframe
         df = df[[
             'date', 'blk', 'age_days','age_sply','window',                              #Time Metrics
@@ -341,7 +364,8 @@ class dcr_add_metrics():
             'FeeTotNtv','FeeTotUSD',                                                    #Fee Metrics
             'S2F', 'inf_pct_ann','SplyCur', 'dcr_sply',                                 #Supply Metrics
             'dcr_tic_sply_avg','tic_day', 'tic_price_avg', 'tic_pool_avg',              #Ticket Metrics
-            'DiffMean','pow_diff_avg', 'pow_hashrate_THs_avg', 'pow_work_TH'            #PoW Metrics
+            'DiffMean','pow_diff_avg', 'pow_hashrate_THs_avg', 'pow_work_TH',           #PoW Metrics
+            'dcr_anon_sply', 'dcr_anon_part','dcr_anon_mix_vol'                        #Privacy Metrics
             ]]
         general_helpers.df_to_csv(df,'DCR_data')
         return df
@@ -423,6 +447,7 @@ class dcr_add_metrics():
 #DCR_diff = dcr_add_metrics().dcr_diff()
 #DCR_perf = dcr_add_metrics().dcr_perf()
 #DCR_natv = dcr_add_metrics().dcr_natv()
+#DCR_priv = dcr_add_metrics().dcr_priv()
 #DCR_real = dcr_add_metrics().dcr_real()
 #DCR_sply = dcr_add_metrics().dcr_sply(500000)
 #DCR_tics = dcr_add_metrics().dcr_ticket_models()

@@ -50,19 +50,19 @@ class dcrdata_api():
     def dcr_difficulty(self):
         print('...Fetching dcrdata - Difficulty metrics...')
         #Extract Ticket Price - WINDOW (~2600)
-        tic_pce = pd.DataFrame(client.chart("ticket-price", bin="block")) #Pull dcrdata
-        tic_pce.columns = ['tic_cnt_window','tic_price','time','window'] #Rename Columns
-        tic_pce['tic_price']= tic_pce['tic_price']/ self.atoms #Change from Atoms to DCR
-        tic_pce['window'] = tic_pce.index #Set window to a counter rather than 144
+        df = pd.DataFrame(client.chart("ticket-price", bin="block")) #Pull dcrdata
+        df.columns = ['tic_cnt_window','tic_price','time','window'] #Rename Columns
+        df['tic_price']= df['tic_price']/ self.atoms #Change from Atoms to DCR
+        df['window'] = df.index #Set window to a counter rather than 144
         #Missed Votes - WINDOW (~2600)
-        tic_miss = pd.DataFrame(client.chart("missed-votes", bin="block", axis="time"))
-        tic_miss.columns = ['tic_miss','offset','time','window']
+        df2 = pd.DataFrame(client.chart("missed-votes", bin="block", axis="time"))
+        df2.columns = ['tic_miss','offset','time','window']
         #Extract Mining Difficulty - WINDOW (~2600)
         pow_dif = pd.DataFrame(client.chart("pow-difficulty", bin="block", axis="time"))
         pow_dif.columns = ['pow_diff','time','window']
         #Combine into single dataset
-        response=tic_pce.join(pow_dif['pow_diff'],how='outer')
-        response=response.join(tic_miss['tic_miss'],how='outer')
+        response=df.join(pow_dif['pow_diff'],how='outer')
+        response=response.join(df2['tic_miss'],how='outer')
         #Add block height and rearrange
         response['blk'] = (response.index+1)*self.window
         response=response[['blk','window','time','tic_cnt_window','tic_price','tic_miss','pow_diff']]
@@ -73,16 +73,16 @@ class dcrdata_api():
     def dcr_performance(self):
         print('...Fetching dcrdata - Performance metrics...')
         #Ticket Staked  - Output dataframe by block
-        pos_stake = pd.DataFrame(client.chart("stake-participation", bin="block", axis="time")) #Pull dcrdata
-        pos_stake.columns = ['axis','bin','dcr_sply','dcr_tic_sply','time'] #Rename columns
-        pos_stake['dcr_sply']= pos_stake['dcr_sply']/ self.atoms #Atoms to DCR
-        pos_stake['dcr_tic_sply']= pos_stake['dcr_tic_sply']/ self.atoms #Atoms to DCR
-        pos_stake['tic_part'] = pos_stake['dcr_tic_sply']/pos_stake['dcr_sply'] #PoS Participation
-        pos_stake['blk'] = pos_stake.index
+        df = pd.DataFrame(client.chart("stake-participation", bin="block", axis="time")) #Pull dcrdata
+        df.columns = ['axis','bin','dcr_sply','dcr_tic_sply','time'] #Rename columns
+        df['dcr_sply']= df['dcr_sply']/ self.atoms #Atoms to DCR
+        df['dcr_tic_sply']= df['dcr_tic_sply']/ self.atoms #Atoms to DCR
+        df['tic_part'] = df['dcr_tic_sply']/df['dcr_sply'] #PoS Participation
+        df['blk'] = df.index
         #Ticket Pool Size in DCR
-        pos_pool = pd.DataFrame(client.chart("ticket-pool-size", bin="block", axis="time"))
-        pos_pool.columns = ['axis','bin','tic_pool','time']
-        pos_pool['tic_blk'] = pos_pool['tic_pool'].diff() + self.votes #Calculate number of tickets purchased in that block (+5 votes)
+        df2 = pd.DataFrame(client.chart("ticket-pool-size", bin="block", axis="time"))
+        df2.columns = ['axis','bin','tic_pool','time']
+        df2['tic_blk'] = df2['tic_pool'].diff() + self.votes #Calculate number of tickets purchased in that block (+5 votes)
         #Mining Hashrate
         pow_hash = pd.DataFrame(client.chart("hashrate", bin="block", axis="time"))
         pow_hash.columns = ['axis','bin','pow_offset','pow_hashrate_THs','time']
@@ -90,7 +90,7 @@ class dcrdata_api():
         tot_work = pd.DataFrame(client.chart("chainwork", bin="block", axis="time"))
         tot_work.columns = ['axis','bin','time','pow_work_TH'] #Note pow_work is in EH, to be converted to TH
         #Combine into single dataset
-        response=pos_stake.join(pos_pool[['tic_blk','tic_pool']],how='outer') #Join
+        response=df.join(df2[['tic_blk','tic_pool']],how='outer') #Join
         response=response.join(pow_hash[['pow_hashrate_THs']],how='outer') #Join
         response=response.join(tot_work[['pow_work_TH']]*1000000,how='outer') #Join + Convert EH to TH
         #Restructure dataframe
@@ -103,11 +103,35 @@ class dcrdata_api():
         #response['blk']=response.astype({'blk':'int64'}) #Ensure blk is int64
         return response
 
+    def dcr_privacy(self):
+        print('...Adding Privacy metrics...')
+        df3 = self.dcr_performance
+
+        #Pull Total anonymity set
+        df = pd.DataFrame(client.chart("coin-supply", bin="day"))           #Pull dcrdata
+        df.columns = ['anon_set', 'axis', 'bin','blk', 'dcr_sply', 'time']  #Rename columns
+        df['date'] = pd.to_datetime(df['time'],unit='s',utc=True)           #Date from timestamp
+        df['dcr_sply']  = df['dcr_sply']/ 1e8                               #Atoms to DCR
+        df['dcr_anon_sply']  = df['anon_set']/ 1e8                          #Atoms to DCR
+        df['dcr_anon_part'] = df['dcr_anon_sply'] / df['dcr_sply']          #Anon participation
+        df = df[[
+            'date','time',
+            'dcr_sply','dcr_anon_sply','dcr_anon_part'
+            ]]                                                              #Restructure columns
+
+        #Pull dcr mixed per day
+        df2 = pd.DataFrame(client.chart("privacy-participation", bin="day"))  #Pull dcrdata
+        df2.columns = ['dcr_anon_mix_vol', 'axis', 'bin', 'time']                 #Rename columns
+        df2['dcr_anon_mix_vol'] = df2['dcr_anon_mix_vol'] / 1e8                       #Atoms to DCR
+        response = df.join(df2['dcr_anon_mix_vol'])
+        return response
+
 
 #a = dcrdata_api().dcr_difficulty()
-#a.head(10)
+#a.tail(10)
 
 #b = dcrdata_api().dcr_performance()
 #b.tail(10)
 
-
+#c = dcrdata_api().dcr_privacy()
+#c.tail(10)

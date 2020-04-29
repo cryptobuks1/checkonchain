@@ -234,9 +234,11 @@ Checkonchain Code
 
 Description: 
 
-    The 142-day sum of USD bound in tickets
+    The 142-day sum of USD bound in tickets was a metric developed by @permabullnino that calculates the 142-day rolling sum of USD value bound in Decred Tickets, divided by circulating supply (red). 142-days is selected as it represents the maximum time-frame for all tickets within the pool to either vote, or expire, and thus captures an entire ticket holder 'cycle'.
+    
+    Interestingly, this metric has shown to act as a point of price resistance during bullish markets, and taking Fibonacci ratios (61.8%, 50.0%, 38.2% and 26.3%) creates additional levels where price has historically found support and resistance. In general, price above the 100% 142-day ticket sum tends to be a local top signal whilst price below the 26.3% ratio is a local bottom signal. The ratio is taken between price and the 50% ratio to generate an oscillator which aides with identifying where price enters these key key levels. 
 
-    Data Source: Coinmetrics.io
+    Data Source: Coinmetrics.io and explorer.dcrdata.org
 
 Links:
     
@@ -245,19 +247,19 @@ Links:
 Inputs:
 
     Primary Y-Axis
-        DCR Price (USD)     = Coin PriceUSD (Daily close)
-        200-Day MA          = 200-day moving average of Price
-        Strong Sell (2.8)   = 2.8 * PriceUSD_200sma
-        Sell (2.0)          = 2.0 * PriceUSD_200sma
-        Buy (0.6)           = 0.6 * PriceUSD_200sma
-        Strong Buy (0.4)    = 0.4 * PriceUSD_200sma
+        DCR Price (USD)                  = Coin PriceUSD (Daily close)
+        142-Day Ticket USD Sum           = (tic_usd_cost_142sum)_sum(142) / SplyCur
+        142-Day Ticket USD Sum * 61.8%   = 61.8% * (tic_usd_cost_142sum)_sum(142) / SplyCur
+        142-Day Ticket USD Sum * 50.0%   = 50.0% * (tic_usd_cost_142sum)_sum(142) / SplyCur
+        142-Day Ticket USD Sum * 38.2%   = 38.2% * (tic_usd_cost_142sum)_sum(142) / SplyCur
+        142-Day Ticket USD Sum * 23.6%   = 23.6% * (tic_usd_cost_142sum)_sum(142) / SplyCur
 
     Secondary Y-Axis
-        Mayer Multiple      = PriceUSD / PriceUSD_200sma
-        ZONES               = [2.8,15]  = Red
-                              [2.0,2.8] = Orange
-                              [0.4,0.6] = Yellow
-                              [0,0.4]   = Green
+        142-day Ticket Multiple (50%)   = PriceUSD / ((tic_usd_cost_142sum)_sum(142) / SplyCur)
+        ZONES                           = [2.000,5.000]  = Red
+                                          [1.236,2.000]  = Orange
+                                          [0.472,0.764]  = Yellow
+                                          [0.000,0.472]  = Green
 
 Chart Description:
 
@@ -274,4 +276,4 @@ Chart Description:
         Type    = log 
 
 Sample Chart
-![Mayer Multiple](charts/dcr_mayer_multiple.png)
+![142-day Ticket Sum](charts/dcr_142dticsum.png)

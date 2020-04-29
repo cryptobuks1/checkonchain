@@ -7,7 +7,15 @@ from datetime import date, datetime, time, timedelta
 
 class dcr_chart_suite():
 
-    def __init__(self):
+    def __init__(self,theme):
+        """
+        Modules for producing standard check-onchain charts for Decred
+        INPUT = theme (string)
+            theme = 'light' = light theme chart
+            theme = 'dark'  = dark theme chart (default)
+        """
+        self.theme = theme
+        self.chart = check_standard_charts(self.theme)
         self.today = datetime.combine(date.today(), time())
         self.last = pd.to_datetime(self.today + pd.to_timedelta(90,unit='D'))
         self.start = '2016-01-01'
@@ -69,6 +77,55 @@ class dcr_chart_suite():
         html_path = html_path + str('\\') + filename + '.html'
         pio.write_html(fig, file=html_path, auto_open=True)
 
+    def color_invert(self,color_data):
+        """Inverts colors in a list
+        INPUT
+            color_data = list of 'rgb(rrr,ggg,bbb)' or 'rgba(rrr,ggg,bbb,a.aa)'
+        """
+        j = 0
+        for i in color_data: #cycle through all colors
+            if self.theme == 'light': #if light theme
+                #split rbg and invert colors
+                text = i.split('(')[1]
+                text = text.split(')')[0]
+                text = text.split(',')
+                r = 255-int(text[0])
+                g = 255-int(text[1])
+                b = 255-int(text[2])
+                if len(text) ==3:
+                    text = 'rgb(' + str(r) + ',' + str(g) + ',' + str(b) + ')'
+                if len(text) ==4:
+                    a = float(text[3])
+                    text = 'rgba(' + str(r) + ',' + str(g) + ',' + str(b) + ',' + str(a) + ')'
+                color_data[j] = text
+            j = j + 1
+        return color_data
+
+    def add_vol_bars(self,fig,df):
+        """ =================================
+            ADD VOLUME BAR CHARTS
+        INPUTS:
+            fig = figure to add volume bars to
+            df  = DataFrame
+        ================================="""
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date']
+        ]
+        y_data = [
+            df['dcr_tic_vol'],
+            df['dcr_tfr_vol'],
+            df['dcr_anon_mix_vol'],
+        ]
+        color_data = ['rgb(237,96,136)','rgb(37,187,217)','rgb(250, 38, 53)']
+        loop_data = [0,1,2]
+        name_data = ['Ticket Vol (DCR)','Transfer Vol (DCR)','Privacy Mix Vol (DCR)']
+        for i in loop_data:
+            fig.add_trace(
+                go.Bar(x=x_data[i],y=y_data[i],name=name_data[i],opacity=0.5,marker_color=color_data[i],yaxis="y2"))
+        fig.update_layout(barmode='stack',bargap=0.01,yaxis2=dict(side="right",position=0.15))
+
     def mvrv(self,model):
         """"Decred Realised Price and MVRV
             model = 0   = Network Valuation (Market Cap, Realised Cap etc)
@@ -90,6 +147,9 @@ class dcr_chart_suite():
             'rgb(239, 125, 50)',    #Price Orange
             'rgba(36, 255, 136, 0.1)',    #Gradient Green
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+
         legend_data = [True,True,True,False,True,False,True,]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
@@ -162,13 +222,13 @@ class dcr_chart_suite():
             range_data = [[self.start,self.last],[-1,3],[np.log10(0.3),4]]
         
         #BUILD CHART
-        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data,
             fill_data
             )
-        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
         fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(showgrid=False,secondary_y=True)
         self.add_slider(fig)
@@ -179,6 +239,8 @@ class dcr_chart_suite():
         elif model ==1:
             chart_name = '\\pricing_models\\mvrv_pricing'
         self.write_html(fig,chart_name)
+
+        #return fig
 
     def unrealised_PnL(self):
         """"Decred Realised Price and MVRV"""
@@ -260,12 +322,14 @@ class dcr_chart_suite():
         color_data = [
             'rgb(255, 255, 255)',    #White
             'rgb(20, 169, 233)',    #Total Blue
-            'rgba(233, 68,  68, 0.3)',     #Capitulation Red
-            'rgba(247, 132, 16, 0.3)',    #Fear Orange
-            'rgba(255, 192, 0 , 0.3)',     #Optimism Yellow
-            'rgba(38, 200,  17, 0.3)',     #Belief Green
-            'rgba(68, 103, 235, 0.3)',    #Greed Blue
+            'rgba(233, 68,  68, 0.4)',     #Capitulation Red
+            'rgba(247, 132, 16, 0.4)',    #Fear Orange
+            'rgba(255, 192, 0 , 0.4)',     #Optimism Yellow
+            'rgba(38, 200,  17, 0.4)',     #Belief Green
+            'rgba(68, 103, 235, 0.4)',    #Greed Blue
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         fill_data = [
             'none','none','tozeroy','tozeroy','tozeroy','tozeroy','tozeroy'
         ]
@@ -273,7 +337,7 @@ class dcr_chart_suite():
             True,True,True,True,True,True,True,
             ]
         title_data = [
-            'Decred Unrealised Profit and Loss',
+            '<b>Decred Unrealised Profit and Loss</b>',
             '<b>Date</b>',
             '<b>Price (USD)</b>',
             '<b>Unrealised PnL</b>'
@@ -283,13 +347,13 @@ class dcr_chart_suite():
         
         autorange_data = [False,False,False]
         type_data = ['date','log','linear']
-        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data,
             fill_data
             )
-        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
         fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(showgrid=False,secondary_y=True,dtick=0.5)
         self.add_slider(fig)
@@ -298,6 +362,7 @@ class dcr_chart_suite():
         chart_name = '\\oscillators\\unrealised_pnl'
         self.write_html(fig,chart_name)
 
+        #return fig
 
     def difficulty_ribbon(self):
         """Decred Difficulty Ribbon and Block Subsidy Model
@@ -346,6 +411,8 @@ class dcr_chart_suite():
             'rgb(20, 169, 233)',    #Total Blue
             'rgb(46, 214, 161)',    #Turquoise
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         dash_data = [
             'solid','dash','solid','solid','solid','solid','solid',
             ]
@@ -362,15 +429,17 @@ class dcr_chart_suite():
         range_data = [[self.start,self.last],[self.cap_lb,self.cap_ub],[0,0]]
 
         #BUILD FINAL CHART
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         
         """ =================================
             ADD DIFFICULTY RIBBON
         ================================="""
+        color_ribbon = str(color_data[6])
         for i in [9,14,25,40,60,90,128,200]:
             fig.add_trace(go.Scatter(
                 mode='lines',
@@ -381,7 +450,7 @@ class dcr_chart_suite():
                 showlegend=True,
                 line=dict(
                     width=i/200*2,
-                    color='rgb(46, 214, 161)',#Turquoise
+                    color=color_ribbon,#Turquoise
                     dash='solid'
                     )),
                 secondary_y=True)
@@ -392,6 +461,8 @@ class dcr_chart_suite():
         #Write out html chart
         chart_name = '\\valuation_models\\difficulty_ribbon'
         self.write_html(fig,chart_name)
+
+        #return fig
 
     def block_subsidy_usd(self,model):
         """Decred Block Subsidy Models priced in USD with Difficulty Ribbon
@@ -419,7 +490,6 @@ class dcr_chart_suite():
             df['date'],
             df['date'],
             df['date'],
-            df['date'],
         ]
         color_data = [
             'rgb(255, 255, 255)',    #White
@@ -427,8 +497,10 @@ class dcr_chart_suite():
             'rgb(114, 49, 163)',    #POS Purple
             'rgb(255, 192, 0)',     #Treasury Yellow
             'rgb(20, 169, 233)',    #Total Blue
-            'rgb(20, 169, 233)',    #Total Blue
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+
         dash_data = ['solid','solid','solid','solid','solid','solid','dash']
         width_data = [2,2,2,2,2,2]
         opacity_data = [1,1,1,1,1,1]
@@ -445,7 +517,6 @@ class dcr_chart_suite():
                 df['SubsidyPoSCapUSD'],
                 df['SubsidyFundCapUSD'],
                 df['SubsidyCapUSD'],
-                df['AdjSubsidyCapUSD']
             ]
             name_data = [
                 'Market Cap',
@@ -453,7 +524,6 @@ class dcr_chart_suite():
                 'POS-USD',
                 'Treasury-USD',
                 'Total-USD', 
-                'Supply Issued Cap (USD)'
             ]
             title_data = [
                 'Decred Block Subsidy Valuation Models (USD)',
@@ -464,14 +534,13 @@ class dcr_chart_suite():
             range_data = [[self.start,self.last],[self.cap_lb,self.cap_ub],[5,11]]
         #MARKET CAP SETTINGS
         elif model == 1:
-            loop_data = [[0,1,2,3,6,4],[5]]
+            loop_data = [[0,1,2,3,4],[]]
             y_data = [
                 df['PriceUSD'],
                 df['PoW_income_usd'].cumsum()/df['SplyCur'],
                 df['PoS_income_usd'].cumsum()/df['SplyCur'],
                 df['Fund_income_usd'].cumsum()/df['SplyCur'],
                 df['Total_income_usd'].cumsum()/df['SplyCur'],
-                df['IssuedPriceUSD']
             ]
             name_data = [
                 'DCR/USD Price', 
@@ -479,7 +548,6 @@ class dcr_chart_suite():
                 'POS-USD',
                 'Treasury-USD',
                 'Total-USD',
-                'Supply Issued Price (USD)'
                 ]
             title_data = [
                 'Decred Block Subsidy Pricing Models (USD)',
@@ -490,38 +558,17 @@ class dcr_chart_suite():
             range_data = [[self.start,self.last],[self.price_lb,self.price_ub],[5,11]]
         
         #BUILD CHARTS
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         
-        #Only Add Volume Bars and Difficulty Ribbon to PRICING MODELS
-        if model == 1:
-            """ =================================
-                ADD VOLUME BAR CHARTS
-            ================================="""
-            x_data = [
-                df['date'],
-                df['date']
-            ]
-            y_data = [
-                100000+df['dcr_tic_vol'],
-                100000+df['dcr_tfr_vol']
-            ]
-            color_data = ['rgb(237,96,136)','rgb(37,187,217)']
-            loop_data = [0,1]
-            name_data = ['Ticket Vol (DCR)','Transfer Vol (DCR)']
-            for i in loop_data:
-                fig.add_trace(
-                    go.Bar(x=x_data[i],y=y_data[i],name=name_data[i],opacity=0.5,marker_color=color_data[i],yaxis="y2"))
-            fig.update_layout(barmode='stack',bargap=0.01,yaxis2=dict(side="right",position=0.15))
-
-
         #FINALISE CHART
         self.add_slider(fig)
-        fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")
+        fig = self.chart.add_annotation(fig,"@checkmatey<br />@permabullnino")
 
         #Write out html chart
         if model == 0:
@@ -529,6 +576,8 @@ class dcr_chart_suite():
         elif model ==1:
             chart_name = '\\pricing_models\\block_subsidy_usd_pricing'
         self.write_html(fig,chart_name)
+
+        #return fig
 
     def block_subsidy_btc(self,model):
         """Decred Block Subsidy Models priced in BTC with Difficulty Ribbon
@@ -556,8 +605,6 @@ class dcr_chart_suite():
             df['date'],
             df['date'],
             df['date'],
-            df['date'],
-            df['date'],
             ]
         color_data = [
             'rgb(250, 38, 53)' , #POW Red
@@ -565,9 +612,9 @@ class dcr_chart_suite():
             'rgb(255, 192, 0)',  #Treasury Yellow
             'rgb(20, 169, 233)', #Total Blue
             'rgb(255, 255, 255)', #White
-            'rgb(46, 214, 161)',    #Turquoise
-            'rgb(20, 169, 233)', #Total Blue
             ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         dash_data = ['solid','solid','solid','solid','solid','solid','dash']
         width_data = [2,2,2,2,2,2,2]
         opacity_data = [1,1,1,1,1,1,1]
@@ -584,8 +631,6 @@ class dcr_chart_suite():
                 df['SubsidyFundCapBTC'],
                 df['SubsidyCapBTC'],
                 df['CapMrktCurBTC'],
-                df['dcr_tic_sply_avg'],
-                df['AdjSubsidyCapBTC'],
                 ]
             name_data = [
                 'POW (BTC)',
@@ -593,8 +638,6 @@ class dcr_chart_suite():
                 'Treasury (BTC)',
                 'Total (BTC)',
                 'Market Cap (BTC)',
-                'Ticket Pool Value (DCR)',
-                'Supply Issued Cap (BTC)'
                 ]
             title_data = [
                 'Decred Block Subsidy Valuation Models (BTC)',
@@ -606,15 +649,13 @@ class dcr_chart_suite():
 
         #PRICING SETTINGS
         elif model == 1:
-            loop_data = [[0,1,2,3,6,4],[5]]
+            loop_data = [[0,1,2,3,4],[]]
             y_data = [
                 df['SubsidyPoWCapBTC']/df['SplyCur'],
                 df['SubsidyPoSCapBTC']/df['SplyCur'],
                 df['SubsidyFundCapBTC']/df['SplyCur'],
                 df['SubsidyCapBTC']/df['SplyCur'],
                 df['PriceBTC'],
-                df['dcr_tic_sply_avg'],
-                df['IssuedPriceBTC'],
                 ]
             name_data = [
                 'POW (BTC)',
@@ -622,8 +663,6 @@ class dcr_chart_suite():
                 'Treasury (BTC)',
                 'Total (BTC)',
                 'DCR Price (BTC)',
-                'Ticket Pool Value (DCR)',
-                'Supply Issued Price (BTC)'
                 ]
             title_data = [
                 'Decred Block Subsidy Pricing Models (BTC)',
@@ -635,7 +674,7 @@ class dcr_chart_suite():
         
 
         #BUILD CHARTS
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,
             x_data,
@@ -648,30 +687,10 @@ class dcr_chart_suite():
             legend_data
         )
         fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
-
-        #ADD VOLUME BARS ONLY TO PRICING MODELS
-        if model == 1:
-            """ =================================
-                ADD VOLUME BAR CHARTS
-            ================================="""
-            x_data = [
-                df['date'],
-                df['date']
-            ]
-            y_data = [
-                df['dcr_tic_vol'],
-                df['dcr_tfr_vol']
-            ]
-            color_data = ['rgb(237,96,136)','rgb(37,187,217)']
-            loop_data = [0,1]
-            name_data = ['Ticket Vol (DCR)','Transfer Vol (DCR)']
-            for i in loop_data:
-                fig.add_trace(
-                    go.Bar(x=x_data[i],y=y_data[i],name=name_data[i],marker_color=color_data[i]),secondary_y=True)
-            fig.update_layout(barmode='stack',bargap=0.01)
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         
         #FINALISE CHART
-        fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")
+        fig = self.chart.add_annotation(fig,"@checkmatey<br />@permabullnino")
         self.add_slider(fig)
 
         #Write out html chart
@@ -680,6 +699,8 @@ class dcr_chart_suite():
         elif model ==1:
             chart_name = '\\pricing_models\\block_subsidy_btc_pricing'
         self.write_html(fig,chart_name)
+
+        #return fig
 
     def commitment_usd(self,model):
         """Decred USD Stakeholder Commitment Models
@@ -721,6 +742,8 @@ class dcr_chart_suite():
             'rgb(46, 214, 161)',    #Turquoise
             'rgb(156,225,143)',     #Turquoise Green
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         dash_data = ['solid','dash','solid','solid','solid','solid','solid','dash']
         width_data = [2,2,2,2,2,2,3,2]
         opacity_data = [1,1,1,1,1,1,1,1]
@@ -739,7 +762,6 @@ class dcr_chart_suite():
                 df['Total_income_usd'].cumsum(),
                 df['tic_usd_cost'].cumsum(),
                 df['IssuedCapUSD'],
-                df['IssuedCapUSD']
             ]
             name_data = [
                 'Market Cap',
@@ -789,12 +811,13 @@ class dcr_chart_suite():
 
 
         #BUILD FINAL CHART
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
 
         self.add_slider(fig)
 
@@ -804,6 +827,8 @@ class dcr_chart_suite():
         elif model ==1:
             chart_name = '\\pricing_models\\commitments_usd_pricing'
         self.write_html(fig,chart_name)
+
+        #return fig
 
     def commitment_btc(self,model):
         """Decred BTC Stakeholder Commitment Models
@@ -845,6 +870,8 @@ class dcr_chart_suite():
             'rgb(46, 214, 161)',    #Turquoise
             'rgb(156,225,143)',     #Turquoise Green
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         dash_data = ['solid','dash','solid','solid','solid','solid','solid','dash']
         width_data = [2,2,2,2,2,2,3,2]
         opacity_data = [1,1,1,1,1,1,1,1]
@@ -911,12 +938,13 @@ class dcr_chart_suite():
             range_data = [[self.start,self.last],[self.price_lb_btc,self.price_ub_btc],[0,0]]
 
         #BUILD FINAL CHART
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
 
         self.add_slider(fig)
 
@@ -926,6 +954,8 @@ class dcr_chart_suite():
         elif model ==1:
             chart_name = '\\pricing_models\\commitment_btc_pricing'
         self.write_html(fig,chart_name)
+
+        #return fig
 
     def s2f_model(self,model):
         """Decred Stock to Flow Models
@@ -992,6 +1022,8 @@ class dcr_chart_suite():
             'rgb(255, 102, 102)',   #Gradient L.Red
             'rgb(255, 80, 80)',     #Gradient Red
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,True,True,True,True,True,True,True,True,True,True,]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
@@ -1060,12 +1092,12 @@ class dcr_chart_suite():
             range_data = [[self.start,self.last],[self.price_lb,self.price_ub],[-2,5]]
         
         
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
-        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
         fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(showgrid=False,secondary_y=True)
         self.add_slider(fig)
@@ -1076,6 +1108,8 @@ class dcr_chart_suite():
         elif model ==1:
             chart_name = '\\pricing_models\\s2f_model_pricing'
         self.write_html(fig,chart_name)
+
+        #return fig
 
     def s2f_model_residuals(self):
         """Decred Stock to Flow Models - Residuals
@@ -1110,10 +1144,10 @@ class dcr_chart_suite():
             df['age_sply'],     #DCR Price
             df2['age_sply'],    #BTC Price
             df3['age_sply'],    #Halvings
-            [-1,2],    # Arbitrary Ceiling for Sell Fill
-            [-1,2],    # BUY
-            [-1,2],    # Arbitrary Ceiling for Sell Fill
-            [-1,2],    # SELL
+            [0,1],    # Arbitrary Ceiling for Sell Fill
+            [0,1],    # BUY
+            [0,1],    # Arbitrary Ceiling for Sell Fill
+            [0,1],    # SELL
         ]
         y_data = [
             df['S2F_CapMr_residual'].rolling(14).mean(),
@@ -1131,7 +1165,7 @@ class dcr_chart_suite():
             'N/A',
             'BUY ZONE (-1.5 stdev)',
             'N/A',
-            'SELL ZONE (-1.5 stdev)',
+            'SELL ZONE (+1.5 stdev)',
         ]
         title_data = [
             '<b>Decred Stock-to-Flow Model Residuals</b>',
@@ -1152,17 +1186,19 @@ class dcr_chart_suite():
             'rgb(50, 50, 50)',    #Background
             'rgba(255, 80, 80,0.25)',     #Gradient Red
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,True,True,False,True,False,True]
         autorange_data = [False,False,False]
         type_data = ['linear','linear','linear']
         range_data = [[0,1],[-4,4],[-4,4]]      
-        fig = check_standard_charts().subplot_lines_doubleaxis_1st_area(
+        fig = self.chart.subplot_lines_doubleaxis_1st_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data,
             fill_data
             )
-        fig.update_xaxes(dtick='0.1',tickformat='%d-%b-%y')
+        fig.update_xaxes(dtick='0.1',tickformat='%d-%b-%y',showgrid=True)
         fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(showgrid=False,secondary_y=True)
         self.add_slider(fig)
@@ -1170,6 +1206,8 @@ class dcr_chart_suite():
         #Write out html chart
         chart_name = '\\oscillators\\s2f_residuals'
         self.write_html(fig,chart_name)
+
+        #return fig
 
     def mayer_multiple(self):
         """"Mayer Multiple Bands"""
@@ -1269,6 +1307,8 @@ class dcr_chart_suite():
             'rgba(36, 255, 136, 0.2)',    #Gradient Green
             'rgb(102, 255, 153)',         #Turquoise Green
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         fill_data = [
             'none','none','none','none','none','none','none',
             'none','tonexty','tonexty','none','tonexty','tozeroy','none',
@@ -1285,18 +1325,21 @@ class dcr_chart_suite():
         range_data = [[self.start,self.last],[-2,3],[np.log10(0.2),5]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data,
             fill_data
             )
         fig.update_xaxes(dtick='M3',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         self.add_slider(fig)
 
         #Write out html chart
         chart_name = '\\pricing_models\\mayer_multiple_pricing'
         self.write_html(fig,chart_name)
+
+        #return fig
 
     def puell_multiple(self):
         """"Puell Multiple"""
@@ -1310,62 +1353,84 @@ class dcr_chart_suite():
             _c = df.loc[i,'DailyIssuedUSD']
             df.loc[i,'Puell_Multiple'] = _c / _b
 
-        loop_data=[[0],[1,2,3,4,5]]
+        loop_data=[[0,1],[2,3,4,5,6,7,8]]
         x_data = [
             df['date'],
             df['date'],
-            ['2016-01-01','2022-01-01'],    #Strong BUY
-            ['2016-01-01','2022-01-01'],    #BUY
-            ['2016-01-01','2022-01-01'],    #SELL
-            ['2016-01-01','2022-01-01'],    #Strong SELL
+            df['date'],
+            [self.start,self.last],    #N/A CEILING
+            [self.start,self.last],    #STRONG SELL
+            [self.start,self.last],    #SELL
+            [self.start,self.last],    #NORMAL
+            [self.start,self.last],    #BUY
+            [self.start,self.last],    #BUY
         ]
         y_data = [
             df['PriceUSD'],
+            df['PriceUSD'].rolling(365).mean(),
             df['Puell_Multiple'],
-            [0.4,0.4],
-            [0.6,0.6],
-            [2.5,2.5],
+            [10,10],
             [5,5],
+            [2.5,2.5],
+            [0.6,0.6],            
+            [0.4,0.4],
+            [0.4,0.4],
         ]
         name_data = [
             'DCR Price (USD)',
+            '365-day MA',
             'Puell Multiple',
-            'STRONG BUY (0.4)',
+            'N/A',
+            'STRONG SELL (2.8)',
+            'SELL (2.0)',
+            'N/A',
             'BUY (0.6)',
-            'SELL (2.5)',
-            'STRONG SELL (5.0)'
+            'STRONG BUY (0.4)',
         ]
-        width_data      = [2,1,2,2,2,2]
-        opacity_data    = [1,1,1,1,1,1]
-        dash_data = ['solid','solid','dash','dash','dash','dash']
+        width_data      = [2,2,1,1,1,1,1,1,1]
+        opacity_data    = [1,1,1,1,1,1,1,1,1]
+        dash_data = ['solid','solid','solid','dash','dash','dash','dash','dash','dash']
         color_data = [
-            'rgb(255, 255, 255)',   #White
-            'rgb(46, 214, 161)',    #Turquoise
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 255, 102)',   #Gradient Lime
-            'rgb(255, 102, 102)',   #Gradient L.Red
-            'rgb(255, 80, 80)',     #Gradient Red
+            'rgb(255, 255, 255)',         #White
+            'rgb(237, 109, 71)',          #Decred Orange
+            'rgb(46, 214, 161)',          #Turquoise
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.1)',     #Gradient Red
+            'rgba(55 ,55, 55, 0)',        #NA
+            'rgba(36, 255, 136, 0.1)',    #Gradient Green
+            'rgba(36, 255, 136, 0.2)',    #Gradient Green
         ]
-        legend_data = [True,True,True,True,True,True]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        fill_data = [
+            'none','none','none',
+            'none','tonexty','tonexty','none','tonexty','tozeroy',
+        ]
+        legend_data = [True,True,True,False,True,True,False,True,True]
         title_data = [
             '<b>Decred Puell Multiple</b>',
             '<b>Date</b>',
             '<b>Price (USD)</b>',
             '<b>Puell Multiple</b>']
-        range_data = [[self.start,self.last],[-1,3],[-1,2]]
+        range_data = [[self.start,self.last],[-1,3],[-1,5]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
             )
-        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         self.add_slider(fig)
 
         #Write out html chart
         chart_name = '\\oscillators\\puell_multiple'
         self.write_html(fig,chart_name)
+
+        #return fig
 
     def contractor_multiple(self):
         """"Contractor Multiple"""
@@ -1406,6 +1471,8 @@ class dcr_chart_suite():
             'rgb(153, 255, 102)',   #Gradient Green
             'rgb(255, 80, 80)',     #Gradient Red
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,True,True,True,True]
         title_data = [
             '<b>Decred Contractor Multiple</b>',
@@ -1415,17 +1482,20 @@ class dcr_chart_suite():
         range_data = [[self.start,self.last],[-1,3],[-0.6931471805599453,3]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
-        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         self.add_slider(fig)
 
         #Write out html chart
         chart_name = '\\oscillators\\contractor_multiple'
         self.write_html(fig,chart_name)
+
+        #return fig
 
     def beam_indicator(self):
         """"BEAM Indicator (Bitcoin Economics Adaptive Multiple) 
@@ -1446,10 +1516,10 @@ class dcr_chart_suite():
             df['date'],
             df['date'],
             df['date'],
-            ['2000-01-01','2100-01-01'],    #Strong BUY
-            ['2000-01-01','2100-01-01'],    #BUY
-            ['2000-01-01','2100-01-01'],    #SELL
-            ['2000-01-01','2100-01-01'],    #Strong SELL
+            [self.start,self.last],    #Strong BUY
+            [self.start,self.last],    #BUY
+            [self.start,self.last],    #SELL
+            [self.start,self.last],    #Strong SELL
         ]
         y_data = [
             df['PriceUSD'],
@@ -1484,6 +1554,8 @@ class dcr_chart_suite():
             'rgb(255, 102, 102)',   #Gradient L.Red
             'rgb(255, 80, 80)',     #Gradient Red
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,True,True,True,True,True,True,True,]
         title_data = [
             '<b>Decred BEAM Indicator<b>',
@@ -1493,12 +1565,12 @@ class dcr_chart_suite():
         range_data = [[self.start,self.last],[-1,3],[-1,10]]
         autorange_data = [False,False,False]
         type_data = ['date','log','linear']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
-        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
         fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(showgrid=False,secondary_y=True,dtick=0.5)
         self.add_slider(fig)
@@ -1506,6 +1578,8 @@ class dcr_chart_suite():
         #Write out html chart
         chart_name = '\\pricing_models\\BEAM_indicator'
         self.write_html(fig,chart_name)
+
+        #return fig
 
     def bottom_cycle(self):
         """"Price Growth over Days since capitulation for each cycle"""
@@ -1558,6 +1632,8 @@ class dcr_chart_suite():
             'rgb(255, 80, 80)',      #Gradient Red
             'rgb(153, 255, 102)',      #Gradient Green
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,True,True,True,]
         title_data = [
             '<b>Decred Price Growth Since Cycle Low</b>',
@@ -1567,18 +1643,21 @@ class dcr_chart_suite():
         range_data = [[0,1500],[0,3],[-1,2]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick=30)
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         #fig.update_yaxes(tickformat='.0%')
         self.add_slider(fig)
 
         #Write out html chart
         chart_name = '\\cycle_charts\\bottom_cycle'
         self.write_html(fig,chart_name)
+
+        #return fig
     
     def top_cycle(self):
         """"Price Drawdown over since market top for each cycle"""
@@ -1630,6 +1709,8 @@ class dcr_chart_suite():
             'rgb(255, 80, 80)',      #Gradient Red
             'rgb(153, 255, 102)',      #Gradient Green
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,True,True,True,]
         title_data = [
             '<b>Decred Drawdown Since Market Top</b>',
@@ -1639,12 +1720,13 @@ class dcr_chart_suite():
         range_data = [[0,1500],[-1.301029996,0],[-1,2]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']
-        fig = check_standard_charts().subplot_lines_singleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
         fig.update_xaxes(dtick=30)
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         #fig.update_yaxes(tickformat='.0%')
         self.add_slider(fig)
 
@@ -1652,579 +1734,7 @@ class dcr_chart_suite():
         chart_name = '\\cycle_charts\\top_cycle'
         self.write_html(fig,chart_name)
 
-    def TVWAP(self):
-        """
-        #############################################################################
-                            REALISED CAP + 142DAY CAP
-        #############################################################################
-        """
-        df = self.df
-        #14 Day TVWAP
-        df['14day_TVWAP'] = (
-            (df['tic_usd_cost'].rolling(14).sum()
-            / df['dcr_tic_vol'].rolling(14).sum())
-        )
-        df['14day_TVWAP_Ratio'] = df['14day_TVWAP'] / df['PriceUSD']
-        df['14day_TVWAP_Cap']   = df['14day_TVWAP'] * df['dcr_sply']
-
-
-        #28 Day TVWAP
-        df['28day_TVWAP'] = (
-            (df['tic_usd_cost'].rolling(28).sum()
-            / df['dcr_tic_vol'].rolling(28).sum())
-        )
-        df['28day_TVWAP_Ratio'] = df['28day_TVWAP'] / df['PriceUSD']
-        df['28day_TVWAP_Cap']   = df['28day_TVWAP'] * df['dcr_sply']
-
-
-        #142 Day TVWAP
-        df['142day_TVWAP'] = (
-            (df['tic_usd_cost'].rolling(142).sum()
-            / df['dcr_tic_vol'].rolling(142).sum())
-        )
-        df['142day_TVWAP_Ratio'] = df['142day_TVWAP'] / df['PriceUSD']
-        df['142day_TVWAP_Cap']   = df['142day_TVWAP'] * df['dcr_sply']
-
-
-        loop_data=[[0,1,2,3,4],[5,6,7,   8,9,10,11,12]]
-        x_data = [
-            df['date'],
-            df['date'],
-            df['date'],
-            df['date'],
-            df['date'],
-            #Ratios
-            df['date'],
-            df['date'],
-            df['date'],
-
-            [self.start,self.last],    #N/A CEILING
-            [self.start,self.last],    #SELL
-            [self.start,self.last],    #NORMAL 1
-            [self.start,self.last],    #NORMAL 2
-            [self.start,self.last],    #BUY
-        ]
-        y_data = [
-            df['PriceUSD'],
-            df['PriceRealUSD'],
-            df['14day_TVWAP'],
-            df['28day_TVWAP'],
-            df['142day_TVWAP'],
-            #Ratios
-            df['14day_TVWAP_Ratio'],
-            df['28day_TVWAP_Ratio'],
-            df['142day_TVWAP_Ratio'],
-
-            [2.00,2.00],    #NA Ceiling
-            [1.20,1.20],    #SELL (above)
-            [0.90,0.90],    #Normal 2 (above)
-            [0.65,0.65],    #Normal 1 (above)
-            [0.65,0.65],    #BUY (below)
-        ]
-        name_data = [
-            'DCR/USD Price',
-            'Realised Price',
-            '14-Day TVWAP',
-            '28-Day TVWAP',
-            '142-Day TVWAP',
-            #Ratios
-            '14 Day Ratio',
-            '28 Day Ratio',
-            '142 Day Ratio',
-            'N/A','N/A','N/A','N/A','N/A',
-            ]
-        color_data = [
-            'rgb(255, 255, 255)',   #White
-            'rgb(17, 255, 125)',    #Powerpoint Green
-            'rgb(255, 192, 0)',     #Treasury Yellow
-            'rgb(250, 38, 53)',     #POW Red
-            'rgb(20, 169, 233)',    #Total Blue
-            #Ratios
-            'rgb(255, 192, 0)',     #Treasury Yellow
-            'rgb(250, 38, 53)',     #POW Red
-            'rgb(20, 169, 233)',    #Total Blue
-            
-            'rgba(255, 80, 80, 0.2)',     #Gradient Red
-            'rgba(255, 80, 80, 0.2)',     #Gradient Red
-            'rgba(255, 204, 102, 0.2)',   #Gradient Yellow
-            'rgba(255, 204, 102, 0.2)',   #Gradient Yellow
-            'rgba(36, 255, 136, 0.2)',    #Gradient Green
-
-        ]
-        dash_data = ['solid','solid','solid','solid','solid',   'solid','solid','solid'     ,'dash','dash','dash','dash','dash','dash']
-        fill_data = ['none','none','none','none','none',         'none','none','none'       ,'none','tonexty','tonexty','tonexty','tozeroy']
-        width_data = [2,2,1,1,2,  1,1,1,   2,2,2,2,2]
-        opacity_data = [1,1,1,1,1,   1,1,1,   0,0.75,0.75,0.75,0.75]
-        legend_data = [True,True,True,True,True,     True,True,True,     False,False,False,False,False,]#
-        title_data = [
-            '<b>Decred Ticket Volume Weighted Average Price (TVWAP)</b>',
-            '<b>Date</b>',
-            '<b>DCR/USD Price</b>',
-            '<b>TVWAP Ratios</b>']
-        range_data = [[self.start,self.last],[-2,3],[0,5]]
-        autorange_data = [False,False,False]
-        type_data = ['date','log','linear']#
-        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data,
-            fill_data
-            )
-        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
-        fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")
-        self.add_slider(fig)
-
-        #Write out html chart
-        chart_name = '\\valuation_models\\TVWAP'
-        self.write_html(fig,chart_name)
-
-    def hodler_conversion(self):
-        """"Decred Hodler COnversion Rates
-            after @permabullnino"""
-        df = self.df
-
-        #142 Day TVWAP
-        df['142day_TVWAP'] = (
-            (df['tic_usd_cost'].rolling(142).sum()
-            / df['dcr_tic_vol'].rolling(142).sum())
-        )
-        df['142day_TVWAP_Ratio'] = df['142day_TVWAP'] / df['PriceUSD']
-        df['142day_TVWAP_Cap']   = df['142day_TVWAP'] * df['dcr_sply']
-
-        #Calculate Hodler Conversion Rate
-        df['hconv142d'] = (
-            (df['dcr_tic_vol'].rolling(142).sum() 
-                / df['TxTfrValNtv'].rolling(142).sum())
-            -
-            (df['dcr_tic_vol'].rolling(28).sum() 
-                / df['dcr_sply'])
-        )
-
-        #Create positive and Negative datasets
-        df['hconv142d_pos'] = np.where(df['hconv142d'] >= 0, df['hconv142d'], 0)
-        df['hconv142d_neg'] = np.where(df['hconv142d'] < 0, df['hconv142d'], 0)
-
-        #CHART
-        loop_data=[[0,1,2],[3,4]]
-        x_data = [
-            df['date'],
-            df['date'],
-            df['date'],
-            df['date'],
-            df['date'],
-        ]
-        y_data = [
-            df['PriceUSD'],
-            df['PriceRealUSD'],
-            df['142day_TVWAP'],
-            df['hconv142d_pos'],
-            df['hconv142d_neg'],
-
-        ]
-        name_data = [
-            'DCR Price (USD)',
-            'Realised Price (USD)',
-            '142-Day TVWAP',
-            'Hodler Conversion Rate +ve',
-            'Hodler Conversion Rate -ve',
-        ]
-        fill_data = ['','','','tozeroy','tozeroy']
-        width_data      = [2,2,2,2,2]
-        opacity_data    = [1,1,1,1,1]
-        dash_data = ['solid','solid','solid','solid','solid',]
-        color_data = [
-            'rgb(255, 255, 255)',   #White
-            'rgb(17, 255, 125)',    #Powerpoint Green
-            'rgb(20, 169, 233)',    #Total Blue
-            'rgb(255, 80, 80)',     #Gradient Red
-            'rgb(153, 255, 102)',   #Gradient Green
-        ]
-        legend_data = [True,True,True,True,True,]
-        title_data = [
-            '<b>Decred HODLer Converstion Rate</b>',
-            '<b>Date</b>',
-            '<b>Price (USD)</b>',
-            '<b>HODLer Conversion Rate</b>']
-        range_data = [[self.start,self.last],[-2,3],[-0.5,1.5]]
-        autorange_data = [False,False,False]
-        type_data = ['date','log','linear']
-        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data,
-            fill_data
-            )
-        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
-        fig.update_yaxes(showgrid=True,secondary_y=False)
-        fig.update_yaxes(showgrid=False,secondary_y=True,tickformat=',.0%',dtick=0.25)
-        self.add_slider(fig)
-
-        fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")     
-        
-        #Write out html chart
-        chart_name = '\\oscillators\\hodler_conversion'
-        self.write_html(fig,chart_name)
-
-    def ticket_overunder(self):
-        """"Decred Ticket Over/Under Measure
-            after @permabullnino"""
-        df = self.df
-
-        df['tic_overunder'] = (
-            df['dcr_tic_vol'].rolling(28).sum()
-            /
-            df['dcr_tic_vol'].rolling(142).sum()
-        )
-
-        #CHART
-        loop_data=[[0,1],[2,3,4]]
-        x_data = [
-            df['date'],
-            df['date'],
-            df['date'],
-            ['2016-01-01','2022-01-01','2022-01-01','2016-01-01'],    #BUY ZONE
-            ['2016-01-01','2022-01-01','2022-01-01','2016-01-01'],    #SELL ZONE
-        ]
-        y_data = [
-            df['PriceBTC'],
-            df['PriceRealBTC'],
-            df['tic_overunder'],
-            [0.199,0.199,0.200,0.200],
-            [0.210,0.210,0.211,0.211],
-        ]
-        name_data = [
-            'DCR Price (BTC)',
-            'Realised Price (BTC)',
-            'Ticket Over/Under Measure',
-            'Buy Zone',
-            'Sell Zone',
-        ]
-        width_data      = [2,2,2,1,1]
-        opacity_data    = [1,1,1,1,1]
-        dash_data = ['solid','solid','solid','dash','dash',]
-        color_data = [
-            'rgb(255, 255, 255)',   #White
-            'rgb(17, 255, 125)',    #Powerpoint Green
-            'rgb(20, 169, 233)',    #Total Blue
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 80, 80)',     #Gradient Red
-        ]
-        legend_data = [True,True,True,True,True,]
-        title_data = [
-            '<b>Decred Ticket Over/Under Measure</b>',
-            '<b>Date</b>',
-            '<b>Price (BTC)</b>',
-            '<b>Ticket Over/Under Measure</b>']
-        range_data = [['2018-01-01',self.last],[-3.698970004,-1.698970004],[0.190,0.240]]
-        autorange_data = [False,False,False]
-        type_data = ['date','log','linear']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
-            )
-        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
-        fig.update_yaxes(showgrid=True,secondary_y=False)
-        fig.update_yaxes(showgrid=False,secondary_y=True,dtick=0.005)
-        self.add_slider(fig)
-
-        fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")     
-
-        #Write out html chart
-        chart_name = '\\oscillators\\ticket_overunder'
-        self.write_html(fig,chart_name)
-
-    def tic_vol_sum_142day(self):
-        """"Decred 142-day sum of tickets with Fibonacci multiple bands 
-            after @permabullnino"""
-        df = self.df
-
-        df['tic_usd_cost_142sum'] = df['tic_usd_cost'].rolling(142).sum()/df['dcr_sply']
-
-        loop_data=[[0,1,2,3,4],[]]
-        x_data = [
-            df['date'],
-            df['date'],
-            df['date'],
-            df['date'],
-            df['date'],
-        ]
-        y_data = [
-            df['PriceUSD'],
-            df['tic_usd_cost_142sum'],
-            df['tic_usd_cost_142sum']*0.236,
-            df['tic_usd_cost_142sum']*0.382,
-            df['tic_usd_cost_142sum']*0.618,
-        ]
-        name_data = [
-            'DCR/USD Price',
-            '142d Ticket USD Sum',
-            '142d Ticket USD Sum x23.6%',
-            '142d Ticket USD Sum x38.2%',
-            '142d Ticket USD Sum x61.8%',
-            ]
-        color_data = [
-            'rgb(255, 255, 255)',    #WHite
-            'rgb(255, 80, 80)',     #Gradient Red
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 204, 102)',   #Gradient Yellow
-            'rgb(255, 204, 102)',   #Gradient Yellow
-        ]
-        dash_data = ['solid','solid','solid','dash','dash']
-        width_data = [2,2,2,1,1]
-        opacity_data = [1,1,1,1,1]
-        legend_data = [True,True,True,True,True]#
-        title_data = [
-            '<b>Decred 142-Day Ticket USD Sum</b>',
-            '<b>Date</b>',
-            '<b>DCR/USD Pricing</b>',
-            '']
-        range_data = [[self.start,self.last],[-1,3],[5,11]]
-        autorange_data = [True,False,False]
-        type_data = ['date','log','log']#
-        fig = check_standard_charts().subplot_lines_singleaxis(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
-            )
-        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
-
-        self.add_slider(fig)
-        fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")
-
-        #Write out html chart
-        chart_name = '\\pricing_models\\142day_ticket_volume'
-        self.write_html(fig,chart_name)
-
-    def tx_volatility_ratio(self):
-        """"Decred Transactional Volatility Ratio
-            after @permabullnino"""
-        df = self.df
-
-        df['tx_volatile_ratio'] = (
-            df['dcr_tfr_vol'].rolling(28).sum()
-            /
-            df['dcr_tfr_vol'].rolling(142).sum()
-        )
-
-        df['tx_volatile_ratio_Ntv'] = (
-            df['TxTfrValAdjNtv'].rolling(28).sum()
-            /
-            df['TxTfrValAdjNtv'].rolling(142).sum()
-        )
-
-        #CHART
-        loop_data=[[0,1],[2,3,4,5]]
-        x_data = [
-            df['date'],
-            df['date'],
-            df['date'],
-            df['date'],
-            ['2016-01-01','2022-01-01','2022-01-01','2016-01-01'],    #BUY ZONE
-            ['2016-01-01','2022-01-01','2022-01-01','2016-01-01'],    #SELL ZONE
-        ]
-        y_data = [
-            df['PriceBTC'],
-            df['PriceRealBTC'],
-            df['tx_volatile_ratio'],
-            df['tx_volatile_ratio_Ntv'],
-            [0.15,0.15,0.17,0.17],
-            [0.26,0.26,0.28,0.28],
-        ]
-        name_data = [
-            'DCR Price (BTC)',
-            'Realised Price (BTC)',
-            'Transaction Volatility (dcrdata)',
-            'Transaction Volatility (CoinMetrics)',
-            'Buy Zone',
-            'Sell Zone',
-        ]
-        width_data      = [2,2,2,2,1,1]
-        opacity_data    = [1,1,1,1,1,1]
-        dash_data = ['solid','solid','dash','solid','dash','dash',]
-        color_data = [
-            'rgb(255, 255, 255)',   #White
-            'rgb(17, 255, 125)',    #Powerpoint Green
-            'rgb(20, 169, 233)',    #Total Blue
-            'rgb(20, 169, 233)',    #Total Blue
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 80, 80)',     #Gradient Red
-        ]
-        legend_data = [True,True,True,True,True,True]
-        title_data = [
-            '<b>Decred Transactional Volatility</b>',
-            '<b>Date</b>',
-            '<b>Price (BTC)</b>',
-            '<b>Transaction Volatility Ratio</b>'
-            ]
-        range_data = [[self.start,self.last],[-4,-1.698970004],[0,1]]
-        autorange_data = [False,False,False]
-        type_data = ['date','log','linear']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
-            )
-        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
-        fig.update_yaxes(showgrid=True,secondary_y=False)
-        fig.update_yaxes(showgrid=False,secondary_y=True,dtick=0.05)
-        self.add_slider(fig)
-
-        fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")     
-
-        #Write out html chart
-        chart_name = '\\oscillators\\tx_volatility_ratio'
-        self.write_html(fig,chart_name)
-
-    def tx_sum_adjsply_142d(self):
-        """"Decred 142day Sum of coins moved, adjusted for supply
-        after @permabullnino"""
-        df = self.df
-
-        #df['tx_dcr_142sum']     = df['TxTfrValNtv'].rolling(142).sum() / df['SplyCur']
-        df['tx_dcr_142sum_adj'] = df['TxTfrValAdjNtv'].rolling(142).sum() / df['SplyCur']
-
-        loop_data=[[0],[1,2,3,4,5]]
-        x_data = [
-            df['date'],
-            df['date'],
-            [self.start,self.last],    #BUY ZONE Ceiling
-            [self.start,self.last],    #BUY ZONE Floor
-            [self.start,self.last],    #SELL ZONE Ceiling
-            [self.start,self.last],    #SELL ZONE Floor
-        ]
-        y_data = [
-            df['PriceUSD'],
-            df['tx_dcr_142sum_adj'],
-            [1.1,1.1],
-            [0.75,0.75],
-            [2.1,2.1],
-            [1.7,1.7],
-        ]
-        name_data = [
-            'DCR Price (USD)',
-            'tx_dcr_142sum_adj',
-            'LOW ACTIVITY',
-            'N/A',
-            'HIGH ACTIVITY',
-            'N/A',
-        ]
-        width_data      = [2,2,2,2,2,2]
-        opacity_data    = [1,1,1,1,1,1]
-        dash_data = ['solid','solid','dash','dash','dash','dash']
-        color_data = [
-            'rgb(46, 214, 161)',    #Turquoise
-            #'rgb(239, 125, 50)',    #Price Orange
-            'rgb(255, 255, 255)',   #White
-            'rgba(0,255,255,0.3)', #Retro Blue
-            'rgba(0,255,255,0.3)', #Retro Blue
-            'rgba(255,0,255,0.3)', #Retro Pink
-            'rgba(255,0,255,0.3)', #Retro Pink
-        ]
-        legend_data = [True,True,True,False,True,False,]
-        fill_data       = ['none','none','none','tonexty','none','tonexty',]
-        title_data = [
-            '<b>Decred 142-Day Moved Coins Adjusted for Supply</b>',
-            '<b>Date</b>',
-            '<b>Price USD</b>',
-            '<b>142-day DCR Sum Moved / Supply</b>']
-        range_data = [[self.start,self.last],[self.price_lb,self.price_ub],[0,3.5]]
-        autorange_data = [False,False,False]
-        type_data = ['date','log','linear']
-        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data,
-            fill_data
-            )
-        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
-        fig.update_yaxes(showgrid=True,secondary_y=False)
-        fig.update_yaxes(showgrid=False,secondary_y=True)
-        self.add_slider(fig)
-
-        #Write out html chart
-        chart_name = '\\oscillators\\tx_sum_adjsply_142d'
-        self.write_html(fig,chart_name)
-
-    def max_vol_ratio(self):
-        """"Decred Maximum Volume Ratio
-            after @permabullnino"""
-        df = self.df
-
-        df['max_vol_ratio_USD'] = (
-            df['CapMrktCurUSD']
-            /
-            df['tic_usd_cost'].rolling(28).sum()
-        )
-
-        df['max_vol_ratio_BTC'] = (
-            df['CapMrktCurBTC']
-            /
-            df['tic_btc_cost'].rolling(28).sum()
-        )
-
-        #CHART
-        loop_data=[[0,1],[2,3,4,5]]
-        x_data = [
-            df['date'],
-            df['date'],
-            df['date'],
-            df['date'],
-            [self.start,self.last,self.last,self.start],    #BUY ZONE
-            [self.start,self.last,self.last,self.start],    #SELL ZONE
-        ]
-        y_data = [
-            df['PriceUSD'],
-            df['PriceRealUSD'],
-            df['max_vol_ratio_USD'],
-            df['max_vol_ratio_BTC'],
-            [0.15,0.15,0.17,0.17],
-            [0.26,0.26,0.28,0.28],
-        ]
-        name_data = [
-            'DCR Price (BTC)',
-            'Realised Price (BTC)',
-            'max_vol_ratio_USD',
-            'max_vol_ratio_BTC',
-            'Buy Zone',
-            'Sell Zone',
-        ]
-        width_data      = [2,2,2,2,1,1]
-        opacity_data    = [1,1,1,1,1,1]
-        dash_data = ['solid','solid','solid','dash','dash','dash',]
-        color_data = [
-            'rgb(255, 255, 255)',   #White
-            'rgb(17, 255, 125)',    #Powerpoint Green
-            'rgb(20, 169, 233)',    #Total Blue
-            'rgb(20, 169, 233)',    #Total Blue
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 80, 80)',     #Gradient Red
-        ]
-        legend_data = [True,True,True,True,True,True]
-        title_data = [
-            '<b>Decred Max Vol Ratio</b>',
-            '<b>Date</b>',
-            '<b>Price (BTC)</b>',
-            '<b>Transaction Volatility Ratio</b>'
-            ]
-        range_data = [[self.start,self.last],[-3.698970004,-2.522878745],[0.0,5.0]]
-        autorange_data = [False,False,False]
-        type_data = ['date','log','linear']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
-            )
-        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
-        fig.update_yaxes(showgrid=True,secondary_y=False)
-        fig.update_yaxes(showgrid=False,secondary_y=True,dtick=0.05)
-        self.add_slider(fig)
-
-        fig = check_standard_charts().add_annotation(fig,"@checkmatey<br />@permabullnino")     
-
-        #Write out html chart
-        chart_name = '\\oscillators\\max_volume_ratio'
-        self.write_html(fig,chart_name)
+        #return fig
 
     def nvt_rvt(self):
         """"Bitcoin NVT and RVT Ratio"""
@@ -2323,6 +1833,8 @@ class dcr_chart_suite():
             'rgba(255, 204, 102, 0.2)',   #Gradient Yellow
             'rgba(36, 255, 136, 0.2)',    #Gradient Green
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [
             True,True,True,True,True,True,True,True,
             False,False,False,False,False,
@@ -2339,13 +1851,13 @@ class dcr_chart_suite():
         range_data = [[self.start,self.last],[5,10],[0,750]]
         autorange_data = [False,False,False]
         type_data = ['date','log','linear']
-        fig = check_standard_charts().subplot_lines_doubleaxis_2nd_area(
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data,
             fill_data
             )
-        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
         fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(showgrid=False,secondary_y=True,dtick=50)
         self.add_slider(fig)
@@ -2353,6 +1865,655 @@ class dcr_chart_suite():
         #Write out html chart
         chart_name = '\\oscillators\\nvt_rvt'
         self.write_html(fig,chart_name)
+
+        #return fig
+
+    def TVWAP(self):
+        """
+        #############################################################################
+                            REALISED CAP + 142DAY CAP
+        #############################################################################
+        """
+        df = self.df
+        #14 Day TVWAP
+        df['14day_TVWAP'] = (
+            (df['tic_usd_cost'].rolling(14).sum()
+            / df['dcr_tic_vol'].rolling(14).sum())
+        )
+        df['14day_TVWAP_Ratio'] = df['14day_TVWAP'] / df['PriceUSD']
+        df['14day_TVWAP_Cap']   = df['14day_TVWAP'] * df['dcr_sply']
+
+
+        #28 Day TVWAP
+        df['28day_TVWAP'] = (
+            (df['tic_usd_cost'].rolling(28).sum()
+            / df['dcr_tic_vol'].rolling(28).sum())
+        )
+        df['28day_TVWAP_Ratio'] = df['28day_TVWAP'] / df['PriceUSD']
+        df['28day_TVWAP_Cap']   = df['28day_TVWAP'] * df['dcr_sply']
+
+
+        #142 Day TVWAP
+        df['142day_TVWAP'] = (
+            (df['tic_usd_cost'].rolling(142).sum()
+            / df['dcr_tic_vol'].rolling(142).sum())
+        )
+        df['142day_TVWAP_Ratio'] = df['142day_TVWAP'] / df['PriceUSD']
+        df['142day_TVWAP_Cap']   = df['142day_TVWAP'] * df['dcr_sply']
+
+
+        loop_data=[[0,1,2,3,4],[5,6,7,   8,9,10,11,12]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            #Ratios
+            df['date'],
+            df['date'],
+            df['date'],
+
+            [self.start,self.last],    #N/A CEILING
+            [self.start,self.last],    #SELL
+            [self.start,self.last],    #NORMAL 1
+            [self.start,self.last],    #NORMAL 2
+            [self.start,self.last],    #BUY
+        ]
+        y_data = [
+            df['PriceUSD'],
+            df['PriceRealUSD'],
+            df['14day_TVWAP'],
+            df['28day_TVWAP'],
+            df['142day_TVWAP'],
+            #Ratios
+            df['14day_TVWAP_Ratio'],
+            df['28day_TVWAP_Ratio'],
+            df['142day_TVWAP_Ratio'],
+
+            [2.00,2.00],    #NA Ceiling
+            [1.20,1.20],    #SELL (above)
+            [0.90,0.90],    #Normal 2 (above)
+            [0.65,0.65],    #Normal 1 (above)
+            [0.65,0.65],    #BUY (below)
+        ]
+        name_data = [
+            'DCR/USD Price',
+            'Realised Price',
+            '14-Day TVWAP',
+            '28-Day TVWAP',
+            '142-Day TVWAP',
+            #Ratios
+            '14 Day Ratio',
+            '28 Day Ratio',
+            '142 Day Ratio',
+            'N/A','N/A','N/A','N/A','N/A',
+            ]
+        color_data = [
+            'rgb(255, 255, 255)',   #White
+            'rgb(17, 255, 125)',    #Powerpoint Green
+            'rgb(255, 192, 0)',     #Treasury Yellow
+            'rgb(250, 38, 53)',     #POW Red
+            'rgb(20, 169, 233)',    #Total Blue
+            #Ratios
+            'rgb(255, 192, 0)',     #Treasury Yellow
+            'rgb(250, 38, 53)',     #POW Red
+            'rgb(20, 169, 233)',    #Total Blue
+            
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 204, 102, 0.2)',   #Gradient Yellow
+            'rgba(255, 204, 102, 0.2)',   #Gradient Yellow
+            'rgba(36, 255, 136, 0.2)',    #Gradient Green
+        ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        dash_data = ['solid','solid','solid','solid','solid',   'solid','solid','solid'     ,'dash','dash','dash','dash','dash','dash']
+        fill_data = ['none','none','none','none','none',         'none','none','none'       ,'none','tonexty','tonexty','tonexty','tozeroy']
+        width_data = [2,2,1,1,2,  1,1,1,   2,2,2,2,2]
+        opacity_data = [1,1,1,1,1,   1,1,1,   0,0.75,0.75,0.75,0.75]
+        legend_data = [True,True,True,True,True,     True,True,True,     False,False,False,False,False,]#
+        title_data = [
+            '<b>Decred Ticket Volume Weighted Average Price (TVWAP)</b>',
+            '<b>Date</b>',
+            '<b>DCR/USD Price</b>',
+            '<b>TVWAP Ratios</b>']
+        range_data = [[self.start,self.last],[-2,3],[0,5]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','linear']#
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+            )
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig = self.chart.add_annotation(fig,"@checkmatey<br />@permabullnino")
+        self.add_slider(fig)
+
+        #Write out html chart
+        chart_name = '\\valuation_models\\TVWAP'
+        self.write_html(fig,chart_name)
+
+        #return fig
+
+    def hodler_conversion(self):
+        """"Decred Hodler COnversion Rates
+            after @permabullnino"""
+        df = self.df
+
+        #142 Day TVWAP
+        df['142day_TVWAP'] = (
+            (df['tic_usd_cost'].rolling(142).sum()
+            / df['dcr_tic_vol'].rolling(142).sum())
+        )
+        df['142day_TVWAP_Ratio'] = df['142day_TVWAP'] / df['PriceUSD']
+        df['142day_TVWAP_Cap']   = df['142day_TVWAP'] * df['dcr_sply']
+
+        #Calculate Hodler Conversion Rate
+        df['hconv142d'] = (
+            (df['dcr_tic_vol'].rolling(142).sum() 
+                / df['TxTfrValNtv'].rolling(142).sum())
+            -
+            (df['dcr_tic_vol'].rolling(28).sum() 
+                / df['dcr_sply'])
+        )
+
+        #Create positive and Negative datasets
+        df['hconv142d_pos'] = np.where(df['hconv142d'] >= 0, df['hconv142d'], 0)
+        df['hconv142d_neg'] = np.where(df['hconv142d'] < 0, df['hconv142d'], 0)
+
+        #CHART
+        loop_data=[[0,1,2],[3,4]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+        ]
+        y_data = [
+            df['PriceUSD'],
+            df['PriceRealUSD'],
+            df['142day_TVWAP'],
+            df['hconv142d_pos'],
+            df['hconv142d_neg'],
+
+        ]
+        name_data = [
+            'DCR Price (USD)',
+            'Realised Price (USD)',
+            '142-Day TVWAP',
+            'Hodler Conversion Rate +ve',
+            'Hodler Conversion Rate -ve',
+        ]
+        fill_data = ['','','','tozeroy','tozeroy']
+        width_data      = [2,2,2,2,2]
+        opacity_data    = [1,1,1,1,1]
+        dash_data = ['solid','solid','solid','solid','solid',]
+        color_data = [
+            'rgb(255, 255, 255)',   #White
+            'rgb(17, 255, 125)',    #Powerpoint Green
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(255, 80, 80)',     #Gradient Red
+            'rgb(153, 255, 102)',   #Gradient Green
+        ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        legend_data = [True,True,True,True,True,]
+        title_data = [
+            '<b>Decred HODLer Converstion Rate</b>',
+            '<b>Date</b>',
+            '<b>Price (USD)</b>',
+            '<b>HODLer Conversion Rate</b>']
+        range_data = [[self.start,self.last],[-2,3],[-0.5,1.5]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','linear']
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+            )
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True,tickformat=',.0%',dtick=0.25)
+        self.add_slider(fig)
+
+        fig = self.chart.add_annotation(fig,"@checkmatey<br />@permabullnino")     
+        
+        #Write out html chart
+        chart_name = '\\oscillators\\hodler_conversion'
+        self.write_html(fig,chart_name)
+
+        #return fig
+
+    def ticket_overunder(self):
+        """"Decred Ticket Over/Under Measure
+            after @permabullnino"""
+        df = self.df
+
+        df['tic_overunder'] = (
+            df['dcr_tic_vol'].rolling(28).sum()
+            /
+            df['dcr_tic_vol'].rolling(142).sum()
+        )
+
+        #CHART
+        loop_data=[[0,1],[2,3,4]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            [self.start,self.last,self.last,self.start],    #BUY ZONE
+            [self.start,self.last,self.last,self.start],    #SELL ZONE
+        ]
+        y_data = [
+            df['PriceBTC'],
+            df['PriceRealBTC'],
+            df['tic_overunder'],
+            [0.199,0.199,0.200,0.200],
+            [0.210,0.210,0.211,0.211],
+        ]
+        name_data = [
+            'DCR Price (BTC)',
+            'Realised Price (BTC)',
+            'Ticket Over/Under Measure',
+            'Buy Zone',
+            'Sell Zone',
+        ]
+        width_data      = [2,2,2,1,1]
+        opacity_data    = [1,1,1,1,1]
+        dash_data = ['solid','solid','solid','dash','dash',]
+        color_data = [
+            'rgb(255, 255, 255)',   #White
+            'rgb(17, 255, 125)',    #Powerpoint Green
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(153, 255, 102)',   #Gradient Green
+            'rgb(255, 80, 80)',     #Gradient Red
+        ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        legend_data = [True,True,True,True,True,]
+        title_data = [
+            '<b>Decred Ticket Over/Under Measure</b>',
+            '<b>Date</b>',
+            '<b>Price (BTC)</b>',
+            '<b>Ticket Over/Under Measure</b>']
+        range_data = [['2018-01-01',self.last],[-3.698970004,-1.698970004],[0.190,0.240]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','linear']
+        fig = self.chart.subplot_lines_doubleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True,dtick=0.005)
+        self.add_slider(fig)
+
+        fig = self.chart.add_annotation(fig,"@checkmatey<br />@permabullnino")     
+
+        #Write out html chart
+        chart_name = '\\oscillators\\ticket_overunder'
+        self.write_html(fig,chart_name)
+
+        return fig
+
+    def tic_vol_sum_142day(self):
+        """"Decred 142-day sum of tickets with Fibonacci multiple bands 
+            after @permabullnino"""
+        df = self.df
+
+        df['tic_usd_cost_142sum'] = df['tic_usd_cost'].rolling(142).sum()/df['dcr_sply']
+        df['tic_usd_cost_142sum_oscillator'] = df['PriceUSD'] / (df['tic_usd_cost_142sum']*0.500)
+
+        loop_data=[[0,1,2,3,4,5],[6,7,8,9,10,11,12]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            #secondary
+            df['date'],
+            [self.start,self.last], #NA Ceiling
+            [self.start,self.last], #STRONG SELL
+            [self.start,self.last], #SELL
+            [self.start,self.last], #NA CEILING
+            [self.start,self.last], #BUY
+            [self.start,self.last], #STRONG BUY
+        ]
+        y_data = [
+            df['PriceUSD'],
+            df['tic_usd_cost_142sum'],
+            df['tic_usd_cost_142sum']*0.236,
+            df['tic_usd_cost_142sum']*0.382,
+            df['tic_usd_cost_142sum']*0.500,
+            df['tic_usd_cost_142sum']*0.618,
+            #secondary
+            df['tic_usd_cost_142sum_oscillator'],
+            [5.000,5.000],
+            [2.000,2.000],
+            [1.236,1.236],
+            [0.764,0.764],
+            [0.472,0.472],
+            [0.472,0.472],
+        ]
+        name_data = [
+            'DCR/USD Price',
+            '142d Ticket USD Sum',
+            '142d Ticket USD Sum x23.6%',
+            '142d Ticket USD Sum x38.2%',
+            '142d Ticket USD Sum x50.0%',
+            '142d Ticket USD Sum x61.8%',
+            '142-day Ticket Multiple (50.0%)',
+            'N/A',
+            'STRONG SELL',
+            'SELL',
+            'N/A',
+            'BUY',
+            'STRONG BUY',
+            ]
+        color_data = [
+            'rgb(255, 255, 255)',    #White
+            'rgb(255, 80, 80)',     #Gradient Red
+            'rgb(153, 255, 102)',   #Gradient Green
+            'rgb(255, 204, 102)',   #Gradient Yellow
+            'rgb(46, 214, 161)',    #Turquoise
+            'rgb(255, 204, 102)',   #Gradient Yellow
+            'rgb(46, 214, 161)',    #Turquoise
+            'rgba(255, 80, 80, 0.0)',     #Gradient Red
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.1)',     #Gradient Red
+            'rgb(55, 55, 55)',            #N/A
+            'rgba(36, 255, 136, 0.1)',    #Gradient Green
+            'rgba(36, 255, 136, 0.2)',    #Gradient Green
+            ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        fill_data = [ 
+            'none','none','none','none','none','none','none',
+            'none','tonexty','tonexty','none','tonexty','tozeroy',
+            ]
+        dash_data = [
+            'solid','solid','solid','dash','dot','dash',
+            'solid','dash','dash','dash','dash','dash','dash'
+            ]
+        width_data   = [2,2,2,1,1,1,   2,1,1,1,1,1,1]
+        opacity_data = [1,1,1,1,1,1,   1,1,1,1,1,1,1]
+        legend_data = [True,True,True,True,True,True,    True,False,True,True,False,True,True]#
+        title_data = [
+            '<b>Decred 142-Day Ticket USD Sum</b>',
+            '<b>Date</b>',
+            '<b>DCR/USD Pricing</b>',
+            '<b>Price / (142-day Ticket Sum * 50%)</b>']
+        range_data = [[self.start,self.last],[-2,3],[np.log10(0.2),5]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','log']#
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+            )
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+
+        self.add_slider(fig)
+        fig = self.chart.add_annotation(fig,"@checkmatey")
+
+        #Write out html chart
+        chart_name = '\\pricing_models\\142day_ticket_volume'
+        self.write_html(fig,chart_name)
+
+        #return fig
+
+    def tx_volatility_ratio(self):
+        """"Decred Transactional Volatility Ratio
+            after @permabullnino"""
+        df = self.df
+
+        df['tx_volatile_ratio'] = (
+            df['dcr_tfr_vol'].rolling(28).sum()
+            /
+            df['dcr_tfr_vol'].rolling(142).sum()
+        )
+
+        df['tx_volatile_ratio_Ntv'] = (
+            df['TxTfrValAdjNtv'].rolling(28).sum()
+            /
+            df['TxTfrValAdjNtv'].rolling(142).sum()
+        )
+
+        #CHART
+        loop_data=[[0,1],[2,3,4,5]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            [self.start,self.last,self.last,self.start],    #BUY ZONE
+            [self.start,self.last,self.last,self.start],    #SELL ZONE
+        ]
+        y_data = [
+            df['PriceBTC'],
+            df['PriceRealBTC'],
+            df['tx_volatile_ratio'],
+            df['tx_volatile_ratio_Ntv'],
+            [0.15,0.15,0.17,0.17],
+            [0.26,0.26,0.28,0.28],
+        ]
+        name_data = [
+            'DCR Price (BTC)',
+            'Realised Price (BTC)',
+            'Transaction Volatility (dcrdata)',
+            'Transaction Volatility (CoinMetrics)',
+            'Buy Zone',
+            'Sell Zone',
+        ]
+        width_data      = [2,2,2,2,1,1]
+        opacity_data    = [1,1,1,1,1,1]
+        dash_data = ['solid','solid','dash','solid','dash','dash',]
+        color_data = [
+            'rgb(255, 255, 255)',   #White
+            'rgb(17, 255, 125)',    #Powerpoint Green
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(153, 255, 102)',   #Gradient Green
+            'rgb(255, 80, 80)',     #Gradient Red
+        ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        legend_data = [True,True,True,True,True,True]
+        title_data = [
+            '<b>Decred Transactional Volatility</b>',
+            '<b>Date</b>',
+            '<b>Price (BTC)</b>',
+            '<b>Transaction Volatility Ratio</b>'
+            ]
+        range_data = [[self.start,self.last],[-4,-1.698970004],[0,1]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','linear']
+        fig = self.chart.subplot_lines_doubleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True,dtick=0.05)
+        self.add_slider(fig)
+
+        fig = self.chart.add_annotation(fig,"@checkmatey<br />@permabullnino")     
+
+        #Write out html chart
+        chart_name = '\\oscillators\\tx_volatility_ratio'
+        self.write_html(fig,chart_name)
+
+        return fig
+
+    def tx_sum_adjsply_142d(self):
+        """"Decred 142day Sum of coins moved, adjusted for supply
+        after @permabullnino"""
+        df = self.df
+
+        #df['tx_dcr_142sum']     = df['TxTfrValNtv'].rolling(142).sum() / df['SplyCur']
+        df['tx_dcr_142sum_adj'] = df['TxTfrValAdjNtv'].rolling(142).sum() / df['SplyCur']
+
+        loop_data=[[0],[1,2,3,4,5]]
+        x_data = [
+            df['date'],
+            df['date'],
+            [self.start,self.last],    #BUY ZONE Ceiling
+            [self.start,self.last],    #BUY ZONE Floor
+            [self.start,self.last],    #SELL ZONE Ceiling
+            [self.start,self.last],    #SELL ZONE Floor
+        ]
+        y_data = [
+            df['PriceUSD'],
+            df['tx_dcr_142sum_adj'],
+            [1.1,1.1],
+            [0.75,0.75],
+            [2.1,2.1],
+            [1.7,1.7],
+        ]
+        name_data = [
+            'DCR Price (USD)',
+            'tx_dcr_142sum_adj',
+            'LOW ACTIVITY',
+            'N/A',
+            'HIGH ACTIVITY',
+            'N/A',
+        ]
+        width_data      = [2,2,2,2,2,2]
+        opacity_data    = [1,1,1,1,1,1]
+        dash_data = ['solid','solid','dash','dash','dash','dash']
+        color_data = [
+            'rgb(46, 214, 161)',    #Turquoise
+            #'rgb(239, 125, 50)',    #Price Orange
+            'rgb(255, 255, 255)',   #White
+            'rgba(0,255,255,0.3)', #Retro Blue
+            'rgba(0,255,255,0.3)', #Retro Blue
+            'rgba(255,0,255,0.3)', #Retro Pink
+            'rgba(255,0,255,0.3)', #Retro Pink
+        ]
+        #Invert Colors for Light Theme
+        color_data[0] = self.color_invert(color_data[0])
+        color_data[1] = self.color_invert(color_data[1])
+        legend_data = [True,True,True,False,True,False,]
+        fill_data       = ['none','none','none','tonexty','none','tonexty',]
+        title_data = [
+            '<b>Decred 142-Day Moved Coins Adjusted for Supply</b>',
+            '<b>Date</b>',
+            '<b>Price USD</b>',
+            '<b>142-day DCR Sum Moved / Supply</b>']
+        range_data = [[self.start,self.last],[self.price_lb,self.price_ub],[0,3.5]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','linear']
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+            )
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
+        self.add_slider(fig)
+
+        #Write out html chart
+        chart_name = '\\oscillators\\tx_sum_adjsply_142d'
+        self.write_html(fig,chart_name)
+
+        #return fig
+
+    def max_vol_ratio(self):
+        """"Decred Maximum Volume Ratio
+            after @permabullnino"""
+        df = self.df
+
+        df['max_vol_ratio_USD'] = (
+            df['CapMrktCurUSD']
+            /
+            df['tic_usd_cost'].rolling(28).sum()
+        )
+
+        df['max_vol_ratio_BTC'] = (
+            df['CapMrktCurBTC']
+            /
+            df['tic_btc_cost'].rolling(28).sum()
+        )
+
+        #CHART
+        loop_data=[[0,1],[2,3,4,5]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            [self.start,self.last,self.last,self.start],    #BUY ZONE
+            [self.start,self.last,self.last,self.start],    #SELL ZONE
+        ]
+        y_data = [
+            df['PriceUSD'],
+            df['PriceRealUSD'],
+            df['max_vol_ratio_USD'],
+            df['max_vol_ratio_BTC'],
+            [0.15,0.15,0.17,0.17],
+            [0.26,0.26,0.28,0.28],
+        ]
+        name_data = [
+            'DCR Price (BTC)',
+            'Realised Price (BTC)',
+            'max_vol_ratio_USD',
+            'max_vol_ratio_BTC',
+            'Buy Zone',
+            'Sell Zone',
+        ]
+        width_data      = [2,2,2,2,1,1]
+        opacity_data    = [1,1,1,1,1,1]
+        dash_data = ['solid','solid','solid','dash','dash','dash',]
+        color_data = [
+            'rgb(255, 255, 255)',   #White
+            'rgb(17, 255, 125)',    #Powerpoint Green
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(153, 255, 102)',   #Gradient Green
+            'rgb(255, 80, 80)',     #Gradient Red
+        ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        legend_data = [True,True,True,True,True,True]
+        title_data = [
+            '<b>Decred Max Vol Ratio</b>',
+            '<b>Date</b>',
+            '<b>Price (BTC)</b>',
+            '<b>Transaction Volatility Ratio</b>'
+            ]
+        range_data = [[self.start,self.last],[self.price_lb_btc,self.price_ub_btc],[-0.5,10]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','linear']
+        fig = check_standard_charts(self.theme).subplot_lines_doubleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True,dtick=0.5)
+        self.add_slider(fig)
+
+        fig = self.chart.add_annotation(fig,"@checkmatey<br />@permabullnino")     
+
+        #Write out html chart
+        chart_name = '\\oscillators\\max_volume_ratio'
+        self.write_html(fig,chart_name)
+
+        #return fig
 
     def dcr_vs_btc(self):
         """"Compare DCR and BTC by Coin Age"""
@@ -2389,6 +2550,8 @@ class dcr_chart_suite():
             'rgb(239, 125, 50)',    #Price Orange
             'rgb(46, 214, 161)',    #Turquoise
         ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
         legend_data = [True,True,True,True,]
         title_data = [
             'BTC vs DCR',
@@ -2398,7 +2561,7 @@ class dcr_chart_suite():
         range_data = [[0,1],[-1,4],[5,12]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']
-        fig = check_standard_charts().subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
@@ -2412,62 +2575,191 @@ class dcr_chart_suite():
         chart_name = '\\valuation_models\\btc_vs_dcr'
         self.write_html(fig,chart_name)
 
+        #return fig
+
+    def MACD(self,model):
+        """"Decred MACD Indicator
+        INPUT:
+            model = 0 --> MACD
+            model = 1 --> RSI
+            model = 2 --> CHOP
+        """
+        df = self.df
+
+        df['MACD'] = (
+            df['PriceUSD'].ewm(com=12).mean()
+            - df['PriceUSD'].ewm(com=26).mean()
+        )
+        df['Signal'] = df['MACD'].ewm(com=9).mean()
+        df['MACD_Hist'] = df['MACD'] - df['Signal']
+
+        #Create positive and Negative datasets
+        df['MACD_Hist_pos'] = np.where(df['MACD_Hist'] >= 0, df['MACD_Hist'], 0)
+        df['MACD_Hist_neg'] = np.where(df['MACD_Hist'] < 0, df['MACD_Hist'], 0)
+
+        #CHART
+        loop_data=[[0,1,2],[5,6]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+        ]
+        y_data = [
+            df['PriceUSD'],
+            df['PriceUSD'].ewm(com=12).mean(),
+            df['PriceUSD'].ewm(com=26).mean(),
+            df['MACD'],
+            df['Signal'],
+            df['MACD_Hist_pos'],
+            df['MACD_Hist_neg'],
+
+        ]
+        name_data = [
+            'DCR Price (USD)',
+            'EMA-12',
+            'EMA-26',
+            'MACD',
+            'Signal',
+            'MACD +ve',
+            'MACD -ve',
+        ]
+        fill_data = [
+            '','','',
+            'none','none','tozeroy','tozeroy'
+            ]
+        width_data      = [2,1,1,1,1,1,1]
+        opacity_data    = [1,1,1,1,1,1,1]
+        dash_data = ['solid','solid','solid','solid','solid','solid','solid',]
+        color_data = [
+            'rgb(255, 255, 255)',   #White
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgba(255, 80,  80,  0.4)',   #Gradient Red
+            'rgba(153, 255, 102, 0.4)',   #Gradient Green
+        ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        legend_data = [True,True,True,True,True,True,True,]
+        title_data = [
+            '<b>Decred MACD Indicator</b>',
+            '<b>Date</b>',
+            '<b>Price (USD)</b>',
+            '<b>HODLer Conversion Rate</b>']
+        range_data = [[self.start,self.last],[-2,3],[-8,20]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','linear']
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+            )
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
+        self.add_slider(fig)
+
+        
+        #Write out html chart
+        chart_name = '\\oscillators\\MACD'
+        self.write_html(fig,chart_name)
+
+        #return fig
+
+    def privacy(self):
+        """Decred Privacy Performance"""
+        df = self.df
+
+        #Regular Transactions
+        df['dcr_tfr_reg'] = df['dcr_tfr_vol'] - df['dcr_anon_mix_vol']
+        #Total Transactions
+        df['total_tx'] = (
+            df['dcr_tfr_reg']
+            + df['dcr_tic_vol']
+            + df['dcr_anon_mix_vol']
+        )
+        df['tx_mix'] = df['dcr_anon_mix_vol'].cumsum()
+        df['tx_tic'] = df['tx_mix'] + df['dcr_tic_vol'].cumsum()
+        df['tx_reg'] = df['tx_tic'] + df['dcr_tfr_reg'].cumsum()
+        
+        loop_data=[[2,1,0],[3,4,5]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+        ]
+        y_data = [
+            df['tx_reg'],
+            df['tx_tic'],
+            df['tx_mix'],
+            df['dcr_tfr_reg'].rolling(7).mean()/df['dcr_sply'],
+            df['dcr_tic_sply_avg']/df['dcr_sply'],
+            df['dcr_anon_part'],
+        ]
+        name_data = [
+            'Regular Volume',
+            'Ticket Volume',
+            'Privacy Mix Volume',
+            'Regular Transactions',
+            'Stake Participation',
+            'Unspent Anonymity Set',
+            ]
+        color_data = [
+            'rgba(239, 125,  50, 0.5)',     #Price Orange
+            'rgba(46,  214, 161, 0.5)',     #Turquoise
+            'rgba(250, 38,   53, 0.5)',     #POW Red
+            'rgb(239, 125,  50)',           #Price Orange
+            'rgb(46,  214, 161)',           #Turquoise
+            'rgb(250, 38, 53)',             #POW Red
+            #'rgb(114, 49, 163)',    #POS Purple
+            #'rgb(255, 192, 0)',     #Treasury Yellow
+            #'rgb(20, 169, 233)',    #Total Blue
+        ]
+        #NO INVERSION
+        fill_data = [
+            'tonexty','tonexty','tozeroy','none','none','none'
+        ]
+        dash_data = [
+            'solid','solid','solid','solid','solid','solid'
+            ]
+        width_data = [1,1,1,5,5,5]
+        opacity_data = [1,1,1,1,1,1]
+        legend_data = [True,True,True,True,True,True]#
+        autorange_data = [False,False,False]
+        type_data = ['date','log','linear']#
+        title_data = [
+            '<b>Decred Transaction Volumes</b>',
+            '<b>Date</b>',
+            '<b>Cumulative On-chain Volume (DCR)</b>',
+            '<b>Proportion of Circ. Supply (DCR)</b>']
+        range_data = [[self.start,self.last],[5,9],[0,1]]
+
+        #BUILD FINAL CHART
+        fig = self.chart.subplot_lines_doubleaxis_1st_area(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+            )
+        fig.update_yaxes(secondary_y=True,dtick=0.1,tickformat=",.0%")
+        self.add_slider(fig)
+
+        #Write out html chart
+        chart_name = '\\performance\\privacy'
+        self.write_html(fig,chart_name)
+        #return fig
 
 
-"""MODEL"""
-fig_dcr = dcr_chart_suite()
-
-fig_dcr.unrealised_PnL()
+#fig_dcr = dcr_chart_suite('light')
 
 
-"""NETWORK VALUATION"""
-fig_dcr.mvrv(0)
-
-fig_dcr.block_subsidy_usd(0)
-fig_dcr.block_subsidy_btc(0)
-
-fig_dcr.commitment_usd(0)
-fig_dcr.commitment_btc(0)
-
-fig_dcr.s2f_model(0)
-fig_dcr.s2f_model_residuals()
-
-fig_dcr.nvt_rvt()
-
-"""PRICING MODELS"""
-fig_dcr.mvrv(1)
-
-fig_dcr.block_subsidy_usd(1)
-fig_dcr.block_subsidy_btc(1)
-
-fig_dcr.commitment_usd(1)
-fig_dcr.commitment_btc(1)
-
-fig_dcr.s2f_model(1)
-
-
-"""Oscillators"""
-
-fig_dcr.mayer_multiple()
-
-fig_dcr.beam_indicator()
-
-fig_dcr.puell_multiple()
-fig_dcr.contractor_multiple()
-
-"""Market Cycle Metrics"""
-
-fig_dcr.dcr_vs_btc()
-fig_dcr.bottom_cycle()
-fig_dcr.top_cycle()
-
-
-"""PermabullNino Metrics"""
-
-fig_dcr.TVWAP()
-fig_dcr.hodler_conversion()
-fig_dcr.ticket_overunder()
-fig_dcr.tic_vol_sum_142day()
-fig_dcr.tx_volatility_ratio()
-fig_dcr.tx_sum_adjsply_142d()
-fig_dcr.max_vol_ratio()
+    
