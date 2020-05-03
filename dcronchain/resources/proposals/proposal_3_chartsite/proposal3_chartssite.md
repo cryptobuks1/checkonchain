@@ -23,13 +23,13 @@ It is proposed to build the website in phases with this proposal covering the fo
 
     b) Oscillators (Mayer multiple and NVT/RVT ratio)
 
-    c) Performance metrics ()
+    c) Performance metrics (charts looking at various performance metrics like privacy mixing, cumulative fees, fee ratios etc)
 
 2. An education hub with blog, curated research paper archive and hosting of recorded video explainers.
 
-3. Language support for English and Spanish.
+3. Language support for English and Spanish to start.
 
-Following delivery of the MVP, additional work phases can be progressed to expand the scope and content of the site to include additional charts, research, languages, dashboards etc. It is suggested that equivalent charts for Bitcoin be presented in a later stage, subject to stakeholder discussion. The reason being that if the charts/research are found to be useful outside the Decred community, it has the potential to draw market share from the competition above and brings more eyes onto Decred, as people using the Bitcoin charts/research are only one click away.
+Following delivery of the MVP, additional work phases can be progressed to expand the scope and content of the site to include additional charts, research, languages, network dashboards etc. It is suggested that equivalent charts for Bitcoin be presented in a later stage, subject to stakeholder discussion. The reason being that if the charts/research are found to be useful outside the Decred community, it has the potential to draw market share from the competition above and brings more eyes onto Decred, as people using the Bitcoin charts/research are only one click away.
 
 **Two prototype layouts** ([WIP_1](https://xd.adobe.com/view/efae9a9b-a5e3-4bf2-4723-8d3f0a0e2aee-999f/) and [WIP_2](https://projects.invisionapp.com/share/ACX4905MNWX#/screens/416016812) have been prepared to demonstrate the current design concepts.
 
@@ -45,7 +45,7 @@ The assembled team for this project are:
 
 **Research/documentation** - Each chart will have a small blurb with links to the author and more detailed research papers/references.
 
-**Chart Development** - code is largely written already by checkmate in python using plotly, coinmetrics and dcrdata. pablito and svitekpavel are assisting integrating with the web-dev backend.
+**Chart Development** - [code backend is largely written](https://github.com/checkmatey/checkonchain/blob/master/dcronchain/charts/dcr_charts.py) already by checkmate in python using plotly, coinmetrics and dcrdata. pablito and svitekpavel are assisting with integration with the web-dev backend.
 
 **Design** - 
 
