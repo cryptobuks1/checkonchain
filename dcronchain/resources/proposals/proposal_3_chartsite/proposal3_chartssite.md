@@ -61,8 +61,8 @@ The assembled team for this project are:
 
 **Web-Dev $XX** - 
 
+## For Discussion
 
-
-
+The working title of the project is **Checkonchain** (a hangover from what checkmate called his codebase repo). The name has relevance to what it achieves but also obviously has the front of authors pseudonym in it and he doesn't want to enshrine himself unnecessarily. Thus, if the community has suggestions for suitable names for the project, please let us know in the comments.
 
 
