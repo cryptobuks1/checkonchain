@@ -51,7 +51,8 @@ Chart Description:
         Type    = log 
 
 Sample Chart
-![MVRV Ratio](charts/01_dcr_mvrv_ratio.png)
+![MVRV Ratio](charts/01_dcr_mvrv_ratio_dark.png)
+![MVRV Ratio](charts/01_dcr_mvrv_ratio_light.png)
 
 
 # **Stakeholder Commitments (USD)**
@@ -113,8 +114,10 @@ Chart Description:
         Type    = log
 
 Sample Chart
-![Block Subsidy Model (USD)](charts/02a_dcr_blksub_usd.png)
-![Block Subsidy Model (BTC)](charts/02b_dcr_blksub_btc.png)
+![Block Subsidy Model (USD)](charts/02a_dcr_blksub_usd_dark.png)
+![Block Subsidy Model (USD)](charts/02a_dcr_blksub_usd_light.png)
+![Block Subsidy Model (BTC)](charts/02b_dcr_blksub_btc_dark.png)
+![Block Subsidy Model (BTC)](charts/02b_dcr_blksub_btc_light.png)
 
 
 # **NVT and RVT Ratio**
@@ -170,7 +173,8 @@ Chart Description:
         Type    = linear 
 
 Sample Chart
-![NVT and RVT Ratios](charts/03_dcr_nvtrvt.png)
+![NVT and RVT Ratios](charts/03_dcr_nvtrvt_dark.png)
+![NVT and RVT Ratios](charts/03_dcr_nvtrvt_light.png)
 
 
 # **Mayer Multiple**
@@ -221,7 +225,8 @@ Chart Description:
         Type    = log 
 
 Sample Chart
-![Mayer Multiple](charts/04_dcr_mayer_multiple.png)
+![Mayer Multiple](charts/04_dcr_mayer_multiple_dark.png)
+![Mayer Multiple](charts/04_dcr_mayer_multiple_light.png)
 
 
 
@@ -276,4 +281,5 @@ Chart Description:
         Type    = log 
 
 Sample Chart
-![142-day Ticket Sum](charts/05_dcr_142dticsum.png)
+![142-day Ticket Sum](charts/05_dcr_142dticsum_dark.png)
+![142-day Ticket Sum](charts/05_dcr_142dticsum_light.png)

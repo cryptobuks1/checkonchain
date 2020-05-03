@@ -2051,7 +2051,6 @@ class dcr_chart_suite():
             df['142day_TVWAP'],
             df['hconv142d_pos'],
             df['hconv142d_neg'],
-
         ]
         name_data = [
             'DCR Price (USD)',
@@ -2073,6 +2072,9 @@ class dcr_chart_suite():
         ]
         #Invert Colors for Light Theme
         color_data = self.color_invert(color_data)
+        color_data[3] = 'rgb(255, 80, 80)',     #Gradient Red
+        color_data[4] = 'rgb(153, 255, 102)',   #Gradient Green
+
         legend_data = [True,True,True,True,True,]
         title_data = [
             '<b>Decred HODLer Converstion Rate</b>',
@@ -2414,8 +2416,9 @@ class dcr_chart_suite():
             'rgba(255,0,255,0.3)', #Retro Pink
         ]
         #Invert Colors for Light Theme
-        color_data[0] = self.color_invert(color_data[0])
-        color_data[1] = self.color_invert(color_data[1])
+        color_data = self.color_invert(color_data)
+        color_data[2] = color_data[3] = 'rgba(0,255,255,0.3)', #Retro Blue
+        color_data[4] = color_data[5] = 'rgba(255,0,255,0.3)', #Retro Pink
         legend_data = [True,True,True,False,True,False,]
         fill_data       = ['none','none','none','tonexty','none','tonexty',]
         title_data = [
@@ -2697,10 +2700,10 @@ class dcr_chart_suite():
             + df['dcr_anon_mix_vol']
         )
         df['tx_mix'] = df['dcr_anon_mix_vol'].cumsum()
-        df['tx_tic'] = df['tx_mix'] + df['dcr_tic_vol'].cumsum()
-        df['tx_reg'] = df['tx_tic'] + df['dcr_tfr_reg'].cumsum()
+        df['tx_tic'] = df['dcr_tic_vol'].cumsum()
+        df['tx_reg'] = df['dcr_tfr_reg'].cumsum()
         
-        loop_data=[[2,1,0],[3,4,5]]
+        loop_data=[[0,1,2],[4,5]]
         x_data = [
             df['date'],
             df['date'],
@@ -2711,9 +2714,9 @@ class dcr_chart_suite():
         ]
         y_data = [
             df['tx_reg'],
-            df['tx_tic'],
-            df['tx_mix'],
-            df['dcr_tfr_reg'].rolling(7).mean()/df['dcr_sply'],
+            (df['tx_reg']+df['tx_tic']),
+            (df['tx_reg']+df['tx_tic']+df['tx_mix']),
+            df['dcr_tfr_reg'].rolling(1).mean()/df['dcr_sply'],
             df['dcr_tic_sply_avg']/df['dcr_sply'],
             df['dcr_anon_part'],
         ]
@@ -2738,16 +2741,16 @@ class dcr_chart_suite():
         ]
         #NO INVERSION
         fill_data = [
-            'tonexty','tonexty','tozeroy','none','none','none'
+            'tozeroy','tonexty','tonexty','none','none','none'
         ]
         dash_data = [
             'solid','solid','solid','solid','solid','solid'
             ]
-        width_data = [1,1,1,5,5,5]
+        width_data = [1,1,1,2,5,5]
         opacity_data = [1,1,1,1,1,1]
         legend_data = [True,True,True,True,True,True]#
         autorange_data = [False,False,False]
-        type_data = ['date','log','linear']#
+        type_data = ['date','linear','linear']#
         title_data = [
             '<b>Decred Transaction Volumes</b>',
             '<b>Date</b>',
@@ -2762,16 +2765,41 @@ class dcr_chart_suite():
             dash_data,width_data,opacity_data,legend_data,
             fill_data
             )
+        #Add Volume Bars for Regular Transactions
+        #self.add_vol_bars(fig,x_data,y_data,color_data,name_data,[3])
+        fig.update_yaxes(secondary_y=False,showgrid=True)
         fig.update_yaxes(secondary_y=True,dtick=0.1,tickformat=",.0%")
         self.add_slider(fig)
 
         #Write out html chart
         chart_name = '\\performance\\privacy'
         self.write_html(fig,chart_name)
-        #return fig
+        return fig
 
+    def add_volume_bars(self,fig,x_data,y_data,color_data,name_data,loop_data):
 
-#fig_dcr = dcr_chart_suite('light')
+        """ =================================
+            ADD VOLUME BAR CHARTS
+            INPUTS:
+                fig = Figure to add columns to
+                x_data      = list of x data series for columns
+                y_data      = list of y data series for columns
+                color_data  = list of colors for columns
+                name_data   = list of name strings for columns
+                loop_data   = List of index for above lists
+        ================================="""
+        for i in loop_data:
+            fig.add_trace(go.Bar(
+                x=x_data[i],
+                y=y_data[i],
+                name=name_data[i],
+                opacity=0.75,
+                marker_color=color_data[i],
+                secondary_y=True
+            ))
+        fig.update_layout(barmode='stack',bargap=0.01)#,yaxis2=dict(side="right",position=0.15))
+        
+        
+fig_dcr = dcr_chart_suite('light')
 
-
-    
+a = fig_dcr.privacy()

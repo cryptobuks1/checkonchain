@@ -50,13 +50,13 @@ class check_standard_charts():
         self._annotation_y = 1.0 #Y Position
 
         if theme == 'light':
-            self._theme_light   = 'simple_white'
+            self._theme         = 'simple_white'
             self._background    = 'rgb(245,245,245)'
             self._gridcolor     = 'rgba(50,50,50,0.25)'
             self._zerolinecolor = 'rgb(50,50,50)'
             self._annocolor     = 'rgb(50,50,50)'
         else:
-            self.theme_dark     = 'plotly_dark'
+            self._theme          = 'plotly_dark'
             self._background    = 'rgb(20,20,20)'
             self._gridcolor     = 'rgb(50,50,50)'
             self._zerolinecolor = 'rgb(50,50,50)'
@@ -87,12 +87,6 @@ class check_standard_charts():
     def basic_chart(self,x_data,y_data,name_data,loop_data,title_data,type_data):
         fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-        #Set theme colour
-        if self.theme == 'light':
-            fig.update_layout(template=self._theme_light)
-        else:
-            fig.update_layout(template=self.theme_dark)
-
         for i in loop_data[0]:
             fig.add_trace(go.Scatter(
                 x=x_data[i], 
@@ -115,7 +109,9 @@ class check_standard_charts():
         fig.update_xaxes(title_text=title_data[1],type=type_data[0])
         fig.update_yaxes(title_text=title_data[2],type=type_data[1],secondary_y=False)
         fig.update_yaxes(title_text=title_data[3],type=type_data[2],secondary_y=True)
-        
+        #Set theme colour
+        fig.update_layout(template=self._theme)
+
         return fig
 
     def subplot_lines_singleaxis(
@@ -126,11 +122,8 @@ class check_standard_charts():
         ):
 
         fig = make_subplots(specs=[[{"secondary_y": False}]])
-        #Set Theme colour
-        if self.theme == 'light':
-            fig.update_layout(template=self._theme_light)
-        else:
-            fig.update_layout(template=self.theme_dark)
+        #Set theme colour
+        fig.update_layout(template=self._theme)
         
         """#######  Add Traces   #######"""
         for i in loop_data[0]:
@@ -239,10 +232,7 @@ class check_standard_charts():
 
         fig = make_subplots(specs=[[{"secondary_y": True}]])
         #Set theme colour
-        if self.theme == 'light':
-            fig.update_layout(template=self._theme_light)
-        else:
-            fig.update_layout(template=self.theme_dark)
+        fig.update_layout(template=self._theme)
         
         """#######  Add PRIMARY Traces   #######"""
         for i in loop_data[0]:
@@ -384,10 +374,8 @@ class check_standard_charts():
         fill_data):
 
         fig = make_subplots(specs=[[{"secondary_y": True}]])
-        if self.theme == 'light':
-            fig.update_layout(template=self._theme_light)
-        else:
-            fig.update_layout(template=self.theme_dark)
+        #Set theme colour
+        fig.update_layout(template=self._theme)
         
         """#######  Add PRIMARY Traces   #######"""
         for i in loop_data[0]:
@@ -532,10 +520,7 @@ class check_standard_charts():
 
         fig = make_subplots(specs=[[{"secondary_y": True}]])
         #Set theme colour
-        if self.theme == 'light':
-            fig.update_layout(template=self._theme_light)
-        else:
-            fig.update_layout(template=self.theme_dark)
+        fig.update_layout(template=self._theme)
         
         """#######  Add PRIMARY Traces   #######"""
         for i in loop_data[0]:
@@ -687,10 +672,7 @@ class check_standard_charts():
             rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.02
         )
         #Set theme colour
-        if self.theme == 'light':
-            fig.update_layout(template=self._theme_light)
-        else:
-            fig.update_layout(template=self.theme_dark)
+        fig.update_layout(template=self._theme)
 
         """#######  Add Traces (ROW=1, Yaxis=1)   #######"""
         for i in loop_data[0]:

@@ -8,7 +8,7 @@ class btc_chart_suite():
 
     def __init__(self,theme):
         self.theme = theme
-        self.chart = check_standard_charts('light')
+        self.chart = check_standard_charts(self.theme)
         self.today = datetime.combine(date.today(), time())
         self.last = pd.to_datetime(self.today + pd.to_timedelta(90,unit='D'))
         self.start = '2010-01-01'
@@ -94,7 +94,6 @@ class btc_chart_suite():
                 color_data[j] = text
             j = j + 1
         return color_data
-
 
     def mvrv(self):
         """"Bitcoin Realised Price and MVRV"""
@@ -1581,6 +1580,149 @@ class btc_chart_suite():
         chart_name = '\\pricing_models\\s2f_model_pricing'
         self.write_html(fig,chart_name)
 
+    def fair_value_models(self):
+        """"Fair Value Models"""
+        df = pd.DataFrame()
+        df = self.df
+
+        #Calc S2F Model - Specific to Bitcoin (CHECKMATE)
+        btc_s2f_model = regression_analysis().ln_regression(df,'S2F','PriceUSD','date')['model_params']
+        df['S2FPriceUSD_CM'] = (
+            np.exp(float(btc_s2f_model['intercept']))
+            * df['S2F']**float(btc_s2f_model['coefficient'])
+            )
+        df['S2FMultiple_CM'] = df['PriceUSD']/df['S2FPriceUSD_CM'].rolling(10).mean()
+
+        #Calc S2F Model - Bitcoins Plan B Model
+        planb_s2f_model = regression_analysis().regression_constants()['planb']
+        df['S2FPriceUSD_PB'] = np.exp(-1.84)*df['S2F']**3.36
+        df['S2FMultiple_PB'] = df['PriceUSD']/df['S2FPriceUSD_PB'].rolling(10).mean()
+
+
+        #Calc Difficulty Model - Specific to Bitcoin (CHECKMATE)
+        btc_diff_model = regression_analysis().ln_regression(df,'DiffMean','CapMrktCurUSD','date')['model_params']
+        df['CapDiffUSD'] = (
+            np.exp(float(btc_diff_model['intercept']))
+            * df['DiffMean']**float(btc_diff_model['coefficient'])
+            )
+        df['DiffMultiple'] = df['CapMrktCurUSD']/df['CapDiffUSD']
+
+        df['MayerMultiple'] = df['PriceUSD']/df['PriceUSD'].rolling(200).mean()
+
+        loop_data=[[1,2,3,4,0],[5,6,7,8,9,10,11,12,13,14,15]]
+        x_data = [
+            df['date'], #Price
+            df['date'], #CM S2F Model
+            df['date'], #PB S2F Model
+            df['date'], #Diff Model
+            df['date'], #Mayer Multiple
+            #Secondary
+            df['date'], #CM Multiple
+            df['date'], #PB Multiple
+            df['date'], #Diff Model
+            df['date'], #Mayer Multiple
+            [self.start,self.last], #NA Ceiling
+            [self.start,self.last], #STRONG SELL
+            [self.start,self.last], #SELL
+            [self.start,self.last], #UNITY
+            [self.start,self.last], #NORMAL
+            [self.start,self.last], #BUY
+            [self.start,self.last], #STRONG BUY
+        ]
+        y_data = [
+            df['PriceUSD'],
+            df['S2FPriceUSD_CM'].rolling(10).mean(),
+            df['S2FPriceUSD_PB'].rolling(10).mean(),
+            df['CapDiffUSD']/df['SplyCur'],
+            df['PriceUSD'].rolling(200).mean(),
+            #Secondary
+            df['S2FMultiple_CM'],
+            df['S2FMultiple_PB'],
+            df['DiffMultiple'],
+            df['MayerMultiple'],
+            [20,20], #NA Ceiling
+            [3.6,3.6], #STRONG SELL (95%)
+            [1.6,1.6], #SELL (85%)
+            [1.0,1.0], #Unity
+            [0.4,0.4], #NORMAL
+            [0.2,0.2], #BUY (20%)
+            [0.2,0.2], #STRONG BUY (10%)
+        ]
+        name_data = [
+            'BTC Price (USD)',
+            'S2F Model (Checkmate)',
+            'S2F Model (Plan B)',
+            'Difficulty Model',
+            '200DMA',
+            'S2F Multiple (Checkmate)',
+            'S2F Multiple (Plan B)',
+            'Difficulty Mutliple',
+            'Mayer Mutliple',
+            'N/A',
+            'STRONG SELL (95%)',
+            'SELL (85%)',
+            'N/A',
+            'N/A',
+            'BUY (80%)',
+            'STRONG BUY (90%)'
+        ]
+        fill_data = [
+            'none','none','none','none','none','none','none',
+            'none','none','none','tonexty','tonexty','none','none','tonexty','tozeroy'
+        ]
+        width_data      = [2,2,  2,  2,2,1,1,   1,1,1,1,1,1,1,1,1]
+        opacity_data    = [1,0.5,0.5,1,1,1,1,   1,1,1,1,1,1,1,1,1]
+        dash_data = [
+            'solid','dot','dot','dash','dash','solid','solid','solid','solid',
+            'dash','dash','dash','dash','dash','dash','dash'
+            ]
+        color_data = [
+            'rgb(255, 255, 255)',    #White
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(255, 80, 80)',      #Gradient Red
+            'rgb(153, 255, 102)',      #Gradient Green
+            'rgb(20, 169, 233)',    #Total Blue
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(255, 80, 80)',      #Gradient Red
+            'rgb(153, 255, 102)',      #Gradient Green
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.2)',     #Gradient Red
+            'rgba(255, 80, 80, 0.1)',     #Gradient Red
+            'rgba(255, 255, 255, 0.2)',   #White
+            'rgba(55 ,55, 55, 0)',        #NA
+            'rgba(36, 255, 136, 0.1)',    #Gradient Green
+            'rgba(36, 255, 136, 0.2)',    #Gradient Green
+        ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        legend_data = [
+            True,True,True,True,True,True,True,True,True,
+            False,True,True,False,False,True,True
+            ]
+        title_data = [
+            'Bitcoin Fair Value Models',
+            '<b>Date</b>',
+            '<b>Price (USD)</b>',
+            '<b>Fair Value Multiples</b>']
+        range_data = [[self.start,self.last],[np.log10(0.02),5],[np.log10(0.2),6]]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','log']
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+            )
+        fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
+        self.add_slider(fig)
+
+        #Write out html chart
+        chart_name = '\\pricing_models\\fair_value_model_pricing'
+        self.write_html(fig,chart_name)
+
     def nvt_rvt(self):
         """"Bitcoin NVT and RVT Ratio"""
         df = pd.DataFrame()
@@ -1709,84 +1851,6 @@ class btc_chart_suite():
 
         #Write out html chart
         chart_name = '\\oscillators\\nvt_rvt_ratio'
-        self.write_html(fig,chart_name)
-
-    def halving_cycle(self):
-        """"Price Growth over Days since halving for each cycle"""
-        df = self.df
-        df['epoch'] = 0
-        df = df.drop(['epoch'],axis=1)
-
-        #Calculate halving epoch
-        df['epoch'] = df['blk']/210000
-        df['epoch'] = df['epoch'].apply(np.floor)
-        #Filter events to halving events
-        df2 = self.halving
-        #Merge events onto df
-        df = pd.merge(
-            df,df2[['epoch','event','date_event']],
-            how='left',
-            left_on='epoch',
-            right_on='epoch',
-            copy=False
-        )
-        #Calculate days until event
-        df['days_to_event'] = 1460 - (df['date_event'] - df['date']) / np.timedelta64(1, 'D')
-
-        loop_data=[[0,1,2,3,4],[]]
-        x_data = [
-            df[df['epoch']==0]['days_to_event'],
-            df[df['epoch']==1]['days_to_event'],
-            df[df['epoch']==2]['days_to_event'],
-            df[df['epoch']==3]['days_to_event'],
-            [0,1500]
-        ]
-        y_data = [
-            df[df['epoch']==0]['PriceUSD']/0.084,
-            df[df['epoch']==1]['PriceUSD']/12.33,
-            df[df['epoch']==2]['PriceUSD']/651.94,
-            df[df['epoch']==3]['PriceUSD']/8250,
-            [1,1]
-        ]
-        name_data = [
-            'Epoch 1 (2009-12)',
-            'Epoch 2 (2012-16)',
-            'Epoch 3 (2016-20)',
-            'Epoch 4 (2020-24)',
-            'Unity'
-        ]
-        width_data      = [2,2,2,2,2]
-        opacity_data    = [1,1,1,1,1]
-        dash_data = ['solid','solid','solid','solid','dash']
-        color_data = [
-            'rgb(239, 125, 50)',    #Price Orange
-            'rgb(78,205,233)',      #Total Blue
-            'rgb(255, 80, 80)',      #Gradient Red
-            'rgb(153, 255, 102)',      #Gradient Green
-            'rgb(46, 214, 161)',          #Turquoise
-        ]
-        #Invert Colors for Light Theme
-        color_data = self.color_invert(color_data)
-        legend_data = [True,True,True,True,False]
-        title_data = [
-            '<b>Bitcoin Days to Halving</b>',
-            '<b>Days since Halving</b>',
-            '<b>Growth Multiple Since Halving</b>',
-            '<b></b>']
-        range_data = [[0,1500],[np.log10(0.5),np.log10(500)],[-1,2]]
-        autorange_data = [False,False,False]
-        type_data = ['linear','log','log']
-        fig = self.chart.subplot_lines_singleaxis(
-            title_data, range_data ,autorange_data ,type_data,
-            loop_data,x_data,y_data,name_data,color_data,
-            dash_data,width_data,opacity_data,legend_data
-            )
-        fig.update_xaxes(dtick=30,tickformat='1./0f')
-        fig.update_yaxes(showgrid=True,secondary_y=False)
-        self.add_slider(fig)
-
-        #Write out html chart
-        chart_name = '\\cycle_charts\\halving_cycle'
         self.write_html(fig,chart_name)
 
     def bottom_cycle(self):
@@ -2049,6 +2113,162 @@ class btc_chart_suite():
         chart_name = '\\cycle_charts\\yearly_cycle'
         self.write_html(fig,chart_name)
 
+    def halving_cycle(self):
+        """"Price Growth over Days since halving for each cycle"""
+        df = self.df
+        df['epoch'] = 0
+        df = df.drop(['epoch'],axis=1)
+
+        #Calculate halving epoch
+        df['epoch'] = df['blk']/210000
+        df['epoch'] = df['epoch'].apply(np.floor)
+        #Filter events to halving events
+        df2 = self.halving
+        #Merge events onto df
+        df = pd.merge(
+            df,df2[['epoch','event','date_event']],
+            how='left',
+            left_on='epoch',
+            right_on='epoch',
+            copy=False
+        )
+        #Calculate days until event
+        df['days_to_event'] = 1460 - (df['date_event'] - df['date']) / np.timedelta64(1, 'D')
+
+        loop_data=[[0,1,2,3,4],[5,6,7,8]]
+        x_data = [
+            df[df['epoch']==0]['days_to_event'],
+            df[df['epoch']==1]['days_to_event'],
+            df[df['epoch']==2]['days_to_event'],
+            df[df['epoch']==3]['days_to_event'],
+            [0,1500],
+            df[df['epoch']==0]['days_to_event'],
+            df[df['epoch']==1]['days_to_event'],
+            df[df['epoch']==2]['days_to_event'],
+            df[df['epoch']==3]['days_to_event'],
+        ]
+        y_data = [
+            df[df['epoch']==0]['PriceUSD']/0.084,
+            df[df['epoch']==1]['PriceUSD']/12.33,
+            df[df['epoch']==2]['PriceUSD']/651.94,
+            df[df['epoch']==3]['PriceUSD']/8250,
+            [1,1],
+            df[df['epoch']==0]['HashRate']/1,
+            df[df['epoch']==1]['HashRate']/df[df['epoch']==0]['HashRate'].iloc[-1],
+            df[df['epoch']==2]['HashRate']/df[df['epoch']==1]['HashRate'].iloc[-1],
+            df[df['epoch']==3]['HashRate']/df[df['epoch']==2]['HashRate'].iloc[-1],
+        ]
+        name_data = [
+            'Epoch 1 (2009-12)',
+            'Epoch 2 (2012-16)',
+            'Epoch 3 (2016-20)',
+            'Epoch 4 (2020-24)',
+            'Unity',
+            'Hashrate (2009-12)',
+            'Hashrate (2012-16)',
+            'Hashrate (2016-20)',
+            'Hashrate (2020-24)',
+        ]
+        width_data      = [2,2,2,2,2,1,1,1,1]
+        opacity_data    = [1,1,1,1,1,1,1,1,1]
+        dash_data = ['solid','solid','solid','solid','dash','dot','dot','dot','dot',]
+        color_data = [
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(78,205,233)',      #Total Blue
+            'rgb(255, 80, 80)',      #Gradient Red
+            'rgb(153, 255, 102)',      #Gradient Green
+            'rgb(46, 214, 161)',          #Turquoise
+            'rgb(239, 125, 50)',    #Price Orange
+            'rgb(78,205,233)',      #Total Blue
+            'rgb(255, 80, 80)',      #Gradient Red
+            'rgb(153, 255, 102)',      #Gradient Green
+        ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        legend_data = [True,True,True,True,False,True,True,True,True]
+        title_data = [
+            '<b>Bitcoin Days to Halving</b>',
+            '<b>Days since Halving</b>',
+            '<b>Growth Multiple Since Halving</b>',
+            '<b>Hashrate Growth Since Halving</b>']
+        range_data = [[0,1500],[np.log10(0.5),np.log10(500)],[-1,2]]
+        autorange_data = [False,False,True]
+        type_data = ['linear','log','log']
+        fig = self.chart.subplot_lines_doubleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick=30,tickformat='1./0f')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        self.add_slider(fig)
+
+        #Write out html chart
+        chart_name = '\\cycle_charts\\halving_cycle'
+        self.write_html(fig,chart_name)
+
+    def btc_sply(self):
+        """"Bitcoin Issuance Curves"""
+
+        df_half = btc_add_metrics().btc_sply(1000000)
+
+        loop_data=[[0,1],[3,2,4]]
+        x_data = [
+            df['blk'],
+            df_half['blk'],
+            df['blk'],
+            df_half['blk'],
+            [0,1000000],
+
+        ]
+        y_data = [
+            df['DailyIssuedNtv']*365.25/df['SplyCur'], #Inflation Rate
+            1/df_half['S2F_ideal'],
+            df['S2F'],
+            df_half['S2F_ideal'],
+            [76,76],
+        ]
+        name_data = [
+            'Issuance Actual',
+            'Issuance Theoretical',
+            'S2F Actual',
+            'S2F Theoretical',
+            'S2F Gold'
+        ]
+        width_data      = [2,2,1,2,  2]
+        opacity_data    = [1,1,1,0.7,1]
+        dash_data = ['solid','dash','solid','dash','solid']
+        color_data = [
+            'rgb(255, 80, 80)',     #Gradient Red
+            'rgb(255, 80, 80)',     #Gradient Red
+            'rgb(78,205,233)',      #Total Blue
+            'rgb(78,205,233)',      #Total Blue
+            'rgb(239, 125, 50)',    #Price Orange
+        ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        legend_data = [True,True,True,True,True]
+        title_data = [
+            '<b>Bitcoin Supply Schedule</b>',
+            '<b>Block Height</b>',
+            '<b>Inflation Rate</b>',
+            '<b>Stock-to-Flow Ratio</b>']
+        range_data = [[0,1e6],[-2,2],[-3,3]]
+        autorange_data = [False,False,False]
+        type_data = ['linear','log','log']
+        fig = self.chart.subplot_lines_doubleaxis(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data
+            )
+        fig.update_xaxes(dtick=52500,tickformat='1./0f')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        self.add_slider(fig)
+
+        #Write out html chart
+        chart_name = '\\cycle_charts\\halving_cycle'
+        self.write_html(fig,chart_name)
+
 
 
 #""" =================================
@@ -2072,7 +2292,12 @@ class btc_chart_suite():
 #fig.update_xaxes(dtick='M12',tickformat='%d-%b-%y')
 
 
-#fig_btc = btc_chart_suite('light')
+fig_btc = btc_chart_suite('dark')
+
+fig_btc.btc_sply()
+
+
+fig_btc.fair_value_models()
 #
 #
 #"""VALUATION MODELS"""
@@ -2097,7 +2322,7 @@ class btc_chart_suite():
 #
 #
 #"""CYCLE MODELS"""
-#fig_btc.halving_cycle()
+fig_btc.halving_cycle()
 #fig_btc.bottom_cycle()
 #fig_btc.top_cycle()
 #fig_btc.yearly_cycle()

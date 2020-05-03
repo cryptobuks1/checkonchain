@@ -4,9 +4,12 @@ import pandas as pd
 import math
 import random
 
+from checkonchain.dcronchain.dcr_add_metrics import*
+#from checkonchain.general.standard_charts import *
+
 
 class dcr_security_calculate_df():
-    """Calculates a dataframe from dcr_security model
+    """Calculates a dataframe from dcr_security model using user defined inputs (e.g real performance)
     Inputs: df = DataFrame structured with the following columns
         df['blk']       = Block Height (time variable)
         df['H_net']     = Hashrate measured in TH/s
@@ -34,6 +37,9 @@ class dcr_security_calculate_df():
         pass
 
     def dcr_security_curve(self):
+        """
+        Calculates the Decred security curve (hashrate multiplier) for incremental stake capture
+        """
         df = pd.DataFrame(columns=['y','p_y','sig_y','x_y','days_buy_y'])
         for i in range(1,101,1):
             y = i/100
@@ -58,65 +64,91 @@ class dcr_security_calculate_df():
             df.loc[i,['days_buy_y']] = y * 40960 / 20 * 5 / 60 / 24
         return df
 
-    def calculate_df(self,asset,atk_blk,df):
+    def calculate_df(self,asset,atk_blk,atk_type,df):
+        """
+        Calculates the Decred security performance and parameters based on a set of REAL inputs
+        """
+        print('sig_y')
         df['sig_y'] = df.apply(
             lambda row : dcr_security_model(
-                asset,atk_blk,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
-                ).sig_y(),axis=1) 
+                asset,atk_blk,atk_type,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
+                ).sig_y(),axis=1)
+        print('p_y') 
         df['p_y'] = df.apply(
             lambda row : dcr_security_model(
-                asset,atk_blk,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
+                asset,atk_blk,atk_type,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
                 ).p_y(),axis=1) 
+        print('x_y')
         df['x_y'] = df.apply(
             lambda row : dcr_security_model(
-                asset,atk_blk,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
+                asset,atk_blk,atk_type,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
                 ).x_y(),axis=1) 
+        print('Ha')
         df['H_a'] = df.apply(
             lambda row : dcr_security_model(
-                asset,atk_blk,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
+                asset,atk_blk,atk_type,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
                 ).H_a(),axis=1) 
+        print('pow_rent')
         df['pow_rent'] = df.apply(
             lambda row : dcr_security_model(
-                asset,atk_blk,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
+                asset,atk_blk,atk_type,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
                 ).pow_term_rent(),axis=1)
+        print('pow_asic')
         df['pow_asic'] = df.apply(
             lambda row : dcr_security_model(
-                asset,atk_blk,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
+                asset,atk_blk,atk_type,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
                 ).pow_term_asic(),axis=1)
+        print('pow_power')
         df['pow_power'] = df.apply(
             lambda row : dcr_security_model(
-                asset,atk_blk,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
+                asset,atk_blk,atk_type,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
                 ).pow_term_power(),axis=1)
+        print('pow_term')
         df['pow_term'] = df.apply(
             lambda row : dcr_security_model(
-                asset,atk_blk,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
+                asset,atk_blk,atk_type,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
                 ).pow_term(),axis=1) / 1e6
+        print('pos_term')
         df['pos_term'] = df.apply(
             lambda row : dcr_security_model(
-                asset,atk_blk,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
+                asset,atk_blk,atk_type,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
                 ).pos_term(),axis=1) / 1e6
+        print('pca')
         df['pca'] = df.apply(
             lambda row : dcr_security_model(
-                asset,atk_blk,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
+                asset,atk_blk,atk_type,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
                 ).pca(),axis=1) / 1e6
         df['pow_ratio'] = df['pow_term'] / df['pca']
         df['pow_prof'] = df.apply(
             lambda row : dcr_security_model(
-                asset,atk_blk,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
+                asset,atk_blk,atk_type,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
                 ).pow_prof(),axis=1)
         df['pos_prof'] = df.apply(
             lambda row : dcr_security_model(
-                asset,atk_blk,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
+                asset,atk_blk,atk_type,row['y'],row['H_net'],row['blk'],row['price'],row['tic_pool'],row['tic_price']
                 ).pos_prof(),axis=1)
         return df
 
 
 class dcr_security_model():
 
-    def __init__(self,asset,atk_blk,y,H_net,blk,price,Z,p_t):
+    def __init__(self,asset,atk_blk,atk_type,y,H_net,blk,price,Z,p_t):
+        """
+        Decred security model calculation for specific data point
+        INPUTS:
+            asset   = str, 'btc' for pure PoW or 'dcr' for Hybrid PoW/PoS
+            atk_blk = int, depth of block reorg/double spend
+            atk_type= str, 'attack type = 'internal' or 'external'
+            y       = float, Portion of the ticket pool owned by an attacker (0 to 1)
+            H_net   = float, Hashrate measured in TH/s
+            price   = float, Price of coin in USD
+            Z       = int, Tickets in pool (target is 40960)
+            p_t     = float, Ticket price (DCR)
+        """
         # Input Params
         self.asset = asset # 'btc' or 'dcr' supported
         self.atk_blk = atk_blk # depth of blocks to attack | double spend
+        self.atk_type = atk_type #attack type = 'internal' or 'external'
         self.y = y # portion of stake owned by attacker
         self.H_net = H_net # network total hashrate (TH/s)
         self.blk = blk # blk height
@@ -134,28 +166,32 @@ class dcr_security_model():
             self.y = 1e-15 # Hard reset of tic pool to near zero
             self.t_b = 10*60 # blk time (s)
             #PoW rentability constants
-            self.a = 0 # total rentable hsh (TH/s)
-            self.r_e = 0.2 # rental price (fiat / TH/s)
+            self.a = (217.2838 + 129.5275)/1000 # total rentable hsh (TH/s)
+            # https://www.nicehash.com/my/marketplace/SHA256
+            self.r_e = 143.25/1000 # rental price (fiat / TH/s)
             #PoW ASIC capital constants
-            self.h_d = 2.4 # ASIC hashrate (TH/s)
-            self.w_d = 1 # ASIC power draw (kW)
-            self.p_d = 1700 # ASIC capital (fiat/ASIC Device)
+            #ASSUMES ANTMINER S19 Pro (May 2020)
+            self.h_d = 110 # ASIC hashrate (TH/s)
+            self.w_d = 3.25 # ASIC power draw (kW)
+            self.p_d = 3140 # ASIC capital (fiat/ASIC Device)
 
         elif asset ==str('dcr'):
             self.t_b = 5*60 # blk time (s)
             #PoW rentability constants
-            self.a = 0 # total rentable hashrate (TH/s)
-            self.r_e = 0 # rental price (fiat / TH/s)
+            self.a = (0.0077 + 0.0044)/1000 # total rentable hashrate (TH/s)
+            self.r_e = 0.73/1000 # rental price (fiat / TH/s)
+            #https://www.nicehash.com/my/marketplace/DECRED
             #PoW ASIC capital constants
-            self.h_d = 2.4 # ASIC hashpower (TH/s)
-            self.w_d = 1 # ASIC power draw (kW)
-            self.p_d = 1700 # ASIC capital (fiat/ASIC Device)
+            #ASSUMES StrongU STU-U1++ or MicroBT Whatsminer D1 (May 2020)
+            self.h_d = 52 # ASIC hashpower (TH/s)
+            self.w_d = 2.2 # ASIC power draw (kW)
+            self.p_d = 1130 # ASIC capital (fiat/ASIC Device)
             
-        # Duration of attack based on blocks to be wound back - compare of finality
+        # Duration of attack based on blocks to be wound back - compare finality
         self.t_a = self.atk_blk * self.t_b # time of attack (time in s)
 
         #PoW power constants
-        self.adj_d = 1 # adjustment factor for other PoW overheads (multiple on Device cost)
+        self.adj_d = 0.05 # adjustment factor for other PoW overheads (multiple on Device cost)
         self.c = 0.05 # cost per power ($/KWh)
         self.rho = (self.p_d / self.h_d) # (ASIC ($/unit)/(TH/s)) = ASIC relative cost
         self.nu = self.h_d/self.w_d # (ASIC (TH/s)/kWh) = ASIC power efficiency
@@ -229,7 +265,7 @@ class dcr_security_model():
 
     def pow_term_asic(self):
         # ASIC Capital
-        # (atk hsh - rent hsh) * (ASIC rel cost) * Overhead adjustment factor
+        # (attack hash - rent hash) * (ASIC relative cost) * Overhead adjustment factor
         D = (self.H_a() - self.a) * self.rho * self.adj_d 
         return D
 
@@ -245,7 +281,7 @@ class dcr_security_model():
 
    
     """Proof-of-Stake Term"""
-    def pos_prof(self): # annual stk yield %
+    def pos_prof(self): # annual stake yield %
         # 
         return ((self.p_t+(self.R()[2]/self.N))/self.p_t)**(365.25/28)-1
     
@@ -255,6 +291,70 @@ class dcr_security_model():
         return S_a
     
     """Total Cost to Attack"""
-    def pca(self): # Total atk cst
+    def pca(self): # Total attack cost
         return self.pow_term() + self.pos_term()
+
+
+#Pull real performance of dcr chain and clean data
+df_dcr = dcr_add_metrics().dcr_real()
+df = df_dcr[['blk','pow_work_TH','PriceUSD','tic_pool_avg','tic_price_avg']]
+df.columns = ['blk','H_net','price','tic_pool','tic_price'] #rename for security model
+#Append dataframe and add increasing share of PoS pool from 1% and then 5% to 75% in 5% increments
+df['y'] = 0.01
+_df = df
+for i in range(5,80,5):
+    _df['y'] = i/100
+    df = df.append(_df)
+df = df.reset_index()
+df = df.dropna(axis=0)
+
+df_sec = dcr_security_calculate_df().calculate_df('dcr',12,'internal',df)
+df_sec[df_sec['y']==0.15]
+
+
+df_sec.columns
+df_sec['pos_term'] = df_sec['y']*df_sec['tic_pool']*df_sec['price']*df_sec['tic_price']
+df_sec['pca'] = df_sec['pca'] + df_sec['pos_term']
+
+import plotly.graph_objects as go
+fig = go.Figure(data=[go.Scatter3d(
+    x=df_sec['blk'], 
+    y=df_sec['y'], 
+    z=df_sec['pca'],
+    mode='markers',
+    marker=dict(
+        size=12,
+        color=df_sec['pca']/1e6,                # set color to an array/list of desired values
+        colorscale='Electric',   # choose a colorscale
+        opacity=0.8
+    )
+)])
+fig.show()
+
+fig.update_layout(scene = dict(
+    xaxis = dict(
+        type = 'linear',
+        backgroundcolor="rgb(200, 200, 230)",
+        gridcolor="white",
+        showbackground=True,
+        zerolinecolor="white",),
+    yaxis = dict(
+        type = 'linear',
+        backgroundcolor="rgb(230, 200,230)",
+        gridcolor="white",
+        showbackground=True,
+        zerolinecolor="white"),
+    zaxis = dict(
+        type = 'log',
+        backgroundcolor="rgb(230, 230,200)",
+        gridcolor="white",
+        showbackground=True,
+        zerolinecolor="white",),),
+    width=1500,
+    height=1500,
+    margin=dict(
+    r=10, l=10,
+    b=10, t=10)
+    )
+fig.show()
 
