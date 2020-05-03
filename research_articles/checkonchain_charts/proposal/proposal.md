@@ -31,7 +31,7 @@ It is proposed to build the website in phases with this proposal covering the fo
 
 Following delivery of the MVP, additional work phases can be progressed to expand the scope and content of the site to include additional charts, research, languages, network dashboards etc. It is suggested that equivalent charts for Bitcoin be presented in a later stage, subject to stakeholder discussion. The reason being that if the charts/research are found to be useful outside the Decred community, it has the potential to draw market share from the competition above and brings more eyes onto Decred, as people using the Bitcoin charts/research are only one click away.
 
-**Two prototype layouts** ([WIP_1](https://xd.adobe.com/view/efae9a9b-a5e3-4bf2-4723-8d3f0a0e2aee-999f/) and [WIP_2](https://projects.invisionapp.com/share/ACX4905MNWX#/screens/416016812) have been prepared to demonstrate the current design concepts.
+**Two prototype layouts** ([WIP_1](https://xd.adobe.com/view/efae9a9b-a5e3-4bf2-4723-8d3f0a0e2aee-999f/) and [WIP_2](https://projects.invisionapp.com/share/ACX4905MNWX#/screens/416016812)) have been prepared to demonstrate the current design concepts.
 
 ## Who
 
@@ -54,8 +54,7 @@ The assembled team for this project are:
 
 ## Budget Requested
 
-**Research/documentation/charts $0** - The work completed by checkmate/nino to date on [Phase 2 Part 1](https://proposals.decred.org/proposals/a677e236cb2e0fdd485980cd5d789e668d00fdc5235d01e7345d2195b8679066) is directly relevant and feeds into this proposal such that no additional time/budget is necessary for these contributions. What is requested is for checkmate to re-allocate 33%-50% of his time/budget from his Part 1 research proposal ($5k to $7.5k) to completing the documentation / new research papers dedicated to the site. This will detail how each chart is presented and applied, how the indicators relate to Decred fundamentals and what these signals mean in practice. This can also include video recorded explainers for the 5 MVP charts.
-
+**Research/documentation/charts $0** - The work completed by checkmate/nino to date on [**Phase 2 Part 1**](https://proposals.decred.org/proposals/a677e236cb2e0fdd485980cd5d789e668d00fdc5235d01e7345d2195b8679066) is directly relevant and feeds into this proposal such that no additional time/budget is necessary for these contributions (covers spec and blurbs). What is requested is for checkmate to re-allocate 33%-50% of his time/budget from his **Phase 2 Part 2** research proposal ($5k to $7.5k) to completing the documentation / new research papers dedicated to the site (includes new metrics which are under development). This will detail how each chart is presented and applied, how the indicators relate to Decred fundamentals and what these signals mean in practice. This can also include video recorded explainers for the 5 MVP charts.
 
 **Design $XX** - 
 
