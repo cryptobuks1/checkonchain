@@ -17,7 +17,7 @@ This proposal aims to deliver an MVP website that will host live charts for Decr
 
 It is proposed to build the website in phases with this proposal covering the following MVP Features (Phase 1):
 
-1. 5 live charts as specified in [this git-repo](https://github.com/checkmatey/checkonchain/blob/master/research_articles/dcr_charts_gitissues/dcrdata_chart.md) (MVRV Ratio, Stakeholder commitments in USD and BTC, NVT/RVT Ratio, Mayer Multiple, 142-day Ticket Sum). Charts will be switchable between light and dark modes. It is expected there will be three umbrella categories for the charts 
+1. 5 live charts as specified in [this git-repo](https://github.com/checkmatey/checkonchain/blob/master/research_articles/checkonchain_charts/checkonchain_charts.md) (MVRV Ratio, Stakeholder commitments in USD and BTC, NVT/RVT Ratio, Mayer Multiple, 142-day Ticket Sum). Charts will be switchable between light and dark modes. It is expected there will be three umbrella categories for the charts 
     
     a) Pricing models (block subsidy, 142-day Ticket Sum)
 
