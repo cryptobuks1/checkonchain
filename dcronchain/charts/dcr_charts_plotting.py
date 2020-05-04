@@ -62,3 +62,4 @@ fig_dcr.max_vol_ratio()
 
 """Performance Metrics"""
 fig_dcr.privacy()
+fig_dcr.privacy_volume()

@@ -135,7 +135,7 @@ class dcr_chart_suite():
 
         #STANDARD SETTINGS
         loop_data=[[0,1],[2,3,4,5,6]]
-        width_data      = [2,2,1,1,1,1,1]
+        width_data      = [2,2,2,1,1,1,1]
         opacity_data    = [1,1,1,1,1,1,1]
         dash_data = ['solid','solid','solid','dash','dash','dash','dash']
         color_data = [
@@ -412,14 +412,15 @@ class dcr_chart_suite():
             'rgb(46, 214, 161)',    #Turquoise
         ]
         #Invert Colors for Light Theme
-        color_data = self.color_invert(color_data)
+        for i in [0,4,5,6]:
+            color_data[i] = self.color_invert([color_data[i]])[0]
         dash_data = [
             'solid','dash','solid','solid','solid','solid','solid',
             ]
         width_data = [2,2,2,2,2,2,2]
-        opacity_data = [1,0.5,0.5,0.5,0.5,0.5,1]
+        opacity_data = [1,1,1,1,1,1,1]
         legend_data = [True,True,True,True,True,True,True]#
-        autorange_data = [True,False,True]
+        autorange_data = [False,False,True]
         type_data = ['date','log','log']#
         title_data = [
             '<b>Decred Difficulty Ribbon</b>',
@@ -499,7 +500,8 @@ class dcr_chart_suite():
             'rgb(20, 169, 233)',    #Total Blue
         ]
         #Invert Colors for Light Theme
-        color_data = self.color_invert(color_data)
+        for i in [0,3]:
+            color_data[i] = self.color_invert([color_data[i]])[0]
 
         dash_data = ['solid','solid','solid','solid','solid','solid','dash']
         width_data = [2,2,2,2,2,2]
@@ -526,9 +528,9 @@ class dcr_chart_suite():
                 'Total-USD', 
             ]
             title_data = [
-                'Decred Block Subsidy Valuation Models (USD)',
-                'Date',
-                'Network Valuation (USD)',
+                '<b>Decred Block Subsidy Valuation Models (USD)</b>',
+                '<b>Date</b>',
+                '<b>Network Valuation (USD)</b>',
                 'N/A'
             ]
             range_data = [[self.start,self.last],[self.cap_lb,self.cap_ub],[5,11]]
@@ -550,10 +552,10 @@ class dcr_chart_suite():
                 'Total-USD',
                 ]
             title_data = [
-                'Decred Block Subsidy Pricing Models (USD)',
-                'Date',
-                'DCR Price (USD)',
-                'Difficulty'
+                '<b>Decred Block Subsidy Pricing Models (USD)</b>',
+                '<b>Date</b>',
+                '<b>DCR Price (USD)</b>',
+                '<b>Difficulty</b>'
             ]
             range_data = [[self.start,self.last],[self.price_lb,self.price_ub],[5,11]]
         
@@ -640,10 +642,10 @@ class dcr_chart_suite():
                 'Market Cap (BTC)',
                 ]
             title_data = [
-                'Decred Block Subsidy Valuation Models (BTC)',
-                'Date',
-                'Network Valuation (BTC)',
-                'Total DCR in Tickets'
+                '<b>Decred Block Subsidy Valuation Models (BTC)</b>',
+                '<b>Date</b>',
+                '<b>Network Valuation (BTC)</b>',
+                '<b>Total DCR in Tickets</b>'
                 ]
             range_data = [[self.start,self.last],[self.cap_lb_btc,self.cap_ub_btc],[0,1]]
 
@@ -665,10 +667,10 @@ class dcr_chart_suite():
                 'DCR Price (BTC)',
                 ]
             title_data = [
-                'Decred Block Subsidy Pricing Models (BTC)',
-                'Date',
-                'DCR Price (BTC)',
-                'Total DCR in Tickets'
+                '<b>Decred Block Subsidy Pricing Models (BTC)</b>',
+                '<b>Date</b>',
+                '<b>DCR Price (BTC)</b>',
+                '<b>Total DCR in Tickets</b>'
                 ]
             range_data = [[self.start,self.last],[self.price_lb_btc,self.price_ub_btc],[0,1]]
         
@@ -743,7 +745,9 @@ class dcr_chart_suite():
             'rgb(156,225,143)',     #Turquoise Green
         ]
         #Invert Colors for Light Theme
-        color_data = self.color_invert(color_data)
+        for i in [0,1,4,6,7]:
+            a = [color_data[i]]
+            color_data[i] = self.color_invert(a)[0]
         dash_data = ['solid','dash','solid','solid','solid','solid','solid','dash']
         width_data = [2,2,2,2,2,2,3,2]
         opacity_data = [1,1,1,1,1,1,1,1]
@@ -871,7 +875,10 @@ class dcr_chart_suite():
             'rgb(156,225,143)',     #Turquoise Green
         ]
         #Invert Colors for Light Theme
-        color_data = self.color_invert(color_data)
+        for i in [0,1,4,6,7]:
+            a = [color_data[i]]
+            color_data[i] = self.color_invert(a)[0]
+
         dash_data = ['solid','dash','solid','solid','solid','solid','solid','dash']
         width_data = [2,2,2,2,2,2,3,2]
         opacity_data = [1,1,1,1,1,1,1,1]
@@ -2072,8 +2079,8 @@ class dcr_chart_suite():
         ]
         #Invert Colors for Light Theme
         color_data = self.color_invert(color_data)
-        color_data[3] = 'rgb(255, 80, 80)',     #Gradient Red
-        color_data[4] = 'rgb(153, 255, 102)',   #Gradient Green
+        color_data[3] = 'rgb(255, 80, 80)'     #Gradient Red
+        color_data[4] = 'rgb(153, 255, 102)'   #Gradient Green
 
         legend_data = [True,True,True,True,True,]
         title_data = [
@@ -2749,15 +2756,14 @@ class dcr_chart_suite():
         width_data = [1,1,1,2,5,5]
         opacity_data = [1,1,1,1,1,1]
         legend_data = [True,True,True,True,True,True]#
-        autorange_data = [False,False,False]
         type_data = ['date','linear','linear']#
         title_data = [
             '<b>Decred Transaction Volumes</b>',
             '<b>Date</b>',
             '<b>Cumulative On-chain Volume (DCR)</b>',
             '<b>Proportion of Circ. Supply (DCR)</b>']
-        range_data = [[self.start,self.last],[5,9],[0,1]]
-
+        range_data = [[self.start,self.last],[0,6e6],[0,0.6]]
+        autorange_data = [False,False,False]
         #BUILD FINAL CHART
         fig = self.chart.subplot_lines_doubleaxis_1st_area(
             title_data, range_data ,autorange_data ,type_data,
@@ -2775,6 +2781,95 @@ class dcr_chart_suite():
         chart_name = '\\performance\\privacy'
         self.write_html(fig,chart_name)
         return fig
+
+    def privacy_volume(self):
+        """Decred Privacy Volumes"""
+        df = self.df
+
+        #Regular Transactions
+        df['dcr_tfr_reg'] = df['dcr_tfr_vol'] - df['dcr_anon_mix_vol']
+        #Total Transactions
+        df['total_tx'] = (
+            df['dcr_tfr_reg']
+            + df['dcr_tic_vol']
+            + df['dcr_anon_mix_vol']
+        )
+        df['tx_mix'] = df['dcr_anon_mix_vol'].cumsum()
+        df['tx_tic'] = df['dcr_tic_vol'].cumsum()
+        df['tx_reg'] = df['dcr_tfr_reg'].cumsum()
+        
+        loop_data=[[0,1,2],[3,4,5]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+        ]
+        y_data = [
+            df['tx_reg'],
+            (df['tx_reg']+df['tx_tic']),
+            (df['tx_reg']+df['tx_tic']+df['tx_mix']),
+            df['dcr_tfr_reg'],
+            df['dcr_tic_vol'],
+            df['dcr_anon_mix_vol'],
+        ]
+        name_data = [
+            'Regular Volume',
+            'Ticket Volume',
+            'Privacy Mix Volume',
+            'Regular Transactions',
+            'Stake Participation',
+            'Unspent Anonymity Set',
+            ]
+        color_data = [
+            'rgba(239, 125,  50, 0.5)',     #Price Orange
+            'rgba(46,  214, 161, 0.5)',     #Turquoise
+            'rgba(250, 38,   53, 0.5)',     #POW Red
+            'rgb(239, 125,  50)',           #Price Orange
+            'rgb(46,  214, 161)',           #Turquoise
+            'rgb(250, 38, 53)',             #POW Red
+            #'rgb(114, 49, 163)',    #POS Purple
+            #'rgb(255, 192, 0)',     #Treasury Yellow
+            #'rgb(20, 169, 233)',    #Total Blue
+        ]
+        #NO INVERSION
+        fill_data = [
+            'tozeroy','tonexty','tonexty','none','none','none'
+        ]
+        dash_data = [
+            'solid','solid','solid','solid','solid','solid'
+            ]
+        width_data = [1,1,1,2,2,2]
+        opacity_data = [1,1,1,1,1,1]
+        legend_data = [True,True,True,True,True,True]#
+        type_data = ['date','linear','linear']#
+        title_data = [
+            '<b>Decred Transaction Volumes</b>',
+            '<b>Date</b>',
+            '<b>Cumulative On-chain Volume (DCR)</b>',
+            '<b>Daily Tx Volume (DCR)</b>']
+        range_data = [[self.start,self.last],[0,6e6],[0,0.6]]
+        autorange_data = [False,False,False]
+        #BUILD FINAL CHART
+        fig = self.chart.subplot_lines_doubleaxis_1st_area(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+            )
+        #Add Volume Bars for Regular Transactions
+        #self.add_vol_bars(fig,x_data,y_data,color_data,name_data,[3])
+        fig.update_yaxes(secondary_y=False,showgrid=True)
+        fig.update_yaxes(secondary_y=True,)
+        self.add_slider(fig)
+
+        #Write out html chart
+        chart_name = '\\performance\\privacy'
+        self.write_html(fig,chart_name)
+        return fig
+
 
     def add_volume_bars(self,fig,x_data,y_data,color_data,name_data,loop_data):
 
@@ -2800,6 +2895,6 @@ class dcr_chart_suite():
         fig.update_layout(barmode='stack',bargap=0.01)#,yaxis2=dict(side="right",position=0.15))
         
         
-fig_dcr = dcr_chart_suite('light')
-
-a = fig_dcr.privacy()
+#fig_dcr = dcr_chart_suite('light')
+#
+#a = fig_dcr.privacy()
