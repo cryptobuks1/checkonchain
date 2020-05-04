@@ -111,4 +111,4 @@ checkonchain
 **Decred**
 >![Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE](misc//images//dcr_qr.png)
 
->[Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE](https://explorer.dcrdata.org//address//Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE)
+>[Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE](https://explorer.dcrdata.org/address/Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE?chart=balance&zoom=k5h3mcg0-k6ok9i80&bin=month)
