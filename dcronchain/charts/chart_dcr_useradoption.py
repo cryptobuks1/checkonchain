@@ -11,9 +11,10 @@ class dcr_user_adoption():
     Establish user adoption metrics for the Decred chain
     Three parties involved
     """
-    def __init__(self):
+    def __init__(self,theme):
         #Chart Theme
-        self.chart = check_standard_charts('dark')
+        self.theme = theme
+        self.chart = check_standard_charts(theme)
         #Compile Input Dataframes
         self.btc = btc_add_metrics().btc_subsidy_models()
         self.dcr = dcr_add_metrics().dcr_ticket_models()
@@ -38,6 +39,29 @@ class dcr_user_adoption():
         #Calculate btc hashrate (ss by Coinmetrics 'HashRate' bu author is lazy)
         self.btc['pow_hashrate_THs'] = self.btc['HashRate']
             
+    def color_invert(self,color_data):
+        """Inverts colors in a list
+        INPUT
+            color_data = list of 'rgb(rrr,ggg,bbb)' or 'rgba(rrr,ggg,bbb,a.aa)'
+        """
+        j = 0
+        for i in color_data: #cycle through all colors
+            if self.theme == 'light': #if light theme
+                #split rbg and invert colors
+                text = i.split('(')[1]
+                text = text.split(')')[0]
+                text = text.split(',')
+                r = 255-int(text[0])
+                g = 255-int(text[1])
+                b = 255-int(text[2])
+                if len(text) ==3:
+                    text = 'rgb(' + str(r) + ',' + str(g) + ',' + str(b) + ')'
+                if len(text) ==4:
+                    a = float(text[3])
+                    text = 'rgba(' + str(r) + ',' + str(g) + ',' + str(b) + ',' + str(a) + ')'
+                color_data[j] = text
+            j = j + 1
+        return color_data
 
     def dcr_user_active_address(self):
         """
@@ -527,7 +551,6 @@ class dcr_user_adoption():
             dash_data,width_data,opacity_data,legend_data
             )
         fig.show()
-
 
     def dcr_miner_pow_growth(self):
         """
@@ -1022,8 +1045,10 @@ class dcr_user_adoption():
             'rgb(46, 214, 161)' ,   #Turquoise
             'rgb(250, 38, 53)' ,    #PoW Red
             ]
+        color_data = self.color_invert(color_data)
+
         dash_data = [
-            'solid','solid','solid','dot',
+            'solid','solid','solid','solid',
             'dot','dot','dot',
             'solid','dash'
             ]
@@ -1043,10 +1068,10 @@ class dcr_user_adoption():
             True,True,
             ]
         title_data = [
-            'Decred Treasury Flows - DCR',
-            'Date',
-            'Treasury Flows (DCR)',
-            'DCR Price (USD)']
+            '<b>Decred Treasury Flows - DCR</b>',
+            '<b>Date</b>',
+            '<b>Treasury Flows (DCR)</b>',
+            '<b>DCR Price (USD)</b>']
         range_data = [['2016-01-01','2021-01-01'],[0,1e6],[-1,3]]
         autorange_data = [False,False,False]
         type_data = ['date','linear','log']
@@ -1070,10 +1095,10 @@ class dcr_user_adoption():
         autorange_data = [False,False,True]
         type_data = ['date','linear','log']
         title_data = [
-            'Decred Treasury Flows',
-            'Date',
-            'Treasury Flows (DCR)',
-            'Treasury Flows (USD)']
+            '<b>Decred Treasury Flows</b>',
+            '<b>Date</b>',
+            '<b>Treasury Flows (DCR)</b>',
+            '<b>Treasury Flows (USD)</b>']
         fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
@@ -1091,9 +1116,9 @@ class dcr_user_adoption():
         autorange_data = [False,False,False]
         type_data = ['date','linear','log']
         title_data = [
-            'Decred Treasury Spend Ratio',
-            'date',
-            'Spend Ratio',
+            '<b>Decred Treasury Spend Ratio</b>',
+            '<b>Date</b>',
+            '<b>Spend Ratio</b>',
             '']
         fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
@@ -1148,6 +1173,7 @@ class dcr_user_adoption():
             'rgb(255,255,255)',     #White
             'rgb(65, 191, 83)'      #Decred Green
             ]
+        color_data = self.color_invert(color_data)
         dash_data = [
             'solid','solid','solid','solid',
             ]
@@ -1167,10 +1193,10 @@ class dcr_user_adoption():
             True,True,
             ]
         title_data = [
-            'Vote Power per Ticket (DCR)',
-            'Date',
-            'Vote Power per Ticket (DCR)',
-            'Vote Power to Ticket Price Ratio']
+            '<b>Vote Power per Ticket (DCR)</b>',
+            '<b>Date</b>',
+            '<b>Vote Power per Ticket (DCR)</b>',
+            '<b>Vote Power to Ticket Price Ratio</b>']
         range_data = [['2016-01-01','2021-01-01'],[-1,2],[-2,0]]
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
@@ -1182,7 +1208,7 @@ class dcr_user_adoption():
         fig.update_yaxes(tickformat = "%",secondary_y=True)
         fig.show()
 
-dcr_class = dcr_user_adoption()
+dcr_class = dcr_user_adoption('light')
 
 #USER ADOPTION
 dcr_class.dcr_user_tx_count()
