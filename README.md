@@ -109,6 +109,6 @@ checkonchain
 >[bc1q0a8r0jcf4natnmj2cun3nz3kwj5z5h2jsc9fk2](https://blockstream.info/address/bc1q0a8r0jcf4natnmj2cun3nz3kwj5z5h2jsc9fk2)
 
 **Decred**
->![Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE](research_articles//bitcoin_rvt_ratio///images/dcr_qr.png)
+>![Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE](misc//images//dcr_qr.png)
 
 >[Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE](https://explorer.dcrdata.org//address//Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE)
