@@ -104,9 +104,9 @@ checkonchain
 ## Donations
 
 **Bitcoin**
->![3FJaqvbMUTPZ6f7rdca8tifS5PnVDFtN6P](research_articles/bitcoin_rvt_ratio/images/btc_qr.png)
+>![bc1q0a8r0jcf4natnmj2cun3nz3kwj5z5h2jsc9fk2](misc\images\btc_qr.png)
 
->[3FJaqvbMUTPZ6f7rdca8tifS5PnVDFtN6P](https://blockstream.info/address/3FJaqvbMUTPZ6f7rdca8tifS5PnVDFtN6P)
+>[bc1q0a8r0jcf4natnmj2cun3nz3kwj5z5h2jsc9fk2](https://blockstream.info/address/bc1q0a8r0jcf4natnmj2cun3nz3kwj5z5h2jsc9fk2)
 
 **Decred**
 >![Dsmx4zrTuS6UJxGHNutc5pwH73VHx7JN5XE](research_articles/bitcoin_rvt_ratio/images/dcr_qr.png)
