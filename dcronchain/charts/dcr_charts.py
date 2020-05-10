@@ -242,6 +242,97 @@ class dcr_chart_suite():
 
         #return fig
 
+    def mrkt_real_gradient(self,period):
+        """"Presents an oscillator for the X-day gradient of the Market Cap and Realised Cap
+            The metric helps to identify where off-chain sell/buy pressure front-runs on-chain signature
+            INPUTS
+                period = period of gradient (defaults to 28)
+        """
+        df = self.df
+
+        df['MrktGradient'] = ((
+            df['PriceUSD'] 
+            - df['PriceUSD'].shift(periods=period,axis=0)
+        ) / period) #/ df['SplyCur']
+
+
+        df['RealGradient'] = ((
+            df['PriceRealUSD'] 
+            - df['PriceRealUSD'].shift(periods=period,axis=0)
+        ) / period) #/ df['SplyCur']
+
+        df['DeltaGradient'] = df['MrktGradient'] - df['RealGradient']
+
+        #STANDARD SETTINGS
+        loop_data=[[0,1],[2,3,4,5]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+        ]
+        y_data = [
+            df['CapMrktCurUSD'],
+            df['CapRealUSD'],
+            df['MrktGradient'],
+            df['RealGradient'],
+            df['RealGradient'],
+            df['DeltaGradient']
+        ]
+        name_data = [
+            'Market Cap',
+            'Realised Cap',
+            'N/A',
+            'Market Gradient',
+            'Realised Gradient',
+            'Delta Gradient',
+        ]
+        color_data = [
+            'rgb(255, 255, 255)',         #White
+            'rgb(239, 125, 50)',          #Price Orange
+            'rgba(255, 80, 80, 0.7)',     #Gradient Red
+            'rgba(255, 80, 80, 0.7)',     #Gradient Red
+            'rgba(36, 255, 136, 0.7)',    #Gradient Green
+            'rgb(143, 207, 95)',          #Purple (Inverted)
+        ]
+        #Invert Colors for Light Theme
+        color_data = self.color_invert(color_data)
+        fill_data = [
+            'none','none','none','tonexty','tozeroy','none'
+        ]
+        width_data      = [2,2,1,1,1,2]
+        opacity_data    = [1,1,1,1,1,1]
+        dash_data = ['solid','solid','solid','solid','solid','solid',]
+        legend_data = [True,True,False,True,True,True]
+        autorange_data = [False,False,False]
+        type_data = ['date','log','linear']
+        range_data = [[self.start,self.last],[self.cap_lb,self.cap_ub],[-2,4]]
+        title_data = [
+            '<b>Decred Market-Realised Gradient Oscillator</b>',
+            '<b>Date</b>',
+            '<b>Network Valuation (USD)</b>',
+            '<b>Market-Real Gradient</b>']
+        #BUILD CHART
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+            )
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(showgrid=False,secondary_y=True)
+        self.add_slider(fig)
+        
+        #Write out html chart
+        chart_name = '\\oscillators\\mrkt_real_gradient'
+
+        self.write_html(fig,chart_name)
+
+        #return fig
+
     def unrealised_PnL(self):
         """"Decred Realised Price and MVRV"""
         df = pd.DataFrame()
@@ -2110,6 +2201,102 @@ class dcr_chart_suite():
 
         #return fig
 
+    def mining_pulse(self):
+        """Decred Mining Pulse after @permabull Nino
+
+        """
+        df = self.df
+        df2 = dcrdata_api().dcr_performance()                                      #dcrdata block time
+        df2['date'] = pd.to_datetime(df2['time'],unit='s',utc=True)           #Date from timestamp
+        #Calculate mining pulse in seconds
+        df2['miningpulse'] = df2['blk_time_s'].rolling(18144).mean() - 300
+
+        df2['miningpulse_pos'] = np.where(df2['miningpulse'] >= 0, df2['miningpulse'], 0)
+        df2['miningpulse_neg'] = np.where(df2['miningpulse'] < 0, df2['miningpulse'], 0)
+
+        loop_data=[[0,1,],[4,5,6,7,2,3]]
+        x_data = [
+            df['date'],
+            df['date'],
+            df2['date'],
+            df2['date'],
+            [self.start,self.last], #NA Ceiling
+            [self.start,self.last], #+2s
+            [self.start,self.last], #NA Floor
+            [self.start,self.last], #-2s
+        ]
+        y_data = [
+            df['PriceUSD'],
+            df['PriceRealUSD'],
+            df2['miningpulse_pos'],
+            df2['miningpulse_neg'],
+            [4,4],
+            [2,2],
+            [-4,-4],
+            [-2,-2],
+        ]
+        name_data = [
+            'Market Cap',
+            'Realised Cap',
+            'Mining Pulse +ve',
+            'Mining Pulse -ve',
+            'na','na','na','na',
+            ]
+        color_data = [
+            'rgb(255, 255, 255)',       #White
+            'rgb(239, 125, 50)',        #Price Orange
+            #'rgba(112, 48, 160,0.7)',   #Purple
+            'rgba(255,0,255,0.7)',      #Retro Pink
+            'rgba(0, 255, 255, 0.7)',   #Retro Blue
+            'rgba(0,0,0,0)',            #NA
+            'rgba(153, 255, 102, 0.2)',  #Gradient Green
+            'rgba(0,0,0,0)',            #NA
+            'rgba(255, 80, 80, 0.2)',    #Gradient Red
+        ]
+        fill_data = [
+            'none','none','tozeroy','tozeroy',
+            'none','tonexty','none','tonexty'
+        ]
+        #Invert Colors for Light Theme
+        for i in [0,1]:
+            color_data[i] = self.color_invert([color_data[i]])[0]
+        dash_data = [
+            'solid','solid','solid','solid',
+            'solid','solid','solid','solid',
+            ]
+        width_data      = [2,2,1,1,    1,1,1,1]
+        opacity_data    = [1,1,1,1,    1,1,1,1]
+        legend_data     = [True,True,True,True,False,False,False,False,]#
+        autorange_data  = [False,False,False]
+        type_data       = ['date','log','linear']#
+        title_data = [
+            '<b>Decred Mining Pulse</b>',
+            '<b>Date</b>',
+            '<b>DCR/USD Price</b>',
+            '<b>Mining Pulse</b>'
+        ]
+        range_data = [[self.start,self.last],[self.price_lb,self.price_ub],[-6,16]]
+
+        #BUILD FINAL CHART
+        fig = self.chart.subplot_lines_doubleaxis_2nd_area(
+            title_data, range_data ,autorange_data ,type_data,
+            loop_data,x_data,y_data,name_data,color_data,
+            dash_data,width_data,opacity_data,legend_data,
+            fill_data
+            )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
+        fig.update_yaxes(dtick=2,secondary_y=True)
+        
+        fig.update_xaxes(dtick='M6',tickformat='%d-%b-%y')
+        self.add_slider(fig)
+        fig = self.chart.add_annotation(fig,"@checkmatey<br />@permabullnino")     
+
+        #Write out html chart
+        chart_name = '\\oscillators\\mining_pulse'
+        self.write_html(fig,chart_name)
+
+        #return fig
+
     def ticket_overunder(self):
         """"Decred Ticket Over/Under Measure
             after @permabullnino"""
@@ -2285,7 +2472,7 @@ class dcr_chart_suite():
         fig.update_yaxes(showgrid=True,secondary_y=False)
 
         self.add_slider(fig)
-        fig = self.chart.add_annotation(fig,"@checkmatey")
+        fig = self.chart.add_annotation(fig,"@checkmatey<br />@permabullnino")     
 
         #Write out html chart
         chart_name = '\\pricing_models\\142day_ticket_volume'
@@ -2446,6 +2633,7 @@ class dcr_chart_suite():
         fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(showgrid=False,secondary_y=True)
         self.add_slider(fig)
+        fig = self.chart.add_annotation(fig,"@checkmatey<br />@permabullnino")
 
         #Write out html chart
         chart_name = '\\oscillators\\tx_sum_adjsply_142d'
@@ -2895,6 +3083,10 @@ class dcr_chart_suite():
         fig.update_layout(barmode='stack',bargap=0.01)#,yaxis2=dict(side="right",position=0.15))
         
         
-#fig_dcr = dcr_chart_suite('light')
+fig_dcr = dcr_chart_suite('light')
+fig_dcr.nvt_rvt()
+#fig_dcr.mrkt_real_gradient(30)
+
+#fig_dcr.mining_pulse()
 #
 #a = fig_dcr.privacy()

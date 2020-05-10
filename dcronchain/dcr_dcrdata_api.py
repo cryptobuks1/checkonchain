@@ -84,18 +84,22 @@ class dcrdata_api():
         df2.columns = ['axis','bin','tic_pool','time']
         df2['tic_blk'] = df2['tic_pool'].diff() + self.votes #Calculate number of tickets purchased in that block (+5 votes)
         #Mining Hashrate
-        pow_hash = pd.DataFrame(client.chart("hashrate", bin="block", axis="time"))
-        pow_hash.columns = ['axis','bin','pow_offset','pow_hashrate_THs','time']
+        df3 = pd.DataFrame(client.chart("hashrate", bin="block", axis="time"))
+        df3.columns = ['axis','bin','pow_offset','pow_hashrate_THs','time']
         #Total Work
-        tot_work = pd.DataFrame(client.chart("chainwork", bin="block", axis="time"))
-        tot_work.columns = ['axis','bin','time','pow_work_TH'] #Note pow_work is in EH, to be converted to TH
+        df4 = pd.DataFrame(client.chart("chainwork", bin="block", axis="time"))
+        df4.columns = ['axis','bin','time','pow_work_TH'] #Note pow_work is in EH, to be converted to TH
+        #Block Time
+        df5 = pd.DataFrame(client.chart("duration-btw-blocks", bin="block")) #Pull dcrdata
         #Combine into single dataset
         response=df.join(df2[['tic_blk','tic_pool']],how='outer') #Join
-        response=response.join(pow_hash[['pow_hashrate_THs']],how='outer') #Join
-        response=response.join(tot_work[['pow_work_TH']]*1000000,how='outer') #Join + Convert EH to TH
+        response=response.join(df3[['pow_hashrate_THs']],how='outer') #Join
+        response=response.join(df4[['pow_work_TH']]*1000000,how='outer') #Join + Convert EH to TH
+        response=response.join(df5[['duration']],how='outer') #Join
+        response=response.rename(columns = {'duration':'blk_time_s'})
         #Restructure dataframe
         response=response[[
-            'blk','time',
+            'blk','time','blk_time_s',
             'dcr_sply','dcr_tic_sply',
             'tic_blk','tic_pool',
             'pow_hashrate_THs','pow_work_TH'
@@ -130,7 +134,7 @@ class dcrdata_api():
 #a = dcrdata_api().dcr_difficulty()
 #a.tail(10)
 
-#b = dcrdata_api().dcr_performance()
+# = dcrdata_api().dcr_performance()
 #b.tail(10)
 
 #c = dcrdata_api().dcr_privacy()

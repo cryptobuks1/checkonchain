@@ -93,6 +93,7 @@ class dcr_user_adoption():
             'rgb(255, 102, 0)' , 'rgb(46, 214, 161)',
             'rgb(255,255,255)'
             ]
+        color_data = self.color_invert(color_data)
         dash_data = [
             'solid','solid','solid',
             'solid','solid',
@@ -114,10 +115,10 @@ class dcr_user_adoption():
             True,
             ]
         title_data = [
-            'Daily USD Value Secured and Settled',
-            'Protocol Age (days)',
-            'Active Address Count',
-            'Price USD']
+            '<b>Daily USD Value Secured and Settled</b>',
+            '<b>Protocol Age (days)</b>',
+            '<b>Active Address Count</b>',
+            '<b>Price USD</b>']
         range_data = [[0,4500],[2,6.3],[-2,4.3]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
@@ -126,6 +127,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.show()
         return fig
 
@@ -155,11 +157,12 @@ class dcr_user_adoption():
         ]
         name_data = ['DCR/BTC Act.Adr Ratio','Equal, 100%','Half, 50%','Quarter, 25%','BTC Halvings']
         color_data = ['rgb(255,255,255)','rgb(153, 255, 102)','rgb(255, 204, 102)','rgb(255, 80, 80)','rgb(255,255,255)']
+        color_data = self.color_invert(color_data)
         width_data = [2,1,1,1,1]
         opacity_data = [1,0.75,0.75,0.75,0.5]
         dash_data = ['solid','dash','dash','dash','dash']
         legend_data = [True,True,True,True,False]
-        title_data = ['','Protocol Age (days)','DCR/BTC Act.Adr Ratio','']                         
+        title_data = ['','<b>Protocol Age (days)</b>','<b>DCR/BTC Act.Adr Ratio</b>','']                         
         range_data = [[0,4500],[-1,3],[]]
         type_data = ['linear','log']
         autorange_data = [False,False,False]
@@ -168,7 +171,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
-
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.show()
         return fig
 
@@ -204,6 +207,7 @@ class dcr_user_adoption():
             'rgb(255, 102, 0)' , 'rgb(65, 191, 83)','rgb(112, 203, 255)',
             'rgb(255,255,255)'
             ]
+        color_data = self.color_invert(color_data)
         dash_data = [
             'solid','solid','solid',
             'dot','dot','dot',
@@ -225,10 +229,10 @@ class dcr_user_adoption():
             True,
             ]
         title_data = [
-            'Transaction Counts',
-            'Protocol Age (days)',
-            'Daily Transaction Counts',
-            'Cumulative Transaction Count']
+            '<b>Transaction Counts</b>',
+            '<b>Protocol Age (days)</b>',
+            '<b>Daily Transaction Counts</b>',
+            '<b>Cumulative Transaction Count</b>']
         range_data = [[0,4500],[0,6.2],[2,9.2]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
@@ -237,6 +241,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.show()
         return fig
 
@@ -273,6 +278,7 @@ class dcr_user_adoption():
             'rgb(255, 102, 0)' , 'rgb(65, 191, 83)','rgb(112, 203, 255)',
             'rgb(255,255,255)'
             ]
+        color_data = self.color_invert(color_data)
         dash_data = [
             'solid','solid','solid',
             'dot','dot','dot',
@@ -294,10 +300,10 @@ class dcr_user_adoption():
             True,
             ]
         title_data = [
-            'Native Units Transferred On-chain',
-            'Protocol Age (days)',
-            'Daily Native Units Transferred',
-            'Cumulative Native Units Transferred']
+            '<b>Native Units Transferred On-chain</b>',
+            '<b>Protocol Age (days)</b>',
+            '<b>Daily Native Units Transferred</b>',
+            '<b>Cumulative Native Units Transferred</b>']
         range_data = [[0,4500],[2,8],[2,12]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
@@ -306,6 +312,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.show()
         return fig
 
@@ -345,6 +352,7 @@ class dcr_user_adoption():
             'rgb(255,255,255)',
             'rgb(255,255,255)','rgb(46, 214, 161)'
             ]
+        color_data = self.color_invert(color_data)
         dash_data = [
             'dash','dash','dash',
             'solid','solid','solid',
@@ -370,10 +378,10 @@ class dcr_user_adoption():
             True,True,
             ]
         title_data = [
-            'Cumulative Value Settled On-chain',
-            'Protocol Age (days)',
-            'Value Settled (USD, BTC, DCR)',
-            'Coin Price']
+            '<b>Cumulative Value Settled On-chain</b>',
+            '<b>Protocol Age (days)</b>',
+            '<b>Value Settled (USD, BTC, DCR)</b>',
+            '<b>Coin Price</b>']
         range_data = [[0,4500],[3,13],[-2,6]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
@@ -382,6 +390,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.show()
         return fig
 
@@ -421,6 +430,7 @@ class dcr_user_adoption():
             'rgb(255,255,255)',
             'rgb(255,255,255)','rgb(46, 214, 161)'
             ]
+        color_data = self.color_invert(color_data)
         dash_data = [
             'solid','solid','solid',
             'solid','solid','solid',
@@ -446,10 +456,10 @@ class dcr_user_adoption():
             True,True,
             ]
         title_data = [
-            'Daily Value Settled On-chain',
-            'Protocol Age (days)',
-            'Value Settled (USD, BTC, DCR)',
-            'Coin Price']
+            '<b>Daily Value Settled On-chain</b>',
+            '<b>Protocol Age (days)</b>',
+            '<b>Value Settled (USD, BTC, DCR)</b>',
+            '<b>Coin Price</b>']
         range_data = [[0,4500],[3,13],[-2,6]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
@@ -458,6 +468,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.show()
         return fig
 
@@ -513,6 +524,7 @@ class dcr_user_adoption():
             'rgb(46, 214, 161)',
             'rgb(255,255,255)'
             ]
+        color_data = self.color_invert(color_data)
         dash_data = [
             'solid','solid',
             'solid','solid','solid',
@@ -538,10 +550,10 @@ class dcr_user_adoption():
             True,
             ]
         title_data = [
-            'Native Units Transferred On-chain',
-            'Protocol Age (days)',
-            'Daily Native Units Transferred',
-            'Coin Price USD']
+            '<b>Native Units Transferred On-chain</b>',
+            '<b>Protocol Age (days)</b>',
+            '<b>Daily Native Units Transferred</b>',
+            '<b>Coin Price USD</b>']
         range_data = [[0,4500],[-5,5],[-2,6]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
@@ -550,6 +562,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.show()
 
     def dcr_miner_pow_growth(self):
@@ -580,11 +593,8 @@ class dcr_user_adoption():
             'rgb(255, 102, 0)' , 'rgb(46, 214, 161)' ,
             'rgb(254, 215, 140)','rgb(65, 191, 83)',
             'rgb(255, 102, 0)' , 'rgb(46, 214, 161)' ,
-            #'rgb(255, 80, 80)','rgb(255, 102, 102)',
-            #'rgb(255, 153, 102)','rgb(255, 255, 102)',
-            #'rgb(156,225,43)', 'rgb(1, 255, 116)',
-            #'rgb(255, 255, 255)', 'rgb(46, 214, 161)',
             ]
+        color_data = self.color_invert(color_data)
         dash_data = [
             'solid','solid',
             'solid','solid',
@@ -600,10 +610,10 @@ class dcr_user_adoption():
             True,True,True,True,True,True,
             ]#
         title_data = [
-            'Proof of Work Growth',
-            'Coin Age (Days since Launch)',
-            'Protocol Difficulty  |  Network Hashrate (TH/s)',
-            'Coin Price (USD)']
+            '<b>Proof of Work Growth</b>',
+            '<b>Coin Age (Days since Launch)</b>',
+            '<b>Protocol Difficulty  |  Network Hashrate (TH/s)</b>',
+            '<b>Coin Price (USD)</b>']
         range_data = [[0,4380],[0,14],[-2,5]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
@@ -612,12 +622,15 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         #Increase tick spacing
         fig.update_xaxes(dtick=365)
 
         """ =================================
             ADD DIFFICULTY RIBBON BAR CHARTS
         ================================="""
+        diff_color = ['rgb(156,225,143)']
+        diff_color = self.color_invert(diff_color)[0]
         for i in [9,14,25,40,60,90,128,200]:
             fig.add_trace(go.Scatter(
                 mode='lines',
@@ -628,11 +641,13 @@ class dcr_user_adoption():
                 showlegend=False,
                 line=dict(
                     width=i/200*2,
-                    color='rgb(156,225,143)',
+                    color=diff_color,
                     dash='solid'
                     )),
                 secondary_y=False)
 
+        diff_color = ['rgb(255, 102, 0)']
+        diff_color = self.color_invert(diff_color)[0]
         for i in [9,14,25,40,60,90,128,200]:
             fig.add_trace(go.Scatter(
                 mode='lines',
@@ -699,6 +714,7 @@ class dcr_user_adoption():
             #Second Chart
             'rgb(255, 102, 0)' , 'rgb(46, 214, 161)',
             ]
+        color_data = self.color_invert(color_data)
         dash_data = [
             'solid','solid',
             'dash','dash',
@@ -722,10 +738,10 @@ class dcr_user_adoption():
             True,True,
             ]#
         title_data = [
-            'Proof of Work Miner Rewards',
-            'Coin Age (Supply / 21M)',
-            'Value (USD)',
-            '']
+            '<b>Proof of Work Miner Rewards</b>',
+            '<b>Coin Age (Supply / 21M)</b>',
+            '<b>Value (USD)</b>',
+            '<b></b>']
         range_data = [[0,1],[2,12],[2,8]]
         autorange_data = [False,False,False]
         type_data = ['linear','log','log']#
@@ -734,6 +750,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         #Increase tick spacing
         fig.update_xaxes(dtick=0.1)
         fig.show()
@@ -742,15 +759,16 @@ class dcr_user_adoption():
 
         loop_data = [[8,9],[]]
         title_data = [
-            'Fee Ratio of PoW Block Reward',
-            'Coin Age (Supply / 21M)',
-            'Fee Ratio','']
+            '<b>Fee Ratio of PoW Block Reward</b>',
+            '<b>Coin Age (Supply / 21M)</b>',
+            '<b>Fee Ratio</b>','']
         range_data = [[0,1],[-5,0],[0,0]]
         fig = self.chart.subplot_lines_doubleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         #Increase tick spacing
         fig.update_xaxes(dtick=0.1)
         fig.update_yaxes(tickformat = ".2%")
@@ -788,6 +806,7 @@ class dcr_user_adoption():
             'rgb(250, 38, 53)' ,    #PoW Red
             'rgb(239, 125, 50)',    #Price Orange
             ]
+        color_data = self.color_invert(color_data)
         dash_data = [
             'solid','solid','solid','dot',
             ]
@@ -801,10 +820,10 @@ class dcr_user_adoption():
             True,True,True,True,
             ]
         title_data = [
-            'Stakeholder Commitments',
-            'date',
-            'Value (USD)',
-            '']
+            '<b>Stakeholder Commitments</b>',
+            '<b>Date</b>',
+            '<b>Value (USD)</b>',
+            '<b></b>']
         range_data = [['2016-01-01','2021-01-01'],[6,10],[2,8]]
         autorange_data = [False,False,True]
         type_data = ['date','log','log']#
@@ -813,6 +832,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         #Increase tick spacing
         #fig.update_xaxes(dtick=0.1)
         fig.show()
@@ -844,11 +864,11 @@ class dcr_user_adoption():
             self.dcr['CapRealBTC'],
             ]
         name_data = [
-            'Market Cap',
-            'Cumulative Ticket Lockup',
-            'Cumulative PoS Block Reward',
-            'Cumulative PoW Block Reward',
-            'Realised Cap',
+            '<b>Market Cap',
+            '<b>Cumulative Ticket Lockup',
+            '<b>Cumulative PoS Block Reward',
+            '<b>Cumulative PoW Block Reward',
+            '<b>Realised Cap',
             ]
         color_data = [
             'rgb(46, 214, 161)' ,   #Turquoise
@@ -857,6 +877,7 @@ class dcr_user_adoption():
             'rgb(250, 38, 53)' ,    #PoW Red
             'rgb(239, 125, 50)',    #Price Orange
             ]
+        color_data = self.color_invert(color_data)
         dash_data = [
             'solid','solid','solid','solid','dot',
             ]
@@ -870,10 +891,10 @@ class dcr_user_adoption():
             True,True,True,True,True,
             ]
         title_data = [
-            'Stakeholder Commitments in BTC',
-            'date',
-            'Value (BTC)',
-            '']
+            '<b>Stakeholder Commitments in BTC</b>',
+            '<b>Date</b>',
+            '<b>Value (BTC)</b>',
+            '<b></b>']
         range_data = [['2016-01-01','2021-01-01'],[3,6],[2,8]]
         autorange_data = [False,False,True]
         type_data = ['date','log','log']#
@@ -882,6 +903,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         #Increase tick spacing
         #fig.update_xaxes(dtick=0.1)
         fig.show()
@@ -921,6 +943,7 @@ class dcr_user_adoption():
             'rgb(250, 38, 53)' ,    #PoW Red
             'rgb(239, 125, 50)',    #Price Orange
             ]
+        color_data = self.color_invert(color_data)
         dash_data = [
             'solid','solid','solid','solid','dot',
             ]
@@ -934,10 +957,10 @@ class dcr_user_adoption():
             True,True,True,True,True,
             ]
         title_data = [
-            'Stakeholder Commitments in BTC',
-            'date',
-            'Value (BTC)',
-            'DCRUSD Price']
+            '<b>Stakeholder Commitments in BTC</b>',
+            '<b>date</b>',
+            '<b>Value (BTC)</b>',
+            '<b>DCRUSD Price</b>']
         range_data = [['2016-01-01','2021-01-01'],[3,6],[2,8]]
         autorange_data = [False,False,True]
         type_data = ['date','log','log']#
@@ -946,6 +969,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         #Increase tick spacing
         #fig.update_xaxes(dtick=0.1)
         fig.show()
@@ -1080,8 +1104,8 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(dtick=1e5,showgrid=True,secondary_y=False)
         #Increase tick spacing
-        fig.update_yaxes(dtick=1e5,secondary_y=False)
         fig.show()
 
         """
@@ -1104,6 +1128,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
+        fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.show()
 
         """
@@ -1125,7 +1150,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
-        fig.update_yaxes(tickformat = "%",dtick=0.1)
+        fig.update_yaxes(showgrid=True,tickformat = "%",dtick=0.1)
         fig.show()
 
     def dcr_fund_votepower(self):
@@ -1205,7 +1230,7 @@ class dcr_user_adoption():
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
             )
-        fig.update_yaxes(tickformat = "%",secondary_y=True)
+        fig.update_yaxes(showgrid=True,tickformat = "%",secondary_y=True)
         fig.show()
 
 dcr_class = dcr_user_adoption('light')

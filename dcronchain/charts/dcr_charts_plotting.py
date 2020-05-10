@@ -44,6 +44,8 @@ fig_dcr.contractor_multiple()
 fig_dcr.unrealised_PnL()
 fig_dcr.MACD(0)
 
+fig_dcr.mrkt_real_gradient(30)
+
 """Market Cycle Metrics"""
 
 fig_dcr.dcr_vs_btc()
@@ -59,6 +61,7 @@ fig_dcr.tic_vol_sum_142day()
 fig_dcr.tx_volatility_ratio()
 fig_dcr.tx_sum_adjsply_142d()
 fig_dcr.max_vol_ratio()
+fig_dcr.mining_pulse()
 
 """Performance Metrics"""
 fig_dcr.privacy()

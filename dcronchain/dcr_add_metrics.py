@@ -154,6 +154,7 @@ class dcr_add_metrics():
         OUTPUT COLUMNS:
             'blk'               - block height
             'time'              - time (timestamp)
+            'blk_time_s'        - block time (seconds)
             'dcr_sply'          - circulating supply (DCR)
             'dcr_tic_sply'      - ticket pool value (DCR)
             'tic_blk'           - Tickets bought per block (max 20)
@@ -200,7 +201,7 @@ class dcr_add_metrics():
             ].fillna(method='bfill')
         # Restructure final dataset
         df = df[[
-            'blk', 'window',
+            'blk', 'window','blk_time_s',
             'tic_cnt_window', 'tic_price', 'tic_blk', 'tic_pool',
             'dcr_tic_sply', 'dcr_sply',
             'pow_diff','pow_hashrate_THs', 'pow_work_TH'
@@ -244,11 +245,13 @@ class dcr_add_metrics():
             TIME VARIABLES
                 'date'                  - Datetime 
                 'blk'                   - Block Height
+                'blk_time_s'            - Block Time (seconds)
                 'age_days'              - Coin Age in Days
                 'age_sply'              - Coin age in Supply (SplyCur/21M)
                 'window'                - Count of difficulty window
                 'BlkSizeByte'           - Daily Total Block Size (bytes)
                 'BlkSizeMeanByte'       - Avg Block Size (bytes)
+                'BlkCnt'                - Daily Block Count
                 'CapMrktCurUSD'         - Market Cap (USD)
                 'CapMrktCurBTC'         - Market Cap (BTC)
                 'CapRealUSD'            - Realised Cap (USD)
@@ -296,7 +299,7 @@ class dcr_add_metrics():
         #Cull _coin to Key Columns
         _coin = _coin[[
             'date','blk','age_days','age_sply',
-            'BlkSizeByte', 'BlkSizeMeanByte',
+            'BlkSizeByte', 'BlkSizeMeanByte','BlkCnt',
             'CapMrktCurUSD','CapMrktCurBTC','CapRealUSD','CapRealBTC','CapMVRVCur',
             'DiffMean','PriceBTC','PriceUSD','PriceRealUSD','PriceRealBTC','BTC_PriceUSD',
             'SplyCur','DailyIssuedNtv','DailyIssuedUSD','S2F',
@@ -354,8 +357,8 @@ class dcr_add_metrics():
             on='date',how='left')
         #Compile into final ordered dataframe
         df = df[[
-            'date', 'blk', 'age_days','age_sply','window',                              #Time Metrics
-            'BlkSizeByte', 'BlkSizeMeanByte',                                           #Blockchain Size Metrics
+            'date', 'blk','blk_time_s', 'age_days','age_sply','window',                 #Time Metrics
+            'BlkSizeByte', 'BlkSizeMeanByte','BlkCnt',                                  #Blockchain Size Metrics
             'CapMrktCurUSD', 'CapMrktCurBTC', 'CapRealUSD','CapRealBTC','CapMVRVCur',   #Value Metrics
             'PriceBTC', 'PriceUSD', 'PriceRealBTC',  'PriceRealUSD','BTC_PriceUSD',     #Price Metrics
             'DailyIssuedNtv','DailyIssuedUSD','AdrActCnt','TxCnt','TxTfrCnt',           #Block Reward Metrics
