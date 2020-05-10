@@ -691,91 +691,110 @@ class btc_chart_suite():
         chart_name = '\\oscillators\\puell_multiple_pricing'
         self.write_html(fig,chart_name)
 
-    def block_subsidy(self):
-        """"Block Subsidy Models"""
+    def block_subsidy(self,model):
+        """"Block Subsidy Models
+        after @permabullnino
+        INPUTS:
+            model == 0, Valuation (Market Cap)
+            model == 1, Pricing
+        """
         df = pd.DataFrame()
         df = self.df
-        
-        df['Puell_Multiple'] = (
-            df['DailyIssuedUSD']
-            / df['DailyIssuedUSD'].rolling(365).mean()
-        )
 
+        #Calculate Miner Cap Adjusted for SUpply (Experimental)
         df['DailyIssuedUSD'] = df['DailyIssuedNtv'] * df['PriceUSD']
-
         df['DailyIssuedUSDAdj'] = df['DailyIssuedUSD']*10*2**(np.floor(df['blk']/210000))
-
         df['FeeTotUSD'] = df['FeeTotNtv'] * df['PriceUSD']
         df['PoW_cap'] = df['DailyIssuedUSDAdj'].cumsum()
         df['miner_cap'] = df['DailyIssuedUSDAdj'].cumsum() + df['FeeTotUSD'].cumsum()
 
+        #Calculate cumulative Block Reward Cap
+        df['PoW_Reward_Cap'] = df['FeeTotUSD'].cumsum() + df['DailyIssuedUSD'].cumsum()
 
-        loop_data=[[0,1,2],[]]#3,4,5,6,7
+        loop_data=[[0,1,2,3,4,5,6,7,8,9],[]]
         x_data = [
             df['date'],
             df['date'],
             df['date'],
             df['date'],
-            ['2008-01-01','2022-01-01'],    #Strong BUY
-            ['2008-01-01','2022-01-01'],    #BUY
-            ['2008-01-01','2022-01-01'],    #SELL
-            ['2008-01-01','2022-01-01'],    #Strong SELL
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
+            df['date'],
         ]
+        #Adjust for pricing or valuation
+        if model == 0:
+            a = 1
+        else:
+            a = df['SplyCur']
         y_data = [
-            df['CapMrktCurUSD'],
-            df['miner_cap'],
-            df['miner_cap']*0.236,
-            df['Puell_Multiple'],
-            [0.4,0.4],
-            [0.6,0.6],
-            [2.5,2.5],
-            [5,5],
+            df['CapMrktCurUSD']/a,
+            df['miner_cap']/a,
+            df['miner_cap']*0.236/a,
+            df['PoW_Reward_Cap']/a,
+            df['PoW_Reward_Cap']*2/a,
+            df['PoW_Reward_Cap']*4/a,
+            df['PoW_Reward_Cap']*8/a,
+            df['PoW_Reward_Cap']*16/a,
+            df['PoW_Reward_Cap']*32/a,
+            df['PoW_Reward_Cap']*64/a,
         ]
         name_data = [
             'Market Cap (USD)',
             'PoW Block Reward Cap',
             'PoW Block Reward Cap * 23.6%',
-            'Puell Multiple',
-            'STRONG BUY (0.4)',
-            'BUY (0.6)',
-            'SELL (2.5)',
-            'STRONG SELL (5.0)'
+            'Block Reward Cap',
+            '2x','4x','8x','16x','32x','64x'
         ]
-        width_data      = [2,2,2,1,2,2,2,2]
-        opacity_data    = [1,1,1,1,1,1,1,1]
-        dash_data = ['solid','dash','solid','solid','dash','dash','dash','dash']
+        if model == 1:
+            name_data[0] = 'BTC Price (USD)'
+        width_data      = [2,2,2,2,2,2,2,2,2,2]
+        opacity_data    = [1,1,1,1,1,1,1,1,1,1]
+        dash_data = ['solid','solid','solid','dash','dash','dash','dash','dash','dash','dash',]
         color_data = [
             'rgb(255, 255, 255)',    #White
             'rgb(250, 38, 53)',     #PoW Red
             'rgb(250, 38, 53)',     #PoW Red
-            'rgb(255, 255, 255)',   #White
-            'rgb(153, 255, 102)',   #Gradient Green
-            'rgb(255, 255, 102)',   #Gradient Lime
-            'rgb(255, 102, 102)',   #Gradient L.Red
-            'rgb(255, 80, 80)',     #Gradient Red
+            'rgb(250, 110, 110)',
+            'rgb(232, 107, 162)',
+            'rgb(183, 121, 199)',
+            'rgb(116, 136, 211)',
+            'rgb(41, 142, 196)',
+            'rgb(2, 142, 164)',
+            'rgb(86, 163, 101)'
+
         ]
         #Invert Colors for Light Theme
         color_data = self.color_invert(color_data)
-        legend_data = [True,True,True,True,True,True,True,True]
+        legend_data = [True,True,True,True,True,True,True,True,True,True]
         title_data = [
-            'Bitcoin Block Subsidy Models',
+            '<b>Bitcoin Block Subsidy Models</b>',
             '<b>Date</b>',
-            '<b>Price (USD)</b>',
-            '<b>Puell Multiple</b>']
+            '<b>Network Valuation (USD)</b>',
+            '<b></b>']
         range_data = [[self.start,self.last],[5,12],[-1,2]]
+        
+        if model == 1:
+            title_data[2] = '<b>Price (USD)</b>'
+            range_data = [[self.start,self.last],[-2,5],[-1,2]]
+        
         autorange_data = [False,False,False]
         type_data = ['date','log','log']
-        fig = self.chart.subplot_lines_doubleaxis(
+        fig = self.chart.subplot_lines_singleaxis(
             title_data, range_data ,autorange_data ,type_data,
             loop_data,x_data,y_data,name_data,color_data,
             dash_data,width_data,opacity_data,legend_data
         )
+        fig.update_xaxes(dtick='M12',tickformat='%b-%y')
         fig.update_yaxes(showgrid=True,secondary_y=False)
         fig.update_yaxes(showgrid=False,secondary_y=True)
         self.add_slider(fig)
+        fig = self.chart.add_annotation(fig,"@checkmatey<br />@permabullnino")  
 
         #Write out html chart
-        chart_name = '\\valuation_models\\block_subsidy_valuation'
+        chart_name = '\\valuation_models\\block_subsidy'
         self.write_html(fig,chart_name)
 
     def difficulty_ribbon(self):
@@ -2294,22 +2313,19 @@ class btc_chart_suite():
 
 fig_btc = btc_chart_suite('dark')
 
-fig_btc.btc_sply()
-
-
-fig_btc.fair_value_models()
 #
 #
 #"""VALUATION MODELS"""
 #fig_btc.difficulty_ribbon()
 #fig_btc.magic_lines_full()
 #fig_btc.magic_lines()
-#fig_btc.block_subsidy()
+fig_btc.block_subsidy(1)
 #fig_btc.investor_tool()
 #fig_btc.golden_ratio()
 #fig_btc.golden_ratio_full()
 #fig_btc.s2f_model()
 #fig_btc.catch_btm_top()
+#fig_btc.fair_value_models()
 #
 #
 #"""OSCILLATORS"""
@@ -2322,7 +2338,7 @@ fig_btc.fair_value_models()
 #
 #
 #"""CYCLE MODELS"""
-fig_btc.halving_cycle()
+#fig_btc.halving_cycle()
 #fig_btc.bottom_cycle()
 #fig_btc.top_cycle()
 #fig_btc.yearly_cycle()
