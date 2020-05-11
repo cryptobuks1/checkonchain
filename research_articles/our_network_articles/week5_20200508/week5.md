@@ -1,9 +1,9 @@
 # Our Network - Week 5
 
 
-## Insight 1 - Marrket-Realised Gradient
+## Insight 1 - Market-Realised Gradient
 
-The Decred is a blockchain has a consistent baseload of demand for block-space, a result of the PoS ticket system and, more recently, on-chain CoinJoin privacy transactions. As such, the Realised Price metric differs in interpretation to Bitcoin. A strong conviction Decred holder actually has a regular and frequent on-chain signature moving DCR as opposed to the equivalent of long periods of dormancy for Bitcoin.
+The Decred blockchain has a consistent baseload of demand for block-space, a result of the PoS ticket system and, more recently, on-chain CoinJoin privacy transactions. As such, the Realised Price metric differs in interpretation to Bitcoin. A strong conviction Decred holder actually has a regular and frequent on-chain signature moving DCR as opposed to the equivalent of long periods of dormancy for Bitcoin.
 
 The Realised Price tends to follow the spot price more closely, however lags behind the day-to-day fluctuations in off-chain price sentiment. The chart below presents an experimental metric that takes the 28-day gradient of the Market Cap and Realised Cap, and produces an oscillator from their difference (purple). This tool distills times where off-chain price momentum bias flips before the on-chain response as DCR is bound in tickets and takes time to transact. Where the oscillator crosses the zero level, it often precedes a shift in price momentum in the direction of the flip.
 
