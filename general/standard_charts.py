@@ -62,6 +62,30 @@ class check_standard_charts():
             self._zerolinecolor = 'rgb(50,50,50)'
             self._annocolor     = 'rgb(50,50,50)'
 
+    def color_invert(self,color_data):
+        """Inverts colors in a list
+        INPUT
+            color_data = list of 'rgb(rrr,ggg,bbb)' or 'rgba(rrr,ggg,bbb,a.aa)'
+        """
+        j = 0
+        for i in color_data: #cycle through all colors
+            if self.theme == 'light': #if light theme
+                #split rbg and invert colors
+                text = i.split('(')[1]
+                text = text.split(')')[0]
+                text = text.split(',')
+                r = 255-int(text[0])
+                g = 255-int(text[1])
+                b = 255-int(text[2])
+                if len(text) ==3:
+                    text = 'rgb(' + str(r) + ',' + str(g) + ',' + str(b) + ')'
+                if len(text) ==4:
+                    a = float(text[3])
+                    text = 'rgba(' + str(r) + ',' + str(g) + ',' + str(b) + ',' + str(a) + ')'
+                color_data[j] = text
+            j = j + 1
+        return color_data
+
     def add_annotation(self,fig,new_annotation):
         """Add additional annotation under @checkmatey"""
         fig.update_layout(

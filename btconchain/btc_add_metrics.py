@@ -108,7 +108,7 @@ class btc_add_metrics():
         _coin = self.btc_coin()
         _blk_max = int(_coin['blk'][_coin.index[-1]])
         df = _coin[[
-            'date', 'blk','BlkCnt', 'age_days','age_sply',                                   #Time Metrics
+            'date', 'blk','BlkCnt', 'age_days','age_sply',                          #Time Metrics
             'CapMrktCurUSD', 'CapRealUSD', 'PriceUSD', 'PriceRealUSD',              #Value Metrics
             'DailyIssuedNtv', 'DailyIssuedUSD','AdrActCnt','TxCnt', 'TxTfrCnt',     #Block Reward Metrics
             'TxTfrValAdjNtv', 'TxTfrValAdjUSD', 'TxTfrValNtv', 'TxTfrValUSD',       #Global Transaction Metrics

@@ -1,70 +1,108 @@
-# Decred, Contrarian Competition with Compliments
+# Decred, The Contrarian Competition, with Compliments
 
-*This article is written as a distillation of the authors thoughts on the macro economic conditions and the role the author sees Bitcoin and Decred playing as digitally scarce, sound money. This is a long term perspective. The author has no intention of speaking in absolutes, but instead portraying their perceived reality and logic underpinning a specific, and contextualised investment thesis for Decred. None of this shall be considered investment advice and shall be considered only as the opinion of the author*
+Traditional markets make no sense. They can and will remain irrational longer than you can remain solvent.
 
-Traditional markets make no sense and will remain irrational longer than you remain solvent.
+Cryptocurrency markets can often make no sense, but at least they are objectively free.
 
-Cryptocurrency markets also make no sense, but at least they are free markets.
+For anyone peering into the cryptocurrency space, it seems like internet funny money driven by naive Millennials, with too much disposable income, and no foresight. Crypto-assets are a market filled with absurd fundamentals and eccentric / missing / anonymous / or crooked leaders, whilst simultaneously touting obscene valuations, especially relative to the tangible technology delivered.
 
-For anyone peering into this space, it seems like internet funny money driven by naive Millennials, with too much disposable income, and no foresight. Crypto-assets are a market filled with absurd fundamentals and eccentric/missing/anonymous/crooked leaders, whilst touting obscene valuations, especially relative to the technology delivered.
+After a number of years in the space, the author has experienced the sane gravity of Bitcoin maximalism. In many regards, it feels like one of the only models that makes sufficient sense with a distinct product market fit.
 
-After a number of years in the space, the author has experienced the sane gravity of Bitcoin maximalism. In many regards, it feels like the only thing that makes any sense and has a distinct product market fit.
+    > Cryptocurrency forces the hand of government into abiding by the fiscal discipline imposed by sound money, and Bitcoin just feels right.
 
-    > Bitcoin just feels right.
+Everything from the cypher-punk roots, the open and fair launch, the sound money properties, the unforgeable costliness and the organic free market process of its rise to dominance. There are an infinite number of critiques leveled at Bitcoin, and the author considers very few of them have any legs to stand on. One must remain open minded to risks and limitations of the design, but can only marvel at the simplicity and effectiveness of incentive alignment Satoshi implemented in the Bitcoin protocol.
 
-Everything from the cypher-punk roots, the open and fair launch, the sound money properties, the unforgeable costliness and the organic free market process of its rise to dominance. There are an infinite number of critiques leveled at Bitcoin, and the author considers very few of them have any legs to stand on. One must remain open minded to risks and limitations of the design, can only marvel at the simplicity and incentive alignment Satoshi implemented in the Bitcoin protocol.
+    > Bitcoin works because the human incentives of greed and self-interest are persistent across time and space.
 
-Whilst his near-maximalist position forms a valuable baseline for interpreting the crypto-asset landscape, the author finds it difficult to believe that there can, and will, only be one winner.
+Whilst this near-maximalist position forms an invaluable baseline for interpreting the crypto-asset landscape, the author finds it difficult to believe that there can, and will, only be one winner. The remainder of this article will detail the logic and reasoning which underpins this opinion and why the author firmly believes that Decred stands as Bitcoin's most complimentary competition.
 
-## Winner Takes All
+## Winner Takes All?
 
-The proposition of a 'winner take all' market for digital money stems from an Austrian economics text-book, and assumes a global convergence to a single, new monetary standard. This seems a rational take at face value and after studying the history of money, but is perhaps, at best, a jump several decades ahead of reality (perhaps more). It also makes two fundamental assumptions that deserve to be challenged:
+The proposition of a 'winner take all' market for sound money stems from the central tenants of an Austrian economics text-book. It posits that a global convergence to a single monetary standard is inevitable. After considering the history of money, and in particular Gold's role in it, this seems a rational and intuitive take.
 
-    1. Bitcoin's characteristics have already, or at least have the potential to, solve the sound money problem of today, tomorrow and ever after.
+For a digital disruption of money however, it is perhaps a jump several decades ahead of reality to assume this is the outcome, and even further to assume Bitcoin to be the only winner. This thesis also makes three fundamental assumptions which deserve to be challenged:
 
-    2. Bitcoin's network effects within the cryptocurrency market are destined to displace those of the 100yr old United States Dollar and ultimately, the 5000yr old gorilla, Gold.
+    Assumption 1: Bitcoin, as a zero to one technology, boasts a feature set, network effect and liquidity pathway that is so strong, it is destined to displace those of the 100yr old United States Dollar and ultimately, the 5000yr+ old gorilla, Gold.
 
-In fact, the leading argument devout Bitcoiners tend level against alt-coins, is that they could never possibly surpass Bitcoin's reputation, liquidity and network effects and are thus doomed to fail. If this were the case, why do they bet against gold? Global empires and economies have risen and fallen through history, always reverting back to the mean equilibrium, one with a sound monetary base.
+    Assumption 2: Bitcoin's characteristics have already, or at least have a great probability to, solve the sound money problem of today, tomorrow and ever after, making it effectively undisruptable.
 
-For 5000yrs this monetary base has invariably been Gold. Gold is the meter, the second, the Pascal of money. The single reference rate against which all commodities, currencies, goods and services can be valued against as a global standard. The Unit of Account.
+    Assumption 3: The market and process of open source, rough consensus governance will find a way to resolve all future conflicts and constraints regarding the evolution of the Bitcoin software.
+
+The leading argument Bitcoiners level against alt-coins, is that irrespective of features, no alt-coin could ever possibly surpass Bitcoin's reputation, liquidity and network effects and are thus doomed to fail.
+
+If this were the case, why do they bet on Bitcoin in a competition against Gold? 
+
+Gold-bugs, usually from the same Austrian school of thought as Bitcoiners, can be forgiven for considering Bitcoin a shitcoin. Monetary metals have effectively been a winner takes all market and the liquidity, reputation and network effects of Gold are orders of magnitude greater than that of Bitcoin. The characteristics and scarcity of Gold outcompete all other forms of money to date. Furthermore, there is little evolution possible to enhance Golds intrinsic properties, and therefore little to disrupt the balance...
+
+...that is of course until a new paradigm arises where monetary metals must compete with digital scarcity protocols for market-share.
+
+## Money is a Competitive Landscape
+
+For students of history who peer behind the fiat money curtain, it becomes obvious that this pure fiat monetary system is but a a blip in human economic history. Global empires, economies and sovereign currencies have risen, and fallen many times over, most often reverting to or being overtaken by a new economic equilibrium with a sound monetary base.
+
+For 5000yrs+ that monetary base has invariably been Gold.
+
+Gold is the datum, the meter, the second, the Pascal, of money. The single reference rate against which all commodities, currencies, goods and services can and have been valued against as a global standard for centuries. Gold is humanities long term **Unit of Account**. As the saying goes:
 
     > An ounce of fine gold will always buy you a decent quality suit.
 
-In fact pricing the world in Gold provides a very different reality to pricing it in fiat currencies. The chart below presents the Dow Jones Index priced in USD and XAU since 1980, where the impact of fiat currency devaluation is quite profound. Clearly one money is superior to the other in preserving it's value.
+Gold has consistently served its purpose as a scarce, sound store of value through all manner of economic realities, ranging from deflation to hyper-inflation. [Grant Williams summarised the convincing case](https://www.realvision.com/grant-william-keynote-speech) of Gold as the apex predator of money, chosen freely by the market and outlasting all past attempts at pure fiat currencies. Given the reliability of human greed, and the incentive to abuse and devalue unsound monies, it is reasonably expected that Gold shall continue to be so long into the future.
 
-![Dow Jones Priced in Gold](images//gold_dji.png)
+[![Gold as Reserve Currency](images//reserve_currencies.png)](https://www.realvision.com/grant-william-keynote-speech)
 
-## Money is Competitive
+**Paper money is an iteration on Gold**, solving for the divisibility, and portability constraints of a scarce and heavy metal. Paper money benefits from the abstraction of a sound base money, a role once afforded to [Silver](https://www.investopedia.com/articles/investing/080316/historical-guide-goldsilver-ratio.asp) until paper money superseded it as a technology, and decimated its monetary premium.
 
-To the initiated, those who have peered behind the fiat money curtain, it is obvious that the pure fiat monetary systems are a blip in human economic history. Tried many times, all with a common outcome. [A strong case has been made](https://www.realvision.com/grant-william-keynote-speech), grounded in history and economic observation, that Gold is the apex predator of money, chosen freely by the market. It has outlasted all fiat currencies and can likely be expected to do so into the future.
+In effect, 'representative' Gold in the form of paper bank-notes, and the expansion of fractional lending it enabled, was sufficiently superior to Silver that it changed the markets perception of its value and necessity. The Gold-Silver ratio has never recovered, with a present exchange rate nearing 1:110, a far cry from the fixed rate of 1:15 set by centralised authorities as far back as the Roman empire.
 
-[![Gold as Reserve Currency](images//reserve_currencies.jpg)](https://twitter.com/IGWTreport/status/927588908656979969)
+    The feature set of paper claims over Gold, definitively outcompete Silver as money.
 
-**Paper money is an iteration on Gold**, solving for the divisibility and portability constraints of a scarce and heavy metal. This role of divisible, portable Gold was once afforded to [Silver](https://www.investopedia.com/articles/investing/080316/historical-guide-goldsilver-ratio.asp) until paper money superseded it as a technology and decimated its monetary premium in the early 20th century. Modern 'electronic money' is yet another iteration where one's held value is reduced to an entry in a centralised digital database. In effect, 'representative' Gold in the form of paper bank-notes or electronic database entries was sufficiently superior to Silver, and leveraged a sounder, scarcer and more desireable base money, that it completely changed the markets perception of Silver value.
+After the USA severed the gold standard completely in 1971, modern fiat money has lost all sound backing, essentially becoming an abstraction of the issuing governments liabilities. This purely fiat based system has now been the dominant form of money through the majority of living memory, making recollections of a Gold standard few and far in between. 
 
-As a result, the Gold-Silver ratio has never recovered to the 1:12 exchange rate used by the Romans nor the rate of 1:15 set by governments through the 19th century. The feature set of paper IOUs on Gold can be concluded to have outcompete Silver as money.
+**Modern 'electronic money' is an iteration on paper money**, where monetary value has been reduced to an account entry in a centralised database. Bank accounts and electronic money affords holders the convenience of global payments, tap and go credit and access to business conducted over the internet. This makes for a superior medium of exchange to its paper and physical Gold predecessors. However, it is a provably woeful tool for wealth preservation. Central Banks, governments and financial institutions have excelled in their ability to devalue fiat currency at ever increasing rates.
 
-Does this mean Gold is evidence of a winner takes all market?
+    "With the exception only of the period of the gold standard, practically all governments of history have used their exclusive power to issue money to defraud and plunder the people." - Hayek
 
-## Digital Scarcity
+![inflation rate and purchasing power](images//inflation.png)
 
-Bitcoin is a digital iteration on Gold and a direct response to the extraordinary abuse of power by Central Banks that is granted by unsound paper money. Even a cursory review of the [many negative impacts](https://wtfhappenedin1971.com/) that directly followed the uncoupling of floating fiat currencies, from a sound money base, suggests that a return is sorely needed. At the root of the problem is a set of misaligned incentives that reward opacity, leverage and high time preference behaviour of those close to the minting of fiat money.
+With the clarity of historical hindsight, it is expected that this purely fiat regime is temporary and has an expiration date. The most rational assumption of a winner-takes-all thesis, would be that history repeats and the fatal flaws in unsound paper/electronic money will be outcompete by the reigning champion of sound money, Gold. In fact, the incentive and momentum behind such a reality is becoming increasingly apparent, observable in the balance of Gold accumulation and investment patterns of the world's Central Banks. *(Further exploration of this point is outside the scope of this paper, although the author recommends [this presentation]((https://www.youtube.com/watch?v=GEwuGHFF7qE)) for those looking to dig deeper)*.
 
-    > The discipline of a Gold standard has become absent.
+![Change in Central Bank Gold](images//gold_holdings.png)
 
-The ingenious design of Bitcoin by Satoshi, can reasonably be argued as a 10x improvement, not only on Gold as a scarce metal, but on the combined system of paper/electronic money built on-top of a Gold base layer. Bitcoin iterated on Gold with:
+## Absolute Digital Scarcity
 
-- Enhanced portability, seizure resistance and is issued as a digital bearer asset via a globally fair distribution mechanism.
+**Bitcoin is a digital iteration on Gold** and a direct response to the extraordinary abuse of power by Central Banks, granted by unsound fiat money. Even a cursory review of the [negative impacts](https://wtfhappenedin1971.com/) that followed the uncoupling from sound money, suggests that a return is sorely needed. At the root of the problem are a set of misaligned incentives that reward and motivate institutional opacity, excessive leverage and high time preference behaviour, as citizens seek an escape from perpetual currency debasement.
 
-- Digital scarcity is enforced through the unforgeable costliness of distributed Proof-of-Work and may perhaps achieve a degree of deterministic scarcity unattainable by atomic metals.
+The ingenious design of Bitcoin by Satoshi is a remarkable improvement, not only on Gold as a scarce commodity, but on the combined distribution system and bearer asset of paper (or electronic) money built on-top of a Gold base layer. The reason Bitcoin is so important to our future is in the elegant and remarkable combination of ways it iterated on Gold:
 
-- Self-equilibrating and deleveraging mechanism of the difficulty adjustment algorithm.
+- Enhanced portability, seizure resistance and storage capabilities afforded by public-private key cryptography.
 
-- Security, immutability and sustainability assurances achieved via aligned incentives, applied equally to all market participants.
+- Issuance as a digital bearer asset via a permissionless, globally accessible, competitive, and provably fair distribution mechanism in Proof-of-Work.
 
-- Transparency of code, ledger audibility and deterministic monetary policy with trivial computation and the asymmetric assurances of cryptography.
+- Absolute digital scarcity enforced through the unforgeable costliness of energy burn and a social contract enforced by a network of high redundancy of nodes. Perhaps this system achieves an absolute scarcity that is actually unattainable by atomic metals.
 
-It is often said that the core genius of Satoshi's design is the way in which he stitched together many pre-existing ideas to form the cohesive implementation of Bitcoin. By fusing the issuance, distribution and payment infrastructure of a verifiably scarce asset, with the portability of data on the internet, one could argue that Bitcoin's feature set
+- Self-equilibrating and deleveraging mechanism of the difficulty adjustment providing a reliably deterministic issuance of supply.
+
+- Security and immutability assurances achieved via aligned incentives, applied equally to all market participants.
+
+- Transparency, verification of authenticity and ledger audibility via trivial computation due to the asymmetric assurances of cryptography.
+
+It is often said that at the core of Satoshi's genius design, is the way he stitched together many pre-existing ideas to form the cohesive implementation of Bitcoin. By fusing the issuance, distribution and payment infrastructure of a verifiably scarce asset, with the portability of data on the internet, one could argue that Bitcoin's feature set has all the properties required to outcompete Gold as a future sound money base.
+
+## First Mover Advantage
+
+Given the almost unbelievable advantage Bitcoin has in features over Gold, it leaves little doubt to why Bitcoiner's believe it to be the ultimate successor. In the same way paper money usurped the throne from physical Gold, and electronic money after it, technological advantages of this magnitude may precipitate a phase change.
+
+Bitcoin enters the fold not only with enhanced distribution, transparency and audibility, but with an absolute scarcity that trumps Gold on its most valuable sound money characteristic. Add to this the relative liquidity, reputation and size of Bitcoin amongst it's digital peers and its success can feel inevitable.
+
+What chance do altcoins stand? The market has proven to date that simply iterating from one to ten on technology has not swayed Bitcoins dominance and Bitcoin maximalism has since become a powerful religion. The first mover advantage and zero to one nature of Bitcoin is undoubtedly the most likely disruptor of Gold.
+
+
+
+## The Risk Free Asset
+
+Sound money should be a risk free asset. Somewhere to park capital and value with confidence its scarcity cannot be tampered with and inflated arbitrarily. It should be reliably consistent and its future state as deterministic as possible.
+
+
 
 It was the author's discovery of Decred that crystalised this opinion, and to such a great extent, that the author now considers it one of the ultimate beneficiaries of what is likely to be the greatest economic shift in history.
 
@@ -82,78 +120,7 @@ There is a characteristic of the Decred community that is less common in the dog
 If miners are captured by nation states, Decred tickets will be owned by the people
 
 
-## Sound Money Backdrop
-
-Outside the microscopic $200B bubble of crypto-currencies, the most hostile monetary environment in living history is playing out around us. Biblical debt levels permeate households, corporations and governments and nominal unemployment numbers are swelling beyond anything we have ever seen.
-
-Human instincts to preserve what scarce savings have been accumulated are beginning to kick in, as the reality of a what a global shut-down actually means for the future. Continued exponential growth is probably not on the cards. A macro shift is underway as the baby boomer generation transition from a lifetime as net buyers of assets via their retirement funds, to the largest group of net sellers in history.
-
-We are likely at the start of a great unwinding, from a multi-decade boom of credit accumulation within equity, derivative and bond markets. This is otherwise known as 'the good times'.
-
-So large is the problem at hand that governments and central banks have now deployed the central bank bazooka of 'unlimited' quantitative easing and liquidity injection. 
-
-In response to this crisis, the money printer goes brrrr....to the tune of (multi-)Trillions of US Dollars...and this is Act I Scene I.
-
-To contextualise, a single Trillion dollars is equivalent to:
-
-- $1 per second for 31,709 years (start your counting in the Stone Age).
-- more than 5x World War I (nominal terms assuming ~$186B in direct costs [[1]](http://www.digitalhistory.uh.edu/era.cfm?eraid=12&smtid=1), [[2]](https://spartacus-educational.com/FWWcosts.htm))
-- 19,440 metric tonnes of gold priced at $1650/t oz (2.4x the U.S Reserves at Fort Knox)
-- 10,000 Pallets of $100 Bills [[3]](https://www.pagetutor.com/trillion/index.html)
-
-!['One Trillion Dollars (Source:'](images/1trillion.png)
-
-## A Speculative Bubble, Doomed to Fail
-
-In this extraordinarily adverse economic climate, why on earth would anyone invest in cryptocurrencies and especially anything outside Bitcoin? What rational position is there to hold an even more speculative crypto-asset like Decred? Nobody in their right mind would do this...right?
-
-The obvious answer in this case of course not. Go on about your day and maintain the assumption that Bitcoin, Decred and crypto-assets are a speculative bubble and destined to collapse to zero. There can be no demand under these circumstances.
-
-For those who have looked behind the curtain of modern finance, it is impossible to un-see the man behind it. The veil is being pulled and the transition beyond a fiat monetary system is a train that none of us can stop.
-
-The Genie Satoshi released is out of the bottle and the time is now.
-
-The largest speculative bubble in history has popped and the air of 'stable' fiat currency systems is coming to it's logical conclusion. For those who study history, it was always doomed to fail for one simple reason, the very same that collapsed every major empire.
-
-The incentives were all wrong.
-
-## The Sound Money Backdrop
-
-An immense geopolitical game of chess is underway which evolves around the dominance of the United States petro-dollar (USD). Since the Bretton-Woods agreement, the world has been reliant on reserves of USD to 
-
-'Alt-fiat' currencies are being savagely devalued against the US Dollar as nations struggle to bring the reserve currency in due to the supply AND demand shock brought on by the COVID-19 virus. As a result, monetary expansion in local currencies continues and the USD strengthens.
-
-It is likely this trend will continue, as society desperately attempts to settle their USD denominated debts and access USD petrodollars for essential commodities at the expense of local currency value.
-
-!["Fiat Currencies Since 9/Mar 2020 (1hr)"](images/currencies.png)
-
-One could not concoct a more bullish scenario for sound money to thrive if they tried. "Unlimited" quantitative easing and liquidity injections by Central Banks culminates in the global phenomena of privatised gains, socialised loses. Accountability and trust in institutions are nowhere to be seen.
-
-The digitisation of 'data-collecting' fiat currencies, and the banning of privacy preserving, 'data-less' cash is more or less inevitable. A Universal basic income or wage subsidy is likely to persist for many of the workplaces displaced as new efficiencies in capital allocation and automation come to fruition.
-
-In this environment of almost guaranteed long term price inflation and surveillance capitalism, privacy preserving, digital sound money becomes an extremely compelling and frankly, sane bet.
-
-
-
-
-DOLLAR IS TOO STRONG
-
-
-
-## Winner Takes All.
-
-Does it?
-
-Gold remains the historical leader with 5000yrs of network effects and brand recognition. Already intertwined with the central bank financial system, it has served society as the safe haven, inflation hedge though periods of historical uncertainty.
-
-Imposition of some gold backed digital currency is becoming increasingly likely, spearheaded by the East, with intent to undermine the hegemony of the USD petrodollar. This is a macro positive move back to sound money.
-
-It is almost an expected outcome as the world reaches the logical conclusion of a pure fiat monetary system.
-
-
-
-Crypto-assets battle for mind-share, relevance and dominance in a competitive landscape for new digital money. Bitcoin's market share and reputation continues to overshadow all others, and the maximalist position posits that this is the case in perpetuity.
-
+DECRED IS A PASSPORT
 
 
 ## Context
@@ -256,11 +223,6 @@ CHART OF DECRED VS BITCOIN VS SUPPLY AGE
 
 ## Complimentary
 
-- Two way street
-    - DEX Liquidity
-    - Privacy Mixing
-    - 
-
 - Hedge
     - Unlikely world will allocate full reserve to one asset
     - Insurance - You don't appreciate it until you need it
@@ -268,3 +230,15 @@ CHART OF DECRED VS BITCOIN VS SUPPLY AGE
 
 - High Assurance settlement Layer adjacent to Bitcoin
     - Excess demand 
+
+- Decred benefits from Bitcoin (Like having a protective older sibling)
+    - Attention
+    - DEX Liquidity
+    - USD valuation of Treasury
+
+- Bitcoin benefits from Decred (Like having a dependable younger sibling)
+    - DEX Liquidity
+    - Privacy Mixing
+    - Off-Bitcoin Settlement assurance
+    - LN Integrations
+    - 
